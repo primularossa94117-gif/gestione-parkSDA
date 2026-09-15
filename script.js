@@ -12,16 +12,9 @@ function showPage(pageId) {
 showPage("pageInbound");
 
 /* ------------------------------
-   FIREBASE IMPORT
+   FIREBASE V8 (compatibile CodePen)
 ------------------------------ */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-import { getDatabase, ref, push, set, onValue, remove }
-  from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
-
-/* ------------------------------
-   FIREBASE CONFIG
------------------------------- */
-const firebaseConfig = {
+firebase.initializeApp({
   apiKey: "AIzaSyA0fRxfAzL4QVwK4T4Qi1MoQXkyfUBVOIY",
   authDomain: "gestione-camion.firebaseapp.com",
   databaseURL: "https://gestione-camion-default-rtdb.europe-west1.firebasedatabase.app",
@@ -30,10 +23,9 @@ const firebaseConfig = {
   messagingSenderId: "6255743448",
   appId: "1:6255743448:web:6d5b6b9c2f125f61ee22ad",
   measurementId: "G-QVFVZDLKNX"
-};
+});
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db = firebase.database();
 
 /* ------------------------------
    WEBCAM
@@ -102,7 +94,7 @@ function popupRegistrato() {
 ------------------------------ */
 function cancella(id) {
   if (!confirm("Sei sicuro di voler cancellare?")) return;
-  remove(ref(db, "camion/" + id));
+  db.ref("camion/" + id).remove();
 }
 
 /* ------------------------------
@@ -131,8 +123,7 @@ registraInbound.onclick = () => {
     fotoOut: null
   };
 
-  const newRef = push(ref(db, "camion"));
-  set(newRef, nuovo);
+  db.ref("camion").push(nuovo);
 
   popupRegistrato();
   resetInbound();
@@ -144,25 +135,27 @@ registraInbound.onclick = () => {
 registraOutbound.onclick = () => {
   const targaOutVal = targaOut.value.trim();
 
-  onValue(ref(db, "camion"), snapshot => {
+  db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
     if (!data) return;
 
     const id = Object.keys(data).find(key => data[key].targa === targaOutVal && !data[key].uscita);
     if (!id) return alert("Targa non trovata!");
 
-    set(ref(db, "camion/" + id + "/uscita"), new Date().toLocaleString());
-    set(ref(db, "camion/" + id + "/fotoOut"), canvasOut.toDataURL());
+    db.ref("camion/" + id).update({
+      uscita: new Date().toLocaleString(),
+      fotoOut: canvasOut.toDataURL()
+    });
 
     popupRegistrato();
     resetOutbound();
-  }, { onlyOnce: true });
+  });
 };
 
 /* ------------------------------
    MONITOR REALTIME
 ------------------------------ */
-onValue(ref(db, "camion"), snapshot => {
+db.ref("camion").on("value", snapshot => {
   monitorIn.innerHTML = "";
   monitorOut.innerHTML = "";
 
