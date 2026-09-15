@@ -1,18 +1,15 @@
 /* ------------------------------
-   FUNZIONE showPage
+   CAMBIO PAGINE
 ------------------------------ */
 function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.style.display = "none");
   document.getElementById(pageId).style.display = "block";
 }
 
-/* ------------------------------
-   MOSTRA SUBITO INBOUND
------------------------------- */
 showPage("pageInbound");
 
 /* ------------------------------
-   FIREBASE V8 (compatibile CodePen)
+   FIREBASE
 ------------------------------ */
 firebase.initializeApp({
   apiKey: "AIzaSyA0fRxfAzL4QVwK4T4Qi1MoQXkyfUBVOIY",
@@ -28,14 +25,25 @@ firebase.initializeApp({
 const db = firebase.database();
 
 /* ------------------------------
-   WEBCAM
+   CAMERA POSTERIORE
 ------------------------------ */
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then(stream => video.srcObject = stream);
+const rearCam = {
+  video: {
+    facingMode: { exact: "environment" }
+  }
+};
 
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then(stream => videoOut.srcObject = stream);
+navigator.mediaDevices.getUserMedia(rearCam)
+  .then(stream => video.srcObject = stream)
+  .catch(err => console.log("Camera IN:", err));
 
+navigator.mediaDevices.getUserMedia(rearCam)
+  .then(stream => videoOut.srcObject = stream)
+  .catch(err => console.log("Camera OUT:", err));
+
+/* ------------------------------
+   FOTO
+------------------------------ */
 snap.onclick = () => {
   canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
 };
@@ -45,7 +53,7 @@ snapOut.onclick = () => {
 };
 
 /* ------------------------------
-   DESTINAZIONE AUTOMATICA
+   DESTINAZIONE
 ------------------------------ */
 function validaDestinazione(dest) {
   dest = dest.trim().toUpperCase();
@@ -67,7 +75,7 @@ function validaDestinazione(dest) {
 }
 
 /* ------------------------------
-   RESET FORM
+   RESET
 ------------------------------ */
 function resetInbound() {
   targa.value = "";
@@ -90,10 +98,10 @@ function popupRegistrato() {
 }
 
 /* ------------------------------
-   CANCELLAZIONE
+   CANCELLA
 ------------------------------ */
 function cancella(id) {
-  if (!confirm("Sei sicuro di voler cancellare?")) return;
+  if (!confirm("Sei sicuro?")) return;
   db.ref("camion/" + id).remove();
 }
 
@@ -153,7 +161,7 @@ registraOutbound.onclick = () => {
 };
 
 /* ------------------------------
-   MONITOR REALTIME
+   MONITOR
 ------------------------------ */
 db.ref("camion").on("value", snapshot => {
   monitorIn.innerHTML = "";
