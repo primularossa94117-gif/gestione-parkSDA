@@ -333,6 +333,7 @@ function exportOutExcel() {
    PARK: colori verde/rosso
 ------------------------------ */
 function aggiornaPark() {
+  // Reset: tutto verde
   document.querySelectorAll(".parkCell").forEach(cell => {
     cell.style.background = "green";
   });
@@ -343,13 +344,14 @@ function aggiornaPark() {
 
     Object.values(data).forEach(c => {
       if (!c.uscita) {
-        const id = "cell-" + c.destinazione;
-        const cell = document.getElementById(id);
+        let id = "cell-" + c.destinazione.replace("/", "-").replace(" ", "").replace("(", "").replace(")", "");
+        let cell = document.getElementById(id);
         if (cell) cell.style.background = "red";
       }
     });
   });
 }
+
 
 setInterval(aggiornaPark, 3000);
 
