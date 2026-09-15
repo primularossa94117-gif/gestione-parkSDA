@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<header id="mainHeader">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Poste_Italiane_logo.svg/2560px-Poste_Italiane_logo.svg.png">
+  <h1>Gestione Ingressi Camion</h1>
+</header>
+
+<div id="menu">
+  <button onclick="showPage('pageInbound')"><i class="fa-solid fa-truck"></i> INBOUND</button>
+  <button onclick="showPage('pageOutbound')"><i class="fa-solid fa-right-from-bracket"></i> OUTBOUND</button>
+  <button onclick="showPage('pageMonitorIn')"><i class="fa-solid fa-warehouse"></i> IN SITO</button>
+  <button onclick="showPage('pageMonitorOut')"><i class="fa-solid fa-check"></i> USCITI</button>
+</div>
+
+<!-- INBOUND -->
+<div id="pageInbound" class="page">
+  <h2><i class="fa-solid fa-camera"></i> INBOUND</h2>
+
+  <video id="video" width="300" autoplay></video>
+  <button id="snap"><i class="fa-solid fa-camera"></i> Scatta Foto</button>
+  <canvas id="canvas" width="300" height="200"></canvas>
+
+  <input id="targa" placeholder="Targa camion">
+  <input id="vettore" placeholder="Vettore">
+  <input id="quantita" placeholder="Quantità carico">
+  <input id="destinazione" placeholder="Destinazione (01-199 / A01 / TRA...)">
+  <button id="registraInbound"><i class="fa-solid fa-plus"></i> Registra INBOUND</button>
+</div>
+
+<!-- OUTBOUND -->
+<div id="pageOutbound" class="page" style="display:none;">
+  <h2><i class="fa-solid fa-right-from-bracket"></i> OUTBOUND</h2>
+
+  <video id="videoOut" width="300" autoplay></video>
+  <button id="snapOut"><i class="fa-solid fa-camera"></i> Scatta Foto</button>
+  <canvas id="canvasOut" width="300" height="200"></canvas>
+
+  <input id="targaOut" placeholder="Targa camion in uscita">
+  <button id="registraOutbound"><i class="fa-solid fa-check"></i> Registra OUTBOUND</button>
+</div>
+
+<!-- MONITOR IN SITO -->
+<div id="pageMonitorIn" class="page" style="display:none;">
+  <h2><i class="fa-solid fa-warehouse"></i> IN SITO</h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Destinazione</th>
+        <th>Tipo</th>
+        <th>Targa</th>
+        <th>Ingresso</th>
+        <th>Foto IN</th>
+        <th>Cancella</th>
+      </tr>
+    </thead>
+    <tbody id="monitorIn"></tbody>
+  </table>
+</div>
+
+<!-- MONITOR USCITI -->
+<div id="pageMonitorOut" class="page" style="display:none;">
+  <h2><i class="fa-solid fa-check"></i> USCITI</h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Destinazione</th>
+        <th>Tipo</th>
+        <th>Targa</th>
+        <th>Ingresso</th>
+        <th>Uscita</th>
+        <th>Foto OUT</th>
+        <th>Cancella</th>
+      </tr>
+    </thead>
+    <tbody id="monitorOut"></tbody>
+  </table>
+</div>
+    <script type="module" src="./script.js"></script>
+
+  </body>
+  
+</html>
