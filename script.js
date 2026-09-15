@@ -96,6 +96,7 @@ function resetInbound() {
   targa.value = "";
   vettore.value = "";
   quantita.value = "";
+  linea.value = "";
   destinazione.value = "";
   canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 }
@@ -127,6 +128,7 @@ registraInbound.onclick = () => {
   const targaVal = targa.value.trim().toUpperCase();
   const vettoreVal = vettore.value.trim();
   const quantitaVal = quantita.value.trim();
+  const lineaVal = linea.value.trim();
   const destInput = destinazione.value.trim();
 
   if (!targaVal) return alert("Inserisci la targa!");
@@ -134,9 +136,23 @@ registraInbound.onclick = () => {
   const valid = validaDestinazione(destInput);
   if (!valid) return alert("Destinazione NON valida!");
 
-  /* Cancella vecchia registrazione della stessa targa */
   db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
+
+    let occupato = false;
+    if (data) {
+      Object.entries(data).forEach(([id, c]) => {
+        if (c.destinazione === valid.valore && !c.uscita) {
+          occupato = true;
+        }
+      });
+    }
+
+    if (occupato) {
+      alert("Destinazione già occupata! Libera la baia/park prima di registrare un altro mezzo.");
+      return;
+    }
+
     if (data) {
       Object.entries(data).forEach(([id, c]) => {
         if (c.targa.toUpperCase() === targaVal && !c.uscita) {
@@ -144,24 +160,25 @@ registraInbound.onclick = () => {
         }
       });
     }
+
+    const nuovo = {
+      targa: targaVal,
+      vettore: vettoreVal,
+      quantita: quantitaVal,
+      linea: lineaVal,
+      destinazione: valid.valore,
+      tipo: valid.tipo,
+      ingresso: new Date().toLocaleString(),
+      uscita: null,
+      fotoIn: canvas.toDataURL(),
+      fotoOut: null
+    };
+
+    db.ref("camion").push(nuovo);
+
+    popupRegistrato();
+    resetInbound();
   });
-
-  const nuovo = {
-    targa: targaVal,
-    vettore: vettoreVal,
-    quantita: quantitaVal,
-    destinazione: valid.valore,
-    tipo: valid.tipo,
-    ingresso: new Date().toLocaleString(),
-    uscita: null,
-    fotoIn: canvas.toDataURL(),
-    fotoOut: null
-  };
-
-  db.ref("camion").push(nuovo);
-
-  popupRegistrato();
-  resetInbound();
 };
 
 /* ------------------------------
@@ -191,50 +208,112 @@ registraOutbound.onclick = () => {
 };
 
 /* ------------------------------
-   EXPORT CSV
+   TRATTORISTI: modifica destinazione
 ------------------------------ */
-function exportCSV(rows, filename) {
-  let csv = rows.map(r => r.join(",")).join("\n");
-  let blob = new Blob([csv], { type: "text/csv" });
-  let url = URL.createObjectURL(blob);
+btnModificaDest.onclick = () => {
+  const targaVal = trattTarga.value.trim().toUpperCase();
+  const nuovaDest = trattDest.value.trim();
 
-  let a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-}
+  if (!targaVal || !nuovaDest) {
+    alert("Inserisci targa e nuova destinazione.");
+    return;
+  }
 
-function exportIn() {
   db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
     if (!data) return;
 
-    let rows = [["Destinazione","Tipo","Targa","Ingresso"]];
+    const id = Object.keys(data).find(key =>
+      data[key].targa.toUpperCase() === targaVal && !data[key].uscita
+    );
+
+    if (!id) {
+      alert("Camion non trovato in sito!");
+      return;
+    }
+
+    const valid = validaDestinazione(nuovaDest);
+    if (!valid) {
+      alert("Destinazione NON valida!");
+      return;
+    }
+
+    db.ref("camion/" + id).update({
+      destinazione: valid.valore,
+      tipo: valid.tipo
+    });
+
+    alert("Destinazione aggiornata!");
+    trattTarga.value = "";
+    trattDest.value = "";
+  });
+};
+
+/* ------------------------------
+   EXPORT EXCEL (XLSX)
+------------------------------ */
+function exportExcel(dataArray, filename) {
+  const worksheet = XLSX.utils.aoa_to_sheet(dataArray);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Dati");
+  XLSX.writeFile(workbook, filename + ".xlsx");
+}
+
+function exportInExcel() {
+  db.ref("camion").once("value", snapshot => {
+    const data = snapshot.val();
+    if (!data) return;
+
+    let rows = [["Destinazione","Tipo","Targa","Linea","Ingresso"]];
     Object.values(data).forEach(c => {
       if (!c.uscita) {
-        rows.push([c.destinazione, c.tipo, c.targa, c.ingresso]);
+        rows.push([c.destinazione, c.tipo, c.targa, c.linea || "", c.ingresso]);
       }
     });
 
-    exportCSV(rows, "IN_SITO.csv");
+    exportExcel(rows, "IN_SITO");
   });
 }
 
-function exportOut() {
+function exportOutExcel() {
   db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
     if (!data) return;
 
-    let rows = [["Destinazione","Tipo","Targa","Ingresso","Uscita"]];
+    let rows = [["Destinazione","Tipo","Targa","Linea","Ingresso","Uscita"]];
     Object.values(data).forEach(c => {
       if (c.uscita) {
-        rows.push([c.destinazione, c.tipo, c.targa, c.ingresso, c.uscita]);
+        rows.push([c.destinazione, c.tipo, c.targa, c.linea || "", c.ingresso, c.uscita]);
       }
     });
 
-    exportCSV(rows, "USCITI.csv");
+    exportExcel(rows, "USCITI");
   });
 }
+
+/* ------------------------------
+   PARK: colori verde/rosso
+------------------------------ */
+function aggiornaPark() {
+  document.querySelectorAll(".parkCell").forEach(cell => {
+    cell.style.background = "green";
+  });
+
+  db.ref("camion").once("value", snapshot => {
+    const data = snapshot.val();
+    if (!data) return;
+
+    Object.values(data).forEach(c => {
+      if (!c.uscita) {
+        const id = "cell-" + c.destinazione;
+        const cell = document.getElementById(id);
+        if (cell) cell.style.background = "red";
+      }
+    });
+  });
+}
+
+setInterval(aggiornaPark, 3000);
 
 /* ------------------------------
    MONITOR
@@ -253,6 +332,7 @@ db.ref("camion").on("value", snapshot => {
           <td>${c.destinazione}</td>
           <td>${c.tipo}</td>
           <td>${c.targa}</td>
+          <td>${c.linea || ""}</td>
           <td>${c.ingresso}</td>
           <td><img src="${c.fotoIn}" width="80"></td>
           <td><i class="fa-solid fa-xmark deleteBtn" onclick="cancella('${id}')"></i></td>
@@ -263,6 +343,7 @@ db.ref("camion").on("value", snapshot => {
           <td>${c.destinazione}</td>
           <td>${c.tipo}</td>
           <td>${c.targa}</td>
+          <td>${c.linea || ""}</td>
           <td>${c.ingresso}</td>
           <td>${c.uscita}</td>
           <td><img src="${c.fotoOut}" width="80"></td>
@@ -270,4 +351,6 @@ db.ref("camion").on("value", snapshot => {
         </tr>`;
     }
   });
+
+  aggiornaPark();
 });
