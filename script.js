@@ -25,14 +25,13 @@ firebase.initializeApp({
 const db = firebase.database();
 
 /* ------------------------------
-   CAMERA POSTERIORE (VERSIONE PERFETTA)
+   CAMERA POSTERIORE
 ------------------------------ */
 async function startRearCamera(videoElement) {
   try {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const videoDevices = devices.filter(d => d.kind === "videoinput");
 
-    // Cerca una camera che contiene "back" o "rear"
     let rearCamera = videoDevices.find(d =>
       d.label.toLowerCase().includes("back") ||
       d.label.toLowerCase().includes("rear")
@@ -54,10 +53,7 @@ async function startRearCamera(videoElement) {
   }
 }
 
-// Avvia camera INBOUND
 startRearCamera(video);
-
-// Avvia camera OUTBOUND
 startRearCamera(videoOut);
 
 /* ------------------------------
@@ -128,7 +124,7 @@ function cancella(id) {
    INBOUND
 ------------------------------ */
 registraInbound.onclick = () => {
-  const targaVal = targa.value.trim();
+  const targaVal = targa.value.trim().toUpperCase();
   const vettoreVal = vettore.value.trim();
   const quantitaVal = quantita.value.trim();
   const destInput = destinazione.value.trim();
@@ -137,6 +133,18 @@ registraInbound.onclick = () => {
 
   const valid = validaDestinazione(destInput);
   if (!valid) return alert("Destinazione NON valida!");
+
+  /* Cancella vecchia registrazione della stessa targa */
+  db.ref("camion").once("value", snapshot => {
+    const data = snapshot.val();
+    if (data) {
+      Object.entries(data).forEach(([id, c]) => {
+        if (c.targa.toUpperCase() === targaVal && !c.uscita) {
+          db.ref("camion/" + id).remove();
+        }
+      });
+    }
+  });
 
   const nuovo = {
     targa: targaVal,
@@ -160,13 +168,16 @@ registraInbound.onclick = () => {
    OUTBOUND
 ------------------------------ */
 registraOutbound.onclick = () => {
-  const targaOutVal = targaOut.value.trim();
+  const targaOutVal = targaOut.value.trim().toUpperCase();
 
   db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
     if (!data) return;
 
-    const id = Object.keys(data).find(key => data[key].targa === targaOutVal && !data[key].uscita);
+    const id = Object.keys(data).find(key =>
+      data[key].targa.toUpperCase() === targaOutVal && !data[key].uscita
+    );
+
     if (!id) return alert("Targa non trovata!");
 
     db.ref("camion/" + id).update({
@@ -178,6 +189,52 @@ registraOutbound.onclick = () => {
     resetOutbound();
   });
 };
+
+/* ------------------------------
+   EXPORT CSV
+------------------------------ */
+function exportCSV(rows, filename) {
+  let csv = rows.map(r => r.join(",")).join("\n");
+  let blob = new Blob([csv], { type: "text/csv" });
+  let url = URL.createObjectURL(blob);
+
+  let a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+}
+
+function exportIn() {
+  db.ref("camion").once("value", snapshot => {
+    const data = snapshot.val();
+    if (!data) return;
+
+    let rows = [["Destinazione","Tipo","Targa","Ingresso"]];
+    Object.values(data).forEach(c => {
+      if (!c.uscita) {
+        rows.push([c.destinazione, c.tipo, c.targa, c.ingresso]);
+      }
+    });
+
+    exportCSV(rows, "IN_SITO.csv");
+  });
+}
+
+function exportOut() {
+  db.ref("camion").once("value", snapshot => {
+    const data = snapshot.val();
+    if (!data) return;
+
+    let rows = [["Destinazione","Tipo","Targa","Ingresso","Uscita"]];
+    Object.values(data).forEach(c => {
+      if (c.uscita) {
+        rows.push([c.destinazione, c.tipo, c.targa, c.ingresso, c.uscita]);
+      }
+    });
+
+    exportCSV(rows, "USCITI.csv");
+  });
+}
 
 /* ------------------------------
    MONITOR
