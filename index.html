@@ -12,6 +12,9 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+<!-- XLSX per export Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 </head>
 <body>
 
@@ -25,6 +28,8 @@
   <button onclick="showPage('pageOutbound')"><i class="fa-solid fa-right-from-bracket"></i> OUTBOUND</button>
   <button onclick="showPage('pageMonitorIn')"><i class="fa-solid fa-warehouse"></i> IN SITO</button>
   <button onclick="showPage('pageMonitorOut')"><i class="fa-solid fa-check"></i> USCITI</button>
+  <button onclick="showPage('pageTrattoristi')"><i class="fa-solid fa-pen"></i> TRATTORISTI</button>
+  <button onclick="showPage('pagePark')"><i class="fa-solid fa-square"></i> PARK</button>
 </div>
 
 <!-- INBOUND -->
@@ -38,6 +43,7 @@
   <input id="targa" placeholder="Targa camion">
   <input id="vettore" placeholder="Vettore">
   <input id="quantita" placeholder="Quantità carico">
+  <input id="linea" placeholder="Linea / Cliente">
   <input id="destinazione" placeholder="Destinazione (01-199 / A01 / TRA...)">
   <button id="registraInbound"><i class="fa-solid fa-plus"></i> Registra INBOUND</button>
 </div>
@@ -58,7 +64,7 @@
 <div id="pageMonitorIn" class="page" style="display:none;">
   <h2><i class="fa-solid fa-warehouse"></i> IN SITO</h2>
 
-  <button onclick="exportIn()">Esporta IN SITO</button>
+  <button onclick="exportInExcel()">Esporta IN SITO in Excel</button>
 
   <table class="table">
     <thead>
@@ -66,6 +72,7 @@
         <th>Destinazione</th>
         <th>Tipo</th>
         <th>Targa</th>
+        <th>Linea</th>
         <th>Ingresso</th>
         <th>Foto IN</th>
         <th>Cancella</th>
@@ -79,7 +86,7 @@
 <div id="pageMonitorOut" class="page" style="display:none;">
   <h2><i class="fa-solid fa-check"></i> USCITI</h2>
 
-  <button onclick="exportOut()">Esporta USCITI</button>
+  <button onclick="exportOutExcel()">Esporta USCITI in Excel</button>
 
   <table class="table">
     <thead>
@@ -87,6 +94,7 @@
         <th>Destinazione</th>
         <th>Tipo</th>
         <th>Targa</th>
+        <th>Linea</th>
         <th>Ingresso</th>
         <th>Uscita</th>
         <th>Foto OUT</th>
@@ -95,6 +103,79 @@
     </thead>
     <tbody id="monitorOut"></tbody>
   </table>
+</div>
+
+<!-- TRATTORISTI -->
+<div id="pageTrattoristi" class="page" style="display:none;">
+  <h2><i class="fa-solid fa-pen"></i> TRATTORISTI</h2>
+
+  <input id="trattTarga" placeholder="Targa camion (in sito)">
+  <input id="trattDest" placeholder="Nuova destinazione (BAIA/PARK)">
+  <button id="btnModificaDest"><i class="fa-solid fa-pen-to-square"></i> Modifica destinazione</button>
+</div>
+
+<!-- PARK -->
+<div id="pagePark" class="page" style="display:none;">
+  <h2><i class="fa-solid fa-square"></i> PARK</h2>
+
+  <div id="parkGrid">
+    <!-- Esempio BAIA 01-10 -->
+    <h3>BUCA</h3>
+    <div class="parkRow">
+      <div class="parkCell" id="cell-01">01</div>
+      <div class="parkCell" id="cell-02">02</div>
+      <div class="parkCell" id="cell-03">03</div>
+      <div class="parkCell" id="cell-04">04</div>
+      <div class="parkCell" id="cell-05">05</div>
+      <div class="parkCell" id="cell-06">06</div>
+      <div class="parkCell" id="cell-07">07</div>
+      <div class="parkCell" id="cell-08">08</div>
+      <div class="parkCell" id="cell-09">09</div>
+      <div class="parkCell" id="cell-10">10</div>
+    </div>
+
+    <h3>PARK A</h3>
+    <div class="parkRow">
+      <div class="parkCell" id="cell-A01">A01</div>
+      <div class="parkCell" id="cell-A02">A02</div>
+      <div class="parkCell" id="cell-A03">A03</div>
+      <div class="parkCell" id="cell-A04">A04</div>
+      <div class="parkCell" id="cell-A05">A05</div>
+      <div class="parkCell" id="cell-A06">A06</div>
+      <div class="parkCell" id="cell-A07">A07</div>
+      <div class="parkCell" id="cell-A08">A08</div>
+      <div class="parkCell" id="cell-A09">A09</div>
+      <div class="parkCell" id="cell-A10">A10</div>
+    </div>
+
+    <h3>PARK B</h3>
+    <div class="parkRow">
+      <div class="parkCell" id="cell-B01">B01</div>
+      <div class="parkCell" id="cell-B02">B02</div>
+      <div class="parkCell" id="cell-B03">B03</div>
+      <div class="parkCell" id="cell-B04">B04</div>
+      <div class="parkCell" id="cell-B05">B05</div>
+      <div class="parkCell" id="cell-B06">B06</div>
+      <div class="parkCell" id="cell-B07">B07</div>
+      <div class="parkCell" id="cell-B08">B08</div>
+      <div class="parkCell" id="cell-B09">B09</div>
+      <div class="parkCell" id="cell-B10">B10</div>
+    </div>
+
+    <h3>PARK C</h3>
+    <div class="parkRow">
+      <div class="parkCell" id="cell-C01">C01</div>
+      <div class="parkCell" id="cell-C02">C02</div>
+      <div class="parkCell" id="cell-C03">C03</div>
+      <div class="parkCell" id="cell-C04">C04</div>
+      <div class="parkCell" id="cell-C05">C05</div>
+      <div class="parkCell" id="cell-C06">C06</div>
+      <div class="parkCell" id="cell-C07">C07</div>
+      <div class="parkCell" id="cell-C08">C08</div>
+      <div class="parkCell" id="cell-C09">C09</div>
+      <div class="parkCell" id="cell-C10">C10</div>
+    </div>
+  </div>
 </div>
 
 <script src="script.js"></script>
