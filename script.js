@@ -25,21 +25,40 @@ firebase.initializeApp({
 const db = firebase.database();
 
 /* ------------------------------
-   CAMERA POSTERIORE
+   CAMERA POSTERIORE (VERSIONE PERFETTA)
 ------------------------------ */
-const rearCam = {
-  video: {
-    facingMode: { exact: "environment" }
+async function startRearCamera(videoElement) {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter(d => d.kind === "videoinput");
+
+    // Cerca una camera che contiene "back" o "rear"
+    let rearCamera = videoDevices.find(d =>
+      d.label.toLowerCase().includes("back") ||
+      d.label.toLowerCase().includes("rear")
+    );
+
+    let constraints;
+
+    if (rearCamera) {
+      constraints = { video: { deviceId: rearCamera.deviceId } };
+    } else {
+      constraints = { video: { facingMode: "environment" } };
+    }
+
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    videoElement.srcObject = stream;
+
+  } catch (err) {
+    console.error("Errore fotocamera:", err);
   }
-};
+}
 
-navigator.mediaDevices.getUserMedia(rearCam)
-  .then(stream => video.srcObject = stream)
-  .catch(err => console.log("Camera IN:", err));
+// Avvia camera INBOUND
+startRearCamera(video);
 
-navigator.mediaDevices.getUserMedia(rearCam)
-  .then(stream => videoOut.srcObject = stream)
-  .catch(err => console.log("Camera OUT:", err));
+// Avvia camera OUTBOUND
+startRearCamera(videoOut);
 
 /* ------------------------------
    FOTO
