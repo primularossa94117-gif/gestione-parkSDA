@@ -211,41 +211,79 @@ registraOutbound.onclick = () => {
    TRATTORISTI: modifica destinazione
 ------------------------------ */
 btnModificaDest.onclick = () => {
-  const targaVal = trattTarga.value.trim().toUpperCase();
-  const nuovaDest = trattDest.value.trim();
+  const inputTarga = trattTarga.value.trim().toUpperCase();
+  const inputDest = trattDest.value.trim().toUpperCase();
 
-  if (!targaVal || !nuovaDest) {
-    alert("Inserisci targa e nuova destinazione.");
+  if (!inputTarga && !inputDest) {
+    alert("Inserisci TARGA oppure DESTINAZIONE.");
     return;
   }
 
   db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
-    if (!data) return;
+    if (!data) {
+      alert("Nessun camion in sito.");
+      return;
+    }
 
-    const id = Object.keys(data).find(key =>
-      data[key].targa.toUpperCase() === targaVal && !data[key].uscita
-    );
+    let trovatoId = null;
 
-    if (!id) {
-      alert("Camion non trovato in sito!");
+    if (inputTarga) {
+      Object.entries(data).forEach(([id, c]) => {
+        if (!c.uscita && c.targa.toUpperCase() === inputTarga) {
+          trovatoId = id;
+        }
+      });
+    }
+
+    if (!trovatoId && inputDest) {
+      Object.entries(data).forEach(([id, c]) => {
+        if (!c.uscita && c.destinazione.toUpperCase() === inputDest) {
+          trovatoId = id;
+        }
+      });
+    }
+
+    if (!trovatoId) {
+      alert("Nessun camion trovato con i dati inseriti.");
+      return;
+    }
+
+    const nuovaDest = nuovaDestinazione.value.trim().toUpperCase();
+    if (!nuovaDest) {
+      alert("Inserisci la NUOVA DESTINAZIONE.");
       return;
     }
 
     const valid = validaDestinazione(nuovaDest);
     if (!valid) {
-      alert("Destinazione NON valida!");
+      alert("Nuova destinazione NON valida!");
       return;
     }
 
-    db.ref("camion/" + id).update({
+    let occupato = false;
+    Object.values(data).forEach(c => {
+      if (!c.uscita && c.destinazione === valid.valore) {
+        occupato = true;
+      }
+    });
+
+    if (occupato) {
+      alert("La nuova destinazione è già occupata!");
+      return;
+    }
+
+    db.ref("camion/" + trovatoId).update({
       destinazione: valid.valore,
       tipo: valid.tipo
     });
 
-    alert("Destinazione aggiornata!");
     trattTarga.value = "";
     trattDest.value = "";
+    nuovaDestinazione.value = "";
+
+    alert("REGISTRATO");
+    aggiornaPark();
   });
 };
 
