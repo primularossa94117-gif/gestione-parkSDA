@@ -113,8 +113,3 @@ video, canvas {
   cursor: pointer;
   transition: 0.2s;
 }
-
-deleteBtn:hover {
-  color: #ff6b6b;
-  transform: scale(1.2);
-}
