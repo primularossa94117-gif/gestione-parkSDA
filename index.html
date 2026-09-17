@@ -15,6 +15,12 @@
 <!-- XLSX per export Excel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    showPage("pageInbound");
+});
+</script>
+
 </head>
 <body>
 
@@ -50,146 +56,57 @@
     <option value="">-- Seleziona destinazione --</option>
 
     <optgroup label="BUCA">
-      <option>BUCA1</option>
-      <option>BUCA2</option>
-      <option>BUCA3</option>
-      <option>BUCA4</option>
-      <option>BUCA5</option>
-      <option>BUCA6</option>
-      <option>BUCA7</option>
-      <option>BUCA8</option>
-      <option>BUCA9</option>
-      <option>BUCA10</option>
-      <option>BUCA157</option>
-      <option>BUCA156</option>
-      <option>BUCA155</option>
-      <option>BUCA154</option>
-      <option>BUCA153</option>
-      <option>BUCA152</option>
-      <option>BUCA151</option>
-      <option>BUCA150</option>
-      <option>BUCA149</option>
-      <option>BUCA148</option>
+      <option>BUCA1</option><option>BUCA2</option><option>BUCA3</option><option>BUCA4</option>
+      <option>BUCA5</option><option>BUCA6</option><option>BUCA7</option><option>BUCA8</option>
+      <option>BUCA9</option><option>BUCA10</option><option>BUCA157</option><option>BUCA156</option>
+      <option>BUCA155</option><option>BUCA154</option><option>BUCA153</option><option>BUCA152</option>
+      <option>BUCA151</option><option>BUCA150</option><option>BUCA149</option><option>BUCA148</option>
     </optgroup>
 
     <optgroup label="PARK A">
-      <option>A01</option>
-      <option>A02</option>
-      <option>A03</option>
-      <option>A04</option>
-      <option>A05</option>
-      <option>A06</option>
-      <option>A07</option>
-      <option>A08</option>
-      <option>A09</option>
-      <option>A10</option>
-      <option>A11</option>
-      <option>A12</option>
-      <option>A13</option>
-      <option>A14</option>
-      <option>A15</option>
-      <option>A16</option>
-      <option>TRA12-13</option>
-      <option>TRA18-19-1</option>
-      <option>TRA18-19-2</option>
+      <option>A01</option><option>A02</option><option>A03</option><option>A04</option>
+      <option>A05</option><option>A06</option><option>A07</option><option>A08</option>
+      <option>A09</option><option>A10</option><option>A11</option><option>A12</option>
+      <option>A13</option><option>A14</option><option>A15</option><option>A16</option>
+      <option>TRA12-13</option><option>TRA18-19-1</option><option>TRA18-19-2</option>
     </optgroup>
 
     <optgroup label="PARK B">
-      <option>INIZIOPARKB1</option>
-      <option>INIZIOPARKB2</option>
-      <option>B01</option>
-      <option>B02</option>
-      <option>B03</option>
-      <option>B04</option>
-      <option>B05</option>
-      <option>B06</option>
-      <option>B07</option>
-      <option>B08</option>
-      <option>B09</option>
-      <option>B010</option>
-      <option>B011</option>
-      <option>B012</option>
-      <option>B013</option>
-      <option>B014</option>
-      <option>B015</option>
-      <option>B016</option>
+      <option>INIZIOPARKB1</option><option>INIZIOPARKB2</option>
+      <option>B01</option><option>B02</option><option>B03</option><option>B04</option>
+      <option>B05</option><option>B06</option><option>B07</option><option>B08</option>
+      <option>B09</option><option>B010</option><option>B011</option><option>B012</option>
+      <option>B013</option><option>B014</option><option>B015</option><option>B016</option>
     </optgroup>
 
     <optgroup label="PARK C">
-      <option>C01</option>
-      <option>C02</option>
-      <option>C03</option>
-      <option>C04</option>
-      <option>C05</option>
-      <option>C06</option>
-      <option>C07</option>
-      <option>C08</option>
-      <option>C09</option>
-      <option>C10</option>
-      <option>C11</option>
-      <option>C13</option>
-      <option>C14</option>
-      <option>C15</option>
-      <option>C16</option>
-      <option>C17</option>
-      <option>C19</option>
-      <option>C21</option>
-      <option>C22</option>
-      <option>C24</option>
-      <option>C25</option>
-      <option>C26</option>
-      <option>C29</option>
-      <option>C30</option>
-      <option>C31</option>
-      <option>C32</option>
-      <option>C33</option>
-      <option>C34</option>
+      <option>C01</option><option>C02</option><option>C03</option><option>C04</option>
+      <option>C05</option><option>C06</option><option>C07</option><option>C08</option>
+      <option>C09</option><option>C10</option><option>C11</option><option>C13</option>
+      <option>C14</option><option>C15</option><option>C16</option><option>C17</option>
+      <option>C19</option><option>C21</option><option>C22</option><option>C24</option>
+      <option>C25</option><option>C26</option><option>C29</option><option>C30</option>
+      <option>C31</option><option>C32</option><option>C33</option><option>C34</option>
       <option>C35</option>
     </optgroup>
 
     <optgroup label="ATTESA PARK C">
-      <option>C31ATTESA</option>
-      <option>C32ATTESA</option>
-      <option>C33ATTESA</option>
-      <option>C34ATTESA</option>
-      <option>C35ATTESA</option>
-      <option>C36ATTESA</option>
+      <option>C31ATTESA</option><option>C32ATTESA</option><option>C33ATTESA</option>
+      <option>C34ATTESA</option><option>C35ATTESA</option><option>C36ATTESA</option>
     </optgroup>
 
     <optgroup label="PARK Y2">
-      <option>Y2-1</option>
-      <option>Y2-2</option>
-      <option>Y2-3</option>
-      <option>Y2-4</option>
-      <option>Y2-5</option>
-      <option>Y2-6</option>
-      <option>Y2-7</option>
-      <option>Y2-8</option>
-      <option>Y2-9</option>
-      <option>Y2-10</option>
-      <option>Y2-11</option>
-      <option>Y2-12</option>
-      <option>Y2-13</option>
-      <option>Y2-14</option>
-      <option>Y2-15</option>
-      <option>Y2-16</option>
-      <option>Y2-17</option>
-      <option>Y2-18</option>
-      <option>Y2-19</option>
-      <option>Y2-20</option>
-      <option>Y2-133-134</option>
-      <option>Y2-139-140</option>
-      <option>Y2-018-019-1</option>
-      <option>Y2-018-019-2</option>
-      <option>Y2-TRA12-13</option>
-      <option>Y2-FRONTEC30</option>
-      <option>Y2-FRONTECOMP1</option>
-      <option>Y2-FRONTECOMP2</option>
-      <option>Y2-FRONTECOMP3</option>
-      <option>Y2-TRA132-133</option>
-      <option>Y2-TRA128-129</option>
-      <option>Y2-TRA123-124</option>
-      <option>Y2-TRA152-152</option>
+      <option>Y2-1</option><option>Y2-2</option><option>Y2-3</option><option>Y2-4</option>
+      <option>Y2-5</option><option>Y2-6</option><option>Y2-7</option><option>Y2-8</option>
+      <option>Y2-9</option><option>Y2-10</option><option>Y2-11</option><option>Y2-12</option>
+      <option>Y2-13</option><option>Y2-14</option><option>Y2-15</option><option>Y2-16</option>
+      <option>Y2-17</option><option>Y2-18</option><option>Y2-19</option><option>Y2-20</option>
+      <option>Y2-133-134</option><option>Y2-139-140</option>
+      <option>Y2-018-019-1</option><option>Y2-018-019-2</option>
+      <option>Y2-TRA12-13</option><option>Y2-FRONTEC30</option>
+      <option>Y2-FRONTECOMP1</option><option>Y2-FRONTECOMP2</option><option>Y2-FRONTECOMP3</option>
+      <option>Y2-TRA132-133</option><option>Y2-TRA128-129</option>
+      <option>Y2-TRA123-124</option><option>Y2-TRA152-152</option>
     </optgroup>
 
   </select>
@@ -209,7 +126,7 @@
   <button id="registraOutbound"><i class="fa-solid fa-check"></i> Registra OUTBOUND</button>
 </div>
 
-<!-- MONITOR IN SITO -->
+<!-- MONITOR IN -->
 <div id="pageMonitorIn" class="page" style="display:none;">
   <h2><i class="fa-solid fa-warehouse"></i> IN SITO</h2>
 
@@ -218,20 +135,15 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Destinazione</th>
-        <th>Tipo</th>
-        <th>Targa</th>
-        <th>Linea</th>
-        <th>Ingresso</th>
-        <th>Foto IN</th>
-        <th>Cancella</th>
+        <th>Destinazione</th><th>Tipo</th><th>Targa</th><th>Linea</th>
+        <th>Ingresso</th><th>Foto IN</th><th>Cancella</th>
       </tr>
     </thead>
     <tbody id="monitorIn"></tbody>
   </table>
 </div>
 
-<!-- MONITOR USCITI -->
+<!-- MONITOR OUT -->
 <div id="pageMonitorOut" class="page" style="display:none;">
   <h2><i class="fa-solid fa-check"></i> USCITI</h2>
 
@@ -240,14 +152,8 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Destinazione</th>
-        <th>Tipo</th>
-        <th>Targa</th>
-        <th>Linea</th>
-        <th>Ingresso</th>
-        <th>Uscita</th>
-        <th>Foto OUT</th>
-        <th>Cancella</th>
+        <th>Destinazione</th><th>Tipo</th><th>Targa</th><th>Linea</th>
+        <th>Ingresso</th><th>Uscita</th><th>Foto OUT</th><th>Cancella</th>
       </tr>
     </thead>
     <tbody id="monitorOut"></tbody>
@@ -259,13 +165,11 @@
   <h2><i class="fa-solid fa-pen"></i> TRATTORISTI</h2>
 
   <input id="trattTarga" placeholder="Targa camion (in sito)">
-  <input id="trattDest" placeholder="Destinazione attuale (BAIA/PARK)">
+  <input id="trattDest" placeholder="Destinazione attuale">
 
   <select id="nuovaDestinazione">
     <option value="">-- Seleziona nuova destinazione --</option>
-
-    <!-- STESSO DROPDOWN DI INBOUND -->
-    <!-- (lo script.js userà lo stesso elenco) -->
+    <!-- Lo script.js riempie automaticamente -->
   </select>
 
   <button id="btnModificaDest"><i class="fa-solid fa-pen-to-square"></i> Modifica destinazione</button>
@@ -346,4 +250,15 @@
       <div class="parkCell" id="cell-B013">B013</div>
       <div class="parkCell" id="cell-B014">B014</div>
       <div class="parkCell" id="cell-B015">B015</div>
-      <div class
+      <div class="parkCell" id="cell-B016">B016</div>
+    </div>
+
+    <!-- PARK C -->
+    <h3>PARK C</h3>
+    <div class="parkRow">
+      <div class="parkCell" id="cell-C01">C01</div>
+      <div class="parkCell" id="cell-C02">C02</div>
+      <div class="parkCell" id="cell-C03">C03</div>
+      <div class="parkCell" id="cell-C04">C04</div>
+      <div class="parkCell" id="cell-C05">C05</div>
+      <div class="parkCell" id="cell-C06">C06</div
