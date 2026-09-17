@@ -1,272 +1,155 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestione Park SDA</title>
-
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<!-- Firebase V8 -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
-<!-- XLSX per export Excel -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-</head>
-<body>
-
-<header id="mainHeader">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Poste_Italiane_logo.svg/2560px-Poste_Italiane_logo.svg.png">
-  <h1>Gestione Park SDA</h1>
-</header>
-
-<div id="menu">
-  <button onclick="showPage('pageInbound')"><i class="fa-solid fa-truck"></i> INBOUND</button>
-  <button onclick="showPage('pageOutbound')"><i class="fa-solid fa-right-from-bracket"></i> OUTBOUND</button>
-  <button onclick="showPage('pageMonitorIn')"><i class="fa-solid fa-warehouse"></i> IN SITO</button>
-  <button onclick="showPage('pageMonitorOut')"><i class="fa-solid fa-check"></i> USCITI</button>
-  <button onclick="showPage('pageTrattoristi')"><i class="fa-solid fa-pen"></i> TRATTORISTI</button>
-  <button onclick="showPage('pagePark')"><i class="fa-solid fa-square"></i> PARK</button>
-</div>
-
-<!-- INBOUND -->
-<div id="pageInbound" class="page">
-  <h2><i class="fa-solid fa-camera"></i> INBOUND</h2>
-
-  <video id="video" autoplay playsinline></video>
-  <button id="snap"><i class="fa-solid fa-camera"></i> Scatta Foto</button>
-  <canvas id="canvas" width="300" height="200"></canvas>
-
-  <input id="targa" placeholder="Targa camion">
-  <input id="vettore" placeholder="Vettore">
-  <input id="quantita" placeholder="Quantità carico">
-  <input id="linea" placeholder="Linea / Cliente">
-  <input id="destinazione" placeholder="Destinazione (BAIA / PARK / Y2...)">
-  <button id="registraInbound"><i class="fa-solid fa-plus"></i> Registra INBOUND</button>
-</div>
-
-<!-- OUTBOUND -->
-<div id="pageOutbound" class="page" style="display:none;">
-  <h2><i class="fa-solid fa-right-from-bracket"></i> OUTBOUND</h2>
-
-  <video id="videoOut" autoplay playsinline></video>
-  <button id="snapOut"><i class="fa-solid fa-camera"></i> Scatta Foto</button>
-  <canvas id="canvasOut" width="300" height="200"></canvas>
-
-  <input id="targaOut" placeholder="Targa camion in uscita">
-  <button id="registraOutbound"><i class="fa-solid fa-check"></i> Registra OUTBOUND</button>
-</div>
-
-<!-- MONITOR IN SITO -->
-<div id="pageMonitorIn" class="page" style="display:none;">
-  <h2><i class="fa-solid fa-warehouse"></i> IN SITO</h2>
-
-  <button onclick="exportInExcel()">Esporta IN SITO in Excel</button>
-
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Destinazione</th>
-        <th>Tipo</th>
-        <th>Targa</th>
-        <th>Linea</th>
-        <th>Ingresso</th>
-        <th>Foto IN</th>
-        <th>Cancella</th>
-      </tr>
-    </thead>
-    <tbody id="monitorIn"></tbody>
-  </table>
-</div>
-
-<!-- MONITOR USCITI -->
-<div id="pageMonitorOut" class="page" style="display:none;">
-  <h2><i class="fa-solid fa-check"></i> USCITI</h2>
-
-  <button onclick="exportOutExcel()">Esporta USCITI in Excel</button>
-
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Destinazione</th>
-        <th>Tipo</th>
-        <th>Targa</th>
-        <th>Linea</th>
-        <th>Ingresso</th>
-        <th>Uscita</th>
-        <th>Foto OUT</th>
-        <th>Cancella</th>
-      </tr>
-    </thead>
-    <tbody id="monitorOut"></tbody>
-  </table>
-</div>
-
-<!-- TRATTORISTI -->
-<div id="pageTrattoristi" class="page" style="display:none;">
-  <h2><i class="fa-solid fa-pen"></i> TRATTORISTI</h2>
-
-  <input id="trattTarga" placeholder="Targa camion (in sito)">
-  <input id="trattDest" placeholder="Destinazione attuale">
-  <input id="nuovaDestinazione" placeholder="Nuova destinazione">
-  <button id="btnModificaDest"><i class="fa-solid fa-pen-to-square"></i> Modifica destinazione</button>
-</div>
-
 <!-- PARK -->
 <div id="pagePark" class="page" style="display:none;">
-  <h2><i class="fa-solid fa-square"></i> PARK</h2>
+  <h2><i class="fa-solid fa-square"></i> PARK MAP</h2>
 
   <div id="parkGrid">
-
-    <!-- BUCA -->
-    <h3>BUCA</h3>
+    <h3 class="title-buca">🟦 BUCA</h3>
     <div class="parkRow">
-      <div class="parkCell" id="cell-BUCA1">BUCA1</div>
-      <div class="parkCell" id="cell-BUCA2">BUCA2</div>
-      <div class="parkCell" id="cell-BUCA3">BUCA3</div>
-      <div class="parkCell" id="cell-BUCA4">BUCA4</div>
-      <div class="parkCell" id="cell-BUCA5">BUCA5</div>
-      <div class="parkCell" id="cell-BUCA6">BUCA6</div>
-      <div class="parkCell" id="cell-BUCA7">BUCA7</div>
-      <div class="parkCell" id="cell-BUCA8">BUCA8</div>
-      <div class="parkCell" id="cell-BUCA9">BUCA9</div>
-      <div class="parkCell" id="cell-BUCA10">BUCA10</div>
-
-      <div class="parkCell" id="cell-BUCA157">BUCA157</div>
-      <div class="parkCell" id="cell-BUCA156">BUCA156</div>
-      <div class="parkCell" id="cell-BUCA155">BUCA155</div>
-      <div class="parkCell" id="cell-BUCA154">BUCA154</div>
-      <div class="parkCell" id="cell-BUCA153">BUCA153</div>
-      <div class="parkCell" id="cell-BUCA152">BUCA152</div>
-      <div class="parkCell" id="cell-BUCA151">BUCA151</div>
-      <div class="parkCell" id="cell-BUCA150">BUCA150</div>
-      <div class="parkCell" id="cell-BUCA149">BUCA149</div>
-      <div class="parkCell" id="cell-BUCA148">BUCA148</div>
+      <div class="parkCell zone-buca" id="cell-BUCA1">BUCA1</div>
+      <div class="parkCell zone-buca" id="cell-BUCA2">BUCA2</div>
+      <div class="parkCell zone-buca" id="cell-BUCA3">BUCA3</div>
+      <div class="parkCell zone-buca" id="cell-BUCA4">BUCA4</div>
+      <div class="parkCell zone-buca" id="cell-BUCA5">BUCA5</div>
+      <div class="parkCell zone-buca" id="cell-BUCA6">BUCA6</div>
+      <div class="parkCell zone-buca" id="cell-BUCA7">BUCA7</div>
+      <div class="parkCell zone-buca" id="cell-BUCA8">BUCA8</div>
+      <div class="parkCell zone-buca" id="cell-BUCA9">BUCA9</div>
+      <div class="parkCell zone-buca" id="cell-BUCA10">BUCA10</div>
+      <div class="parkCell zone-buca" id="cell-BUCA157">BUCA157</div>
+      <div class="parkCell zone-buca" id="cell-BUCA156">BUCA156</div>
+      <div class="parkCell zone-buca" id="cell-BUCA155">BUCA155</div>
+      <div class="parkCell zone-buca" id="cell-BUCA154">BUCA154</div>
+      <div class="parkCell zone-buca" id="cell-BUCA153">BUCA153</div>
+      <div class="parkCell zone-buca" id="cell-BUCA152">BUCA152</div>
+      <div class="parkCell zone-buca" id="cell-BUCA151">BUCA151</div>
+      <div class="parkCell zone-buca" id="cell-BUCA150">BUCA150</div>
+      <div class="parkCell zone-buca" id="cell-BUCA149">BUCA149</div>
+      <div class="parkCell zone-buca" id="cell-BUCA148">BUCA148</div>
     </div>
 
-    <!-- PARK A -->
-    <h3>PARK A</h3>
+    <h3 class="title-parkA">🟩 PARK A</h3>
     <div class="parkRow">
-      <div class="parkCell" id="cell-A01">A01</div>
-      <div class="parkCell" id="cell-A02">A02</div>
-      <div class="parkCell" id="cell-A03">A03</div>
-      <div class="parkCell" id="cell-A04">A04</div>
-      <div class="parkCell" id="cell-A05">A05</div>
-      <div class="parkCell" id="cell-A06">A06</div>
-      <div class="parkCell" id="cell-A07">A07</div>
-      <div class="parkCell" id="cell-A08">A08</div>
-      <div class="parkCell" id="cell-A09">A09</div>
-      <div class="parkCell" id="cell-A10">A10</div>
-      <div class="parkCell" id="cell-A11">A11</div>
-      <div class="parkCell" id="cell-A12">A12</div>
-      <div class="parkCell" id="cell-A13">A13</div>
-      <div class="parkCell" id="cell-A14">A14</div>
-      <div class="parkCell" id="cell-A15">A15</div>
-      <div class="parkCell" id="cell-A16">A16</div>
-
-      <div class="parkCell" id="cell-TRA12-13">TRA12-13</div>
-      <div class="parkCell" id="cell-TRA18-19-1">TRA18-19-1</div>
-      <div class="parkCell" id="cell-TRA18-19-2">TRA18-19-2</div>
+      <div class="parkCell zone-parkA" id="cell-A01">A01</div>
+      <div class="parkCell zone-parkA" id="cell-A02">A02</div>
+      <div class="parkCell zone-parkA" id="cell-A03">A03</div>
+      <div class="parkCell zone-parkA" id="cell-A04">A04</div>
+      <div class="parkCell zone-parkA" id="cell-A05">A05</div>
+      <div class="parkCell zone-parkA" id="cell-A06">A06</div>
+      <div class="parkCell zone-parkA" id="cell-A07">A07</div>
+      <div class="parkCell zone-parkA" id="cell-A08">A08</div>
+      <div class="parkCell zone-parkA" id="cell-A09">A09</div>
+      <div class="parkCell zone-parkA" id="cell-A10">A10</div>
+      <div class="parkCell zone-parkA" id="cell-A11">A11</div>
+      <div class="parkCell zone-parkA" id="cell-A12">A12</div>
+      <div class="parkCell zone-parkA" id="cell-A13">A13</div>
+      <div class="parkCell zone-parkA" id="cell-A14">A14</div>
+      <div class="parkCell zone-parkA" id="cell-A15">A15</div>
+      <div class="parkCell zone-parkA" id="cell-A16">A16</div>
+      <div class="parkCell zone-parkA" id="cell-TRA12-13">TRA12-13</div>
+      <div class="parkCell zone-parkA" id="cell-TRA18-19-1">TRA18-19-1</div>
+      <div class="parkCell zone-parkA" id="cell-TRA18-19-2">TRA18-19-2</div>
     </div>
 
-    <!-- PARK B -->
-    <h3>PARK B</h3>
+    <h3 class="title-parkB">🟧 PARK B</h3>
     <div class="parkRow">
-      <div class="parkCell" id="cell-INIZIOPARKB1">INIZIOPARKB1</div>
-      <div class="parkCell" id="cell-INIZIOPARKB2">INIZIOPARKB2</div>
-
-      <div class="parkCell" id="cell-B01">B01</div>
-      <div class="parkCell" id="cell-B02">B02</div>
-      <div class="parkCell" id="cell-B03">B03</div>
-      <div class="parkCell" id="cell-B04">B04</div>
-      <div class="parkCell" id="cell-B05">B05</div>
-      <div class="parkCell" id="cell-B06">B06</div>
-      <div class="parkCell" id="cell-B07">B07</div>
-      <div class="parkCell" id="cell-B08">B08</div>
-      <div class="parkCell" id="cell-B09">B09</div>
-      <div class="parkCell" id="cell-B010">B010</div>
-      <div class="parkCell" id="cell-B011">B011</div>
-      <div class="parkCell" id="cell-B012">B012</div>
-      <div class="parkCell" id="cell-B013">B013</div>
-      <div class="parkCell" id="cell-B014">B014</div>
-      <div class="parkCell" id="cell-B015">B015</div>
-      <div class="parkCell" id="cell-B016">B016</div>
+      <div class="parkCell zone-parkB" id="cell-INIZIOPARKB1">INIZIOPARKB1</div>
+      <div class="parkCell zone-parkB" id="cell-INIZIOPARKB2">INIZIOPARKB2</div>
+      <div class="parkCell zone-parkB" id="cell-B01">B01</div>
+      <div class="parkCell zone-parkB" id="cell-B02">B02</div>
+      <div class="parkCell zone-parkB" id="cell-B03">B03</div>
+      <div class="parkCell zone-parkB" id="cell-B04">B04</div>
+      <div class="parkCell zone-parkB" id="cell-B05">B05</div>
+      <div class="parkCell zone-parkB" id="cell-B06">B06</div>
+      <div class="parkCell zone-parkB" id="cell-B07">B07</div>
+      <div class="parkCell zone-parkB" id="cell-B08">B08</div>
+      <div class="parkCell zone-parkB" id="cell-B09">B09</div>
+      <div class="parkCell zone-parkB" id="cell-B010">B010</div>
+      <div class="parkCell zone-parkB" id="cell-B011">B011</div>
+      <div class="parkCell zone-parkB" id="cell-B012">B012</div>
+      <div class="parkCell zone-parkB" id="cell-B013">B013</div>
+      <div class="parkCell zone-parkB" id="cell-B014">B014</div>
+      <div class="parkCell zone-parkB" id="cell-B015">B015</div>
+      <div class="parkCell zone-parkB" id="cell-B016">B016</div>
     </div>
 
-    <!-- PARK C -->
-    <h3>PARK C</h3>
+    <h3 class="title-parkC">🟪 PARK C</h3>
     <div class="parkRow">
-      <div class="parkCell" id="cell-C01">C01</div>
-      <div class="parkCell" id="cell-C02">C02</div>
-      <div class="parkCell" id="cell-C03">C03</div>
-      <div class="parkCell" id="cell-C04">C04</div>
-      <div class="parkCell" id="cell-C05">C05</div>
-      <div class="parkCell" id="cell-C06">C06</div>
-      <div class="parkCell" id="cell-C07">C07</div>
-      <div class="parkCell" id="cell-C08">C08</div>
-      <div class="parkCell" id="cell-C09">C09</div>
-      <div class="parkCell" id="cell-C10">C10</div>
-      <div class="parkCell" id="cell-C11">C11</div>
-      <div class="parkCell" id="cell-C13">C13</div>
-      <div class="parkCell" id="cell-C14">C14</div>
-      <div class="parkCell" id="cell-C15">C15</div>
-      <div class="parkCell" id="cell-C16">C16</div>
-      <div class="parkCell" id="cell-C17">C17</div>
-      <div class="parkCell" id="cell-C19">C19</div>
-      <div class="parkCell" id="cell-C21">C21</div>
-      <div class="parkCell" id="cell-C22">C22</div>
-      <div class="parkCell" id="cell-C24">C24</div>
-      <div class="parkCell" id="cell-C25">C25</div>
-      <div class="parkCell" id="cell-C26">C26</div>
-      <div class="parkCell" id="cell-C29">C29</div>
-      <div class="parkCell" id="cell-C30">C30</div>
-      <div class="parkCell" id="cell-C31">C31</div>
-      <div class="parkCell" id="cell-C32">C32</div>
-      <div class="parkCell" id="cell-C33">C33</div>
-      <div class="parkCell" id="cell-C34">C34</div>
-      <div class="parkCell" id="cell-C35">C35</div>
+      <div class="parkCell zone-parkC" id="cell-C01">C01</div>
+      <div class="parkCell zone-parkC" id="cell-C02">C02</div>
+      <div class="parkCell zone-parkC" id="cell-C03">C03</div>
+      <div class="parkCell zone-parkC" id="cell-C04">C04</div>
+      <div class="parkCell zone-parkC" id="cell-C05">C05</div>
+      <div class="parkCell zone-parkC" id="cell-C06">C06</div>
+      <div class="parkCell zone-parkC" id="cell-C07">C07</div>
+      <div class="parkCell zone-parkC" id="cell-C08">C08</div>
+      <div class="parkCell zone-parkC" id="cell-C09">C09</div>
+      <div class="parkCell zone-parkC" id="cell-C10">C10</div>
+      <div class="parkCell zone-parkC" id="cell-C11">C11</div>
+      <div class="parkCell zone-parkC" id="cell-C13">C13</div>
+      <div class="parkCell zone-parkC" id="cell-C14">C14</div>
+      <div class="parkCell zone-parkC" id="cell-C15">C15</div>
+      <div class="parkCell zone-parkC" id="cell-C16">C16</div>
+      <div class="parkCell zone-parkC" id="cell-C17">C17</div>
+      <div class="parkCell zone-parkC" id="cell-C19">C19</div>
+      <div class="parkCell zone-parkC" id="cell-C21">C21</div>
+      <div class="parkCell zone-parkC" id="cell-C22">C22</div>
+      <div class="parkCell zone-parkC" id="cell-C24">C24</div>
+      <div class="parkCell zone-parkC" id="cell-C25">C25</div>
+      <div class="parkCell zone-parkC" id="cell-C26">C26</div>
+      <div class="parkCell zone-parkC" id="cell-C29">C29</div>
+      <div class="parkCell zone-parkC" id="cell-C30">C30</div>
+      <div class="parkCell zone-parkC" id="cell-C31">C31</div>
+      <div class="parkCell zone-parkC" id="cell-C32">C32</div>
+      <div class="parkCell zone-parkC" id="cell-C33">C33</div>
+      <div class="parkCell zone-parkC" id="cell-C34">C34</div>
+      <div class="parkCell zone-parkC" id="cell-C35">C35</div>
     </div>
 
-    <!-- ATTESA PARK C -->
-    <h3>ATTESA PARK C</h3>
+    <h3 class="title-attesaC">🟫 ATTESA PARK C</h3>
     <div class="parkRow">
-      <div class="parkCell" id="cell-C31ATTESA">C31ATTESA</div>
-      <div class="parkCell" id="cell-C32ATTESA">C32ATTESA</div>
-      <div class="parkCell" id="cell-C33ATTESA">C33ATTESA</div>
-      <div class="parkCell" id="cell-C34ATTESA">C34ATTESA</div>
-      <div class="parkCell" id="cell-C35ATTESA">C35ATTESA</div>
-      <div class="parkCell" id="cell-C36ATTESA">C36ATTESA</div>
+      <div class="parkCell zone-attesaC" id="cell-C31ATTESA">C31ATTESA</div>
+      <div class="parkCell zone-attesaC" id="cell-C32ATTESA">C32ATTESA</div>
+      <div class="parkCell zone-attesaC" id="cell-C33ATTESA">C33ATTESA</div>
+      <div class="parkCell zone-attesaC" id="cell-C34ATTESA">C34ATTESA</div>
+      <div class="parkCell zone-attesaC" id="cell-C35ATTESA">C35ATTESA</div>
+      <div class="parkCell zone-attesaC" id="cell-C36ATTESA">C36ATTESA</div>
     </div>
 
-    <!-- PARK Y2 -->
-    <h3>PARK Y2</h3>
+    <h3 class="title-parkY2">🟥 PARK Y2</h3>
     <div class="parkRow">
-      <div class="parkCell" id="cell-Y2-1">Y2-1</div>
-      <div class="parkCell" id="cell-Y2-2">Y2-2</div>
-      <div class="parkCell" id="cell-Y2-3">Y2-3</div>
-      <div class="parkCell" id="cell-Y2-4">Y2-4</div>
-      <div class="parkCell" id="cell-Y2-5">Y2-5</div>
-      <div class="parkCell" id="cell-Y2-6">Y2-6</div>
-      <div class="parkCell" id="cell-Y2-7">Y2-7</div>
-      <div class="parkCell" id="cell-Y2-8">Y2-8</div>
-      <div class="parkCell" id="cell-Y2-9">Y2-9</div>
-      <div class="parkCell" id="cell-Y2-10">Y2-10</div>
-      <div class="parkCell" id="cell-Y2-11">Y2-11</div>
-      <div class="parkCell" id="cell-Y2-12">Y2-12</div>
-      <div class="parkCell" id="cell-Y2-13">Y2-13</div>
-      <div class="parkCell" id="cell-Y2-14">Y2-14</div>
-      <div class="parkCell" id="cell-Y2-15">Y2-15</div>
-      <div class="parkCell" id="cell-Y2-16">Y2-16</div>
-      <div class="parkCell" id="cell-Y2-17">Y2-17</div>
-      <div class="parkCell" id="cell-Y2-18">Y2-18</div>
-      <div class="parkCell" id="cell-Y2-19">Y2-19</div>
-      <div class="parkCell" id="cell-Y2-20">Y2-20</div>
-
-      <div class="parkCell" id="cell-Y2-133-134">Y2-133-134</div>
-      <div class="parkCell" id="cell-Y2-139-140">Y2-139-140</div>
-      <div class="parkCell" id="cell-Y2-018-019-1">Y2-018-019-1</div>
-      <div class="parkCell" id="cell-Y2-018-019-2">Y2-018-019-2</div>
-      <div class="parkCell" id
+      <div class="parkCell zone-parkY2" id="cell-Y2-1">Y2-1</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-2">Y2-2</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-3">Y2-3</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-4">Y2-4</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-5">Y2-5</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-6">Y2-6</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-7">Y2-7</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-8">Y2-8</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-9">Y2-9</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-10">Y2-10</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-11">Y2-11</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-12">Y2-12</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-13">Y2-13</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-14">Y2-14</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-15">Y2-15</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-16">Y2-16</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-17">Y2-17</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-18">Y2-18</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-19">Y2-19</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-20">Y2-20</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-133-134">Y2-133-134</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-139-140">Y2-139-140</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-018-019-1">Y2-018-019-1</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-018-019-2">Y2-018-019-2</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-TRA12-13">Y2-TRA12-13</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-FRONTEC30">Y2-FRONTEC30</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-FRONTECOMP1">Y2-FRONTECOMP1</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-FRONTECOMP2">Y2-FRONTECOMP2</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-FRONTECOMP3">Y2-FRONTECOMP3</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-TRA132-133">Y2-TRA132-133</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-TRA128-129">Y2-TRA128-129</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-TRA123-124">Y2-TRA123-124</div>
+      <div class="parkCell zone-parkY2" id="cell-Y2-TRA152-152">Y2-TRA152-152</div>
+    </div>
+  </div>
+</div>
