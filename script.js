@@ -68,21 +68,19 @@ snapOut.onclick = () => {
 };
 
 /* ------------------------------
-   DESTINAZIONE
+   VALIDAZIONE DESTINAZIONE
 ------------------------------ */
 function validaDestinazione(dest) {
   dest = dest.trim().toUpperCase();
 
+  // BAIA numerica (1–199)
   const num = parseInt(dest);
   if (!isNaN(num) && num >= 1 && num <= 199) {
-    return { tipo: "BAIA", valore: dest.padStart(2, "0") };
+    return { tipo: "BAIA", valore: "BUCA" + num };
   }
 
-  if (dest.startsWith("TRA")) {
-    return { tipo: "PARK", valore: dest };
-  }
-
-  if (/^[A-Z]/.test(dest)) {
+  // Codici PARK complessi (A01, B010, C31ATTESA, Y2-TRA132-133…)
+  if (/^[A-Z0-9\-]+$/.test(dest)) {
     return { tipo: "PARK", valore: dest };
   }
 
@@ -149,7 +147,7 @@ registraInbound.onclick = () => {
     }
 
     if (occupato) {
-      alert("Destinazione già occupata! Libera la baia/park prima di registrare un altro mezzo.");
+      alert("Destinazione già occupata!");
       return;
     }
 
@@ -208,7 +206,7 @@ registraOutbound.onclick = () => {
 };
 
 /* ------------------------------
-   TRATTORISTI: modifica destinazione
+   TRATTORISTI
 ------------------------------ */
 btnModificaDest.onclick = () => {
   const inputTarga = trattTarga.value.trim().toUpperCase();
@@ -245,7 +243,7 @@ btnModificaDest.onclick = () => {
     }
 
     if (!trovatoId) {
-      alert("Nessun camion trovato con i dati inseriti.");
+      alert("Nessun camion trovato.");
       return;
     }
 
@@ -288,7 +286,7 @@ btnModificaDest.onclick = () => {
 };
 
 /* ------------------------------
-   EXPORT EXCEL (XLSX)
+   EXPORT EXCEL
 ------------------------------ */
 function exportExcel(dataArray, filename) {
   const worksheet = XLSX.utils.aoa_to_sheet(dataArray);
