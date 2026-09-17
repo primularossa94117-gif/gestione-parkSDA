@@ -6,15 +6,16 @@ function showPage(pageId) {
   document.getElementById(pageId).style.display = "block";
 }
 
+// Avvio sulla schermata di Inbound
 showPage("pageInbound");
 
 /* ------------------------------
-   FIREBASE
+   CONFIGURAZIONE FIREBASE
 ------------------------------ */
 firebase.initializeApp({
   apiKey: "AIzaSyA0fRxfAzL4QVwK4T4Qi1MoQXkyfUBVOIY",
-  authDomain: "gestione-camion.firebaseapp.com",
-  databaseURL: "https://gestione-camion-default-rtdb.europe-west1.firebasedatabase.app",
+  authDomain: "://firebaseapp.com",
+  databaseURL: "https://firebasedatabase.app",
   projectId: "gestione-camion",
   storageBucket: "gestione-camion.firebasestorage.app",
   messagingSenderId: "6255743448",
@@ -38,7 +39,6 @@ async function startRearCamera(videoElement) {
     );
 
     let constraints;
-
     if (rearCamera) {
       constraints = { video: { deviceId: rearCamera.deviceId } };
     } else {
@@ -49,15 +49,16 @@ async function startRearCamera(videoElement) {
     videoElement.srcObject = stream;
 
   } catch (err) {
-    console.error("Errore fotocamera:", err);
+    console.error("Errore attivazione fotocamera:", err);
   }
 }
 
+// Inizializza i flussi video per le due schermate
 startRearCamera(video);
 startRearCamera(videoOut);
 
 /* ------------------------------
-   FOTO
+   CATTURA FOTO (CANVAS)
 ------------------------------ */
 snap.onclick = () => {
   canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -68,27 +69,28 @@ snapOut.onclick = () => {
 };
 
 /* ------------------------------
-   VALIDAZIONE DESTINAZIONE
+   VALIDAZIONE DESTINAZIONE AGGIORNATA
 ------------------------------ */
 function validaDestinazione(dest) {
   dest = dest.trim().toUpperCase();
 
-  // BAIA numerica (1–199)
-  const num = parseInt(dest);
-  if (!isNaN(num) && num >= 1 && num <= 199) {
-    return { tipo: "BAIA", valore: "BUCA" + num };
+  // Verifica se l'ID esiste fisicamente nella nuova mappa parcheggi del DOM
+  const cellTarget = document.getElementById("cell-" + dest);
+  if (cellTarget) {
+    return { tipo: "PARK", valore: dest };
   }
 
-  // Codici PARK complessi (A01, B010, C31ATTESA, Y2-TRA132-133…)
-  if (/^[A-Z0-9\-]+$/.test(dest)) {
-    return { tipo: "PARK", valore: dest };
+  // Verifica se la destinazione è una Baia di carico standard (valore numerico 1-199)
+  const num = parseInt(dest);
+  if (!isNaN(num) && num >= 1 && num <= 199) {
+    return { tipo: "BAIA", valore: dest.padStart(2, "0") };
   }
 
   return null;
 }
 
 /* ------------------------------
-   RESET
+   RESET CAMPI INPUT
 ------------------------------ */
 function resetInbound() {
   targa.value = "";
@@ -105,22 +107,34 @@ function resetOutbound() {
 }
 
 /* ------------------------------
-   POPUP
+   POPUP NOTIFICA
 ------------------------------ */
 function popupRegistrato() {
-  alert("REGISTRATO");
+  alert("REGISTRATO CON SUCCESSO");
 }
 
 /* ------------------------------
-   CANCELLA
+   MOSTRA FOTO IN POPUP BROWSER
+------------------------------ */
+function mostraFoto(base64Data) {
+  if (!base64Data || base64Data.length < 100) {
+    alert("Foto non disponibile o non acquisita.");
+    return;
+  }
+  const win = window.open();
+  win.document.write(`<img src="${base64Data}" style="max-width:100%; border-radius:8px;" alt="Foto Mezzo">`);
+}
+
+/* ------------------------------
+   CANCELLAZIONE RECORD DEFINITIVA
 ------------------------------ */
 function cancella(id) {
-  if (!confirm("Sei sicuro?")) return;
+  if (!confirm("Sei sicuro di voler eliminare definitivamente questo record?")) return;
   db.ref("camion/" + id).remove();
 }
 
 /* ------------------------------
-   INBOUND
+   LOGICA REGISTRAZIONE INBOUND
 ------------------------------ */
 registraInbound.onclick = () => {
   const targaVal = targa.value.trim().toUpperCase();
@@ -137,6 +151,7 @@ registraInbound.onclick = () => {
   db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
 
+    // Controllo se la destinazione selezionata ha già un mezzo presente
     let occupato = false;
     if (data) {
       Object.entries(data).forEach(([id, c]) => {
@@ -147,10 +162,11 @@ registraInbound.onclick = () => {
     }
 
     if (occupato) {
-      alert("Destinazione già occupata!");
+      alert("Destinazione già occupata! Libera lo spazio prima di registrare un altro mezzo.");
       return;
     }
 
+    // Se la stessa targa entrava già senza essere uscita, rimuovi il vecchio record sporco
     if (data) {
       Object.entries(data).forEach(([id, c]) => {
         if (c.targa.toUpperCase() === targaVal && !c.uscita) {
@@ -169,7 +185,7 @@ registraInbound.onclick = () => {
       ingresso: new Date().toLocaleString(),
       uscita: null,
       fotoIn: canvas.toDataURL(),
-      fotoOut: null
+      fotoOut: ""
     };
 
     db.ref("camion").push(nuovo);
@@ -180,20 +196,21 @@ registraInbound.onclick = () => {
 };
 
 /* ------------------------------
-   OUTBOUND
+   LOGICA REGISTRAZIONE OUTBOUND
 ------------------------------ */
 registraOutbound.onclick = () => {
   const targaOutVal = targaOut.value.trim().toUpperCase();
+  if (!targaOutVal) return alert("Inserisci la targa in uscita!");
 
   db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
-    if (!data) return;
+    if (!data) return alert("Nessun mezzo presente all'interno del sito.");
 
     const id = Object.keys(data).find(key =>
       data[key].targa.toUpperCase() === targaOutVal && !data[key].uscita
     );
 
-    if (!id) return alert("Targa non trovata!");
+    if (!id) return alert("Targa non trovata all'interno del sito!");
 
     db.ref("camion/" + id).update({
       uscita: new Date().toLocaleString(),
@@ -206,23 +223,20 @@ registraOutbound.onclick = () => {
 };
 
 /* ------------------------------
-   TRATTORISTI
+   TRATTORISTI: MODIFICA DESTINAZIONE INTERNA
 ------------------------------ */
 btnModificaDest.onclick = () => {
   const inputTarga = trattTarga.value.trim().toUpperCase();
   const inputDest = trattDest.value.trim().toUpperCase();
 
   if (!inputTarga && !inputDest) {
-    alert("Inserisci TARGA oppure DESTINAZIONE.");
+    alert("Inserisci TARGA oppure DESTINAZIONE attuale.");
     return;
   }
 
   db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
-    if (!data) {
-      alert("Nessun camion in sito.");
-      return;
-    }
+    if (!data) return alert("Nessun camion presente in sito.");
 
     let trovatoId = null;
 
@@ -243,22 +257,17 @@ btnModificaDest.onclick = () => {
     }
 
     if (!trovatoId) {
-      alert("Nessun camion trovato.");
+      alert("Nessun camion trovato con i dettagli inseriti.");
       return;
     }
 
     const nuovaDest = nuovaDestinazione.value.trim().toUpperCase();
-    if (!nuovaDest) {
-      alert("Inserisci la NUOVA DESTINAZIONE.");
-      return;
-    }
+    if (!nuovaDest) return alert("Inserisci la NUOVA DESTINAZIONE.");
 
     const valid = validaDestinazione(nuovaDest);
-    if (!valid) {
-      alert("Nuova destinazione NON valida!");
-      return;
-    }
+    if (!valid) return alert("Nuova destinazione NON valida!");
 
+    // Controlla se lo spazio di destinazione finale è libero
     let occupato = false;
     Object.values(data).forEach(c => {
       if (!c.uscita && c.destinazione === valid.valore) {
@@ -266,10 +275,7 @@ btnModificaDest.onclick = () => {
       }
     });
 
-    if (occupato) {
-      alert("La nuova destinazione è già occupata!");
-      return;
-    }
+    if (occupato) return alert("La nuova destinazione selezionata è già occupata!");
 
     db.ref("camion/" + trovatoId).update({
       destinazione: valid.valore,
@@ -280,113 +286,48 @@ btnModificaDest.onclick = () => {
     trattDest.value = "";
     nuovaDestinazione.value = "";
 
-    alert("REGISTRATO");
-    aggiornaPark();
+    alert("SPOSTAMENTO REGISTRATO");
   });
 };
 
 /* ------------------------------
-   EXPORT EXCEL
------------------------------- */
-function exportExcel(dataArray, filename) {
-  const worksheet = XLSX.utils.aoa_to_sheet(dataArray);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Dati");
-  XLSX.writeFile(workbook, filename + ".xlsx");
-}
-
-function exportInExcel() {
-  db.ref("camion").once("value", snapshot => {
-    const data = snapshot.val();
-    if (!data) return;
-
-    let rows = [["Destinazione","Tipo","Targa","Linea","Ingresso"]];
-    Object.values(data).forEach(c => {
-      if (!c.uscita) {
-        rows.push([c.destinazione, c.tipo, c.targa, c.linea || "", c.ingresso]);
-      }
-    });
-
-    exportExcel(rows, "IN_SITO");
-  });
-}
-
-function exportOutExcel() {
-  db.ref("camion").once("value", snapshot => {
-    const data = snapshot.val();
-    if (!data) return;
-
-    let rows = [["Destinazione","Tipo","Targa","Linea","Ingresso","Uscita"]];
-    Object.values(data).forEach(c => {
-      if (c.uscita) {
-        rows.push([c.destinazione, c.tipo, c.targa, c.linea || "", c.ingresso, c.uscita]);
-      }
-    });
-
-    exportExcel(rows, "USCITI");
-  });
-}
-
-/* ------------------------------
-   PARK: colori verde/rosso
------------------------------- */
-function aggiornaPark() {
-  document.querySelectorAll(".parkCell").forEach(cell => {
-    cell.style.background = "green";
-  });
-
-  db.ref("camion").once("value", snapshot => {
-    const data = snapshot.val();
-    if (!data) return;
-
-    Object.values(data).forEach(c => {
-      if (!c.uscita) {
-        const id = "cell-" + c.destinazione;
-        const cell = document.getElementById(id);
-        if (cell) cell.style.background = "red";
-      }
-    });
-  });
-}
-
-setInterval(aggiornaPark, 3000);
-
-/* ------------------------------
-   MONITOR
+   ASCOLTO SINCRONO REALTIME (TABELLE + AGGIORNAMENTO PARK)
 ------------------------------ */
 db.ref("camion").on("value", snapshot => {
+  const data = snapshot.val();
+  
+  const monitorIn = document.getElementById("monitorIn");
+  const monitorOut = document.getElementById("monitorOut");
+  
   monitorIn.innerHTML = "";
   monitorOut.innerHTML = "";
 
-  const data = snapshot.val();
-  if (!data) return;
-
-  Object.entries(data).forEach(([id, c]) => {
-    if (!c.uscita) {
-      monitorIn.innerHTML += `
-        <tr>
-          <td>${c.destinazione}</td>
-          <td>${c.tipo}</td>
-          <td>${c.targa}</td>
-          <td>${c.linea || ""}</td>
-          <td>${c.ingresso}</td>
-          <td><img src="${c.fotoIn}" width="80"></td>
-          <td><i class="fa-solid fa-xmark deleteBtn" onclick="cancella('${id}')"></i></td>
-        </tr>`;
-    } else {
-      monitorOut.innerHTML += `
-        <tr>
-          <td>${c.destinazione}</td>
-          <td>${c.tipo}</td>
-          <td>${c.targa}</td>
-          <td>${c.linea || ""}</td>
-          <td>${c.ingresso}</td>
-          <td>${c.uscita}</td>
-          <td><img src="${c.fotoOut}" width="80"></td>
-          <td><i class="fa-solid fa-xmark deleteBtn" onclick="cancella('${id}')"></i></td>
-        </tr>`;
-    }
+  // Reset visivo totale delle classi delle celle del parcheggio
+  document.querySelectorAll(".parkCell").forEach(cell => {
+    cell.className = "parkCell"; // Pulisce tutte le classi aggiuntive di occupazione
+    cell.title = "Libero";
   });
 
-  aggiornaPark();
-});
+  if (!data) return;
+
+  // Mostra i record dal più recente invertendo la lista
+  const recordOrdinati = Object.entries(data).reverse();
+
+  recordOrdinati.forEach(([id, c]) => {
+    if (!c.uscita) {
+      // 1. Popola Monitor IN SITO
+      const rowIn = `<tr>
+        <td><b>${c.destinazione}</b></td>
+        <td>${c.tipo}</td>
+        <td>${c.targa}</td>
+        <td>${c.linea || "-"}</td>
+        <td>${c.ingresso}</td>
+        <td><button onclick="mostraFoto('${c.fotoIn}')"><i class="fa-solid fa-image"></i></button></td>
+        <td><button style="background:#cc0000;" onclick="cancella('${id}')"><i class="fa-solid fa-trash"></i></button></td>
+      </tr>`;
+      monitorIn.innerHTML += rowIn;
+
+      // 2. Colora la cella del parcheggio in base alla zona di appartenenza
+      const cellaElement = document.getElementById("cell-" + c.destinazione);
+      if (cellaElement) {
+        cellaElement.classList.add("occupato");
