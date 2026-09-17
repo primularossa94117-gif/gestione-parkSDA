@@ -44,7 +44,156 @@
   <input id="vettore" placeholder="Vettore">
   <input id="quantita" placeholder="Quantità carico">
   <input id="linea" placeholder="Linea / Cliente">
-  <input id="destinazione" placeholder="Destinazione (01-199 / A01 / TRA...)">
+
+  <!-- Dropdown destinazioni -->
+  <select id="destinazione">
+    <option value="">-- Seleziona destinazione --</option>
+
+    <optgroup label="BUCA">
+      <option>BUCA1</option>
+      <option>BUCA2</option>
+      <option>BUCA3</option>
+      <option>BUCA4</option>
+      <option>BUCA5</option>
+      <option>BUCA6</option>
+      <option>BUCA7</option>
+      <option>BUCA8</option>
+      <option>BUCA9</option>
+      <option>BUCA10</option>
+      <option>BUCA157</option>
+      <option>BUCA156</option>
+      <option>BUCA155</option>
+      <option>BUCA154</option>
+      <option>BUCA153</option>
+      <option>BUCA152</option>
+      <option>BUCA151</option>
+      <option>BUCA150</option>
+      <option>BUCA149</option>
+      <option>BUCA148</option>
+    </optgroup>
+
+    <optgroup label="PARK A">
+      <option>A01</option>
+      <option>A02</option>
+      <option>A03</option>
+      <option>A04</option>
+      <option>A05</option>
+      <option>A06</option>
+      <option>A07</option>
+      <option>A08</option>
+      <option>A09</option>
+      <option>A10</option>
+      <option>A11</option>
+      <option>A12</option>
+      <option>A13</option>
+      <option>A14</option>
+      <option>A15</option>
+      <option>A16</option>
+      <option>TRA12-13</option>
+      <option>TRA18-19-1</option>
+      <option>TRA18-19-2</option>
+    </optgroup>
+
+    <optgroup label="PARK B">
+      <option>INIZIOPARKB1</option>
+      <option>INIZIOPARKB2</option>
+      <option>B01</option>
+      <option>B02</option>
+      <option>B03</option>
+      <option>B04</option>
+      <option>B05</option>
+      <option>B06</option>
+      <option>B07</option>
+      <option>B08</option>
+      <option>B09</option>
+      <option>B010</option>
+      <option>B011</option>
+      <option>B012</option>
+      <option>B013</option>
+      <option>B014</option>
+      <option>B015</option>
+      <option>B016</option>
+    </optgroup>
+
+    <optgroup label="PARK C">
+      <option>C01</option>
+      <option>C02</option>
+      <option>C03</option>
+      <option>C04</option>
+      <option>C05</option>
+      <option>C06</option>
+      <option>C07</option>
+      <option>C08</option>
+      <option>C09</option>
+      <option>C10</option>
+      <option>C11</option>
+      <option>C13</option>
+      <option>C14</option>
+      <option>C15</option>
+      <option>C16</option>
+      <option>C17</option>
+      <option>C19</option>
+      <option>C21</option>
+      <option>C22</option>
+      <option>C24</option>
+      <option>C25</option>
+      <option>C26</option>
+      <option>C29</option>
+      <option>C30</option>
+      <option>C31</option>
+      <option>C32</option>
+      <option>C33</option>
+      <option>C34</option>
+      <option>C35</option>
+    </optgroup>
+
+    <optgroup label="ATTESA PARK C">
+      <option>C31ATTESA</option>
+      <option>C32ATTESA</option>
+      <option>C33ATTESA</option>
+      <option>C34ATTESA</option>
+      <option>C35ATTESA</option>
+      <option>C36ATTESA</option>
+    </optgroup>
+
+    <optgroup label="PARK Y2">
+      <option>Y2-1</option>
+      <option>Y2-2</option>
+      <option>Y2-3</option>
+      <option>Y2-4</option>
+      <option>Y2-5</option>
+      <option>Y2-6</option>
+      <option>Y2-7</option>
+      <option>Y2-8</option>
+      <option>Y2-9</option>
+      <option>Y2-10</option>
+      <option>Y2-11</option>
+      <option>Y2-12</option>
+      <option>Y2-13</option>
+      <option>Y2-14</option>
+      <option>Y2-15</option>
+      <option>Y2-16</option>
+      <option>Y2-17</option>
+      <option>Y2-18</option>
+      <option>Y2-19</option>
+      <option>Y2-20</option>
+      <option>Y2-133-134</option>
+      <option>Y2-139-140</option>
+      <option>Y2-018-019-1</option>
+      <option>Y2-018-019-2</option>
+      <option>Y2-TRA12-13</option>
+      <option>Y2-FRONTEC30</option>
+      <option>Y2-FRONTECOMP1</option>
+      <option>Y2-FRONTECOMP2</option>
+      <option>Y2-FRONTECOMP3</option>
+      <option>Y2-TRA132-133</option>
+      <option>Y2-TRA128-129</option>
+      <option>Y2-TRA123-124</option>
+      <option>Y2-TRA152-152</option>
+    </optgroup>
+
+  </select>
+
   <button id="registraInbound"><i class="fa-solid fa-plus"></i> Registra INBOUND</button>
 </div>
 
@@ -111,7 +260,14 @@
 
   <input id="trattTarga" placeholder="Targa camion (in sito)">
   <input id="trattDest" placeholder="Destinazione attuale (BAIA/PARK)">
-  <input id="nuovaDestinazione" placeholder="Nuova destinazione (BAIA/PARK)">
+
+  <select id="nuovaDestinazione">
+    <option value="">-- Seleziona nuova destinazione --</option>
+
+    <!-- STESSO DROPDOWN DI INBOUND -->
+    <!-- (lo script.js userà lo stesso elenco) -->
+  </select>
+
   <button id="btnModificaDest"><i class="fa-solid fa-pen-to-square"></i> Modifica destinazione</button>
 </div>
 
@@ -121,6 +277,32 @@
 
   <div id="parkGrid">
 
+    <!-- BUCA -->
+    <h3>BUCA</h3>
+    <div class="parkRow">
+      <div class="parkCell" id="cell-BUCA1">BUCA1</div>
+      <div class="parkCell" id="cell-BUCA2">BUCA2</div>
+      <div class="parkCell" id="cell-BUCA3">BUCA3</div>
+      <div class="parkCell" id="cell-BUCA4">BUCA4</div>
+      <div class="parkCell" id="cell-BUCA5">BUCA5</div>
+      <div class="parkCell" id="cell-BUCA6">BUCA6</div>
+      <div class="parkCell" id="cell-BUCA7">BUCA7</div>
+      <div class="parkCell" id="cell-BUCA8">BUCA8</div>
+      <div class="parkCell" id="cell-BUCA9">BUCA9</div>
+      <div class="parkCell" id="cell-BUCA10">BUCA10</div>
+      <div class="parkCell" id="cell-BUCA157">BUCA157</div>
+      <div class="parkCell" id="cell-BUCA156">BUCA156</div>
+      <div class="parkCell" id="cell-BUCA155">BUCA155</div>
+      <div class="parkCell" id="cell-BUCA154">BUCA154</div>
+      <div class="parkCell" id="cell-BUCA153">BUCA153</div>
+      <div class="parkCell" id="cell-BUCA152">BUCA152</div>
+      <div class="parkCell" id="cell-BUCA151">BUCA151</div>
+      <div class="parkCell" id="cell-BUCA150">BUCA150</div>
+      <div class="parkCell" id="cell-BUCA149">BUCA149</div>
+      <div class="parkCell" id="cell-BUCA148">BUCA148</div>
+    </div>
+
+    <!-- PARK A -->
     <h3>PARK A</h3>
     <div class="parkRow">
       <div class="parkCell" id="cell-A01">A01</div>
@@ -139,15 +321,16 @@
       <div class="parkCell" id="cell-A14">A14</div>
       <div class="parkCell" id="cell-A15">A15</div>
       <div class="parkCell" id="cell-A16">A16</div>
-      <div class="parkCell" id="cell-TRA12-13">TRA 12-13</div>
-      <div class="parkCell" id="cell-TRA18-19-1">TRA 18-19 (1)</div>
-      <div class="parkCell" id="cell-TRA18-19-2">TRA 18-19 (2)</div>
+      <div class="parkCell" id="cell-TRA12-13">TRA12-13</div>
+      <div class="parkCell" id="cell-TRA18-19-1">TRA18-19-1</div>
+      <div class="parkCell" id="cell-TRA18-19-2">TRA18-19-2</div>
     </div>
 
+    <!-- PARK B -->
     <h3>PARK B</h3>
     <div class="parkRow">
-      <div class="parkCell" id="cell-INIZIOB1">INIZIO PARK B</div>
-      <div class="parkCell" id="cell-INIZIOB2">INIZIO PARK B</div>
+      <div class="parkCell" id="cell-INIZIOPARKB1">INIZIOPARKB1</div>
+      <div class="parkCell" id="cell-INIZIOPARKB2">INIZIOPARKB2</div>
       <div class="parkCell" id="cell-B01">B01</div>
       <div class="parkCell" id="cell-B02">B02</div>
       <div class="parkCell" id="cell-B03">B03</div>
@@ -163,94 +346,4 @@
       <div class="parkCell" id="cell-B013">B013</div>
       <div class="parkCell" id="cell-B014">B014</div>
       <div class="parkCell" id="cell-B015">B015</div>
-      <div class="parkCell" id="cell-B016">B016</div>
-    </div>
-
-    <h3>PARK C</h3>
-    <div class="parkRow">
-      <div class="parkCell" id="cell-C01">C01</div>
-      <div class="parkCell" id="cell-C02">C02</div>
-      <div class="parkCell" id="cell-C03">C03</div>
-      <div class="parkCell" id="cell-C04">C04</div>
-      <div class="parkCell" id="cell-C05">C05</div>
-      <div class="parkCell" id="cell-C06">C06</div>
-      <div class="parkCell" id="cell-C07">C07</div>
-      <div class="parkCell" id="cell-C08">C08</div>
-      <div class="parkCell" id="cell-C09">C09</div>
-      <div class="parkCell" id="cell-C10">C10</div>
-      <div class="parkCell" id="cell-C11">C11</div>
-      <div class="parkCell" id="cell-C13">C13</div>
-      <div class="parkCell" id="cell-C14">C14</div>
-      <div class="parkCell" id="cell-C15">C15</div>
-      <div class="parkCell" id="cell-C16">C16</div>
-      <div class="parkCell" id="cell-C17">C17</div>
-      <div class="parkCell" id="cell-C19">C19</div>
-      <div class="parkCell" id="cell-C21">C21</div>
-      <div class="parkCell" id="cell-C22">C22</div>
-      <div class="parkCell" id="cell-C24">C24</div>
-      <div class="parkCell" id="cell-C25">C25</div>
-      <div class="parkCell" id="cell-C26">C26</div>
-      <div class="parkCell" id="cell-C29">C29</div>
-      <div class="parkCell" id="cell-C30">C30</div>
-      <div class="parkCell" id="cell-C31">C31</div>
-      <div class="parkCell" id="cell-C32">C32</div>
-      <div class="parkCell" id="cell-C33">C33</div>
-      <div class="parkCell" id="cell-C34">C34</div>
-      <div class="parkCell" id="cell-C35">C35</div>
-    </div>
-
-    <h3>ATTESA PARK C</h3>
-    <div class="parkRow">
-      <div class="parkCell" id="cell-C31A">C31</div>
-      <div class="parkCell" id="cell-C32A">C32</div>
-      <div class="parkCell" id="cell-C33A">C33</div>
-      <div class="parkCell" id="cell-C34A">C34</div>
-      <div class="parkCell" id="cell-C35A">C35</div>
-      <div class="parkCell" id="cell-C36">C36</div>
-    </div>
-
-    <h3>PARK Y2</h3>
-    <div class="parkRow">
-      <div class="parkCell" id="cell-Y2-1">1</div>
-      <div class="parkCell" id="cell-Y2-2">2</div>
-      <div class="parkCell" id="cell-Y2-3">3</div>
-      <div class="parkCell" id="cell-Y2-4">4</div>
-      <div class="parkCell" id="cell-Y2-5">5</div>
-      <div class="parkCell" id="cell-Y2-6">6</div>
-      <div class="parkCell" id="cell-Y2-7">7</div>
-      <div class="parkCell" id="cell-Y2-8">8</div>
-      <div class="parkCell" id="cell-Y2-9">9</div>
-      <div class="parkCell" id="cell-Y2-10">10</div>
-      <div class="parkCell" id="cell-Y2-11">11</div>
-      <div class="parkCell" id="cell-Y2-12">12</div>
-      <div class="parkCell" id="cell-Y2-13">13</div>
-      <div class="parkCell" id="cell-Y2-14">14</div>
-      <div class="parkCell" id="cell-Y2-15">15</div>
-      <div class="parkCell" id="cell-Y2-16">16</div>
-      <div class="parkCell" id="cell-Y2-17">17</div>
-      <div class="parkCell" id="cell-Y2-18">18</div>
-      <div class="parkCell" id="cell-Y2-19">19</div>
-      <div class="parkCell" id="cell-Y2-20">20</div>
-
-      <div class="parkCell" id="cell-Y2-133-134">133/134</div>
-      <div class="parkCell" id="cell-Y2-139-140">139/140</div>
-      <div class="parkCell" id="cell-Y2-018-019-1">018/019</div>
-      <div class="parkCell" id="cell-Y2-018-019-2">018/019</div>
-      <div class="parkCell" id="cell-Y2-TRA12-13">TRA LA 12/13</div>
-      <div class="parkCell" id="cell-Y2-FRONTEC30">FRONTE C30</div>
-      <div class="parkCell" id="cell-Y2-FRONTECOMP1">FRONTE COMP</div>
-      <div class="parkCell" id="cell-Y2-FRONTECOMP2">FRONTE COMP</div>
-      <div class="parkCell" id="cell-Y2-FRONTECOMP3">FRONTE COMP</div>
-      <div class="parkCell" id="cell-Y2-TRA132-133">TRA 132/133</div>
-      <div class="parkCell" id="cell-Y2-TRA128-129">TRA 128/129</div>
-      <div class="parkCell" id="cell-Y2-TRA123-124">TRA 123/124</div>
-      <div class="parkCell" id="cell-Y2-TRA152-152">TRA 152/152</div>
-    </div>
-
-  </div>
-</div>
-
-
-<script src="script.js"></script>
-</body>
-</html>
+      <div class
