@@ -1,333 +1,217 @@
-/* ------------------------------
-   CAMBIO PAGINE
------------------------------- */
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.style.display = "none");
-  document.getElementById(pageId).style.display = "block";
+/* --------------------------------------------------------
+   STILI GENERALI E RESET
+-------------------------------------------------------- */
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
 }
 
-// Avvio sulla schermata di Inbound
-showPage("pageInbound");
-
-/* ------------------------------
-   CONFIGURAZIONE FIREBASE
------------------------------- */
-firebase.initializeApp({
-  apiKey: "AIzaSyA0fRxfAzL4QVwK4T4Qi1MoQXkyfUBVOIY",
-  authDomain: "://firebaseapp.com",
-  databaseURL: "https://firebasedatabase.app",
-  projectId: "gestione-camion",
-  storageBucket: "gestione-camion.firebasestorage.app",
-  messagingSenderId: "6255743448",
-  appId: "1:6255743448:web:6d5b6b9c2f125f61ee22ad",
-  measurementId: "G-QVFVZDLKNX"
-});
-
-const db = firebase.database();
-
-/* ------------------------------
-   CAMERA POSTERIORE
------------------------------- */
-async function startRearCamera(videoElement) {
-  try {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const videoDevices = devices.filter(d => d.kind === "videoinput");
-
-    let rearCamera = videoDevices.find(d =>
-      d.label.toLowerCase().includes("back") ||
-      d.label.toLowerCase().includes("rear")
-    );
-
-    let constraints;
-    if (rearCamera) {
-      constraints = { video: { deviceId: rearCamera.deviceId } };
-    } else {
-      constraints = { video: { facingMode: "environment" } };
-    }
-
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    videoElement.srcObject = stream;
-
-  } catch (err) {
-    console.error("Errore attivazione fotocamera:", err);
-  }
+body {
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: #121212;
+  color: #e5e5e5;
+  padding: 20px;
 }
 
-// Inizializza i flussi video per le due schermate
-startRearCamera(video);
-startRearCamera(videoOut);
-
-/* ------------------------------
-   CATTURA FOTO (CANVAS)
------------------------------- */
-snap.onclick = () => {
-  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-};
-
-snapOut.onclick = () => {
-  canvasOut.getContext("2d").drawImage(videoOut, 0, 0, canvasOut.width, canvasOut.height);
-};
-
-/* ------------------------------
-   VALIDAZIONE DESTINAZIONE AGGIORNATA
------------------------------- */
-function validaDestinazione(dest) {
-  dest = dest.trim().toUpperCase();
-
-  // Verifica se l'ID esiste fisicamente nella nuova mappa parcheggi del DOM
-  const cellTarget = document.getElementById("cell-" + dest);
-  if (cellTarget) {
-    return { tipo: "PARK", valore: dest };
-  }
-
-  // Verifica se la destinazione è una Baia di carico standard (valore numerico 1-199)
-  const num = parseInt(dest);
-  if (!isNaN(num) && num >= 1 && num <= 199) {
-    return { tipo: "BAIA", valore: dest.padStart(2, "0") };
-  }
-
-  return null;
+header {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  background: #1f1f1f;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 2px solid #0057b8;
+  z-index: 1000;
 }
 
-/* ------------------------------
-   RESET CAMPI INPUT
------------------------------- */
-function resetInbound() {
-  targa.value = "";
-  vettore.value = "";
-  quantita.value = "";
-  linea.value = "";
-  destinazione.value = "";
-  canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+header img { height: 40px; }
+header h1 { font-size: 20px; font-weight: 700; }
+
+/* --------------------------------------------------------
+   MENU DI NAVIGAZIONE
+-------------------------------------------------------- */
+#menu {
+  margin-top: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
 }
 
-function resetOutbound() {
-  targaOut.value = "";
-  canvasOut.getContext("2d").clearRect(0, 0, canvasOut.width, canvasOut.height);
+#menu button {
+  background: #0057b8;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: auto; /* Sovrascrive il button generico delle pagine */
 }
 
-/* ------------------------------
-   POPUP NOTIFICA
------------------------------- */
-function popupRegistrato() {
-  alert("REGISTRATO CON SUCCESSO");
+#menu button:hover { 
+  background: #003f82; 
+  transform: translateY(-2px); 
 }
 
-/* ------------------------------
-   MOSTRA FOTO IN POPUP BROWSER
------------------------------- */
-function mostraFoto(base64Data) {
-  if (!base64Data || base64Data.length < 100) {
-    alert("Foto non disponibile o non acquisita.");
-    return;
-  }
-  const win = window.open();
-  win.document.write(`<img src="${base64Data}" style="max-width:100%; border-radius:8px;" alt="Foto Mezzo">`);
+/* --------------------------------------------------------
+   STRUTTURA PAGINE E COMPONENTI DI INPUT
+-------------------------------------------------------- */
+.page {
+  background: #1f1f1f;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  max-width: 600px;
+  margin: 20px auto;
 }
 
-/* ------------------------------
-   CANCELLAZIONE RECORD DEFINITIVA
------------------------------- */
-function cancella(id) {
-  if (!confirm("Sei sicuro di voler eliminare definitivamente questo record?")) return;
-  db.ref("camion/" + id).remove();
+.page h2 { 
+  margin-bottom: 15px; 
+  font-size: 22px; 
+  color: #4da3ff; 
 }
 
-/* ------------------------------
-   LOGICA REGISTRAZIONE INBOUND
------------------------------- */
-registraInbound.onclick = () => {
-  const targaVal = targa.value.trim().toUpperCase();
-  const vettoreVal = vettore.value.trim();
-  const quantitaVal = quantita.value.trim();
-  const lineaVal = linea.value.trim();
-  const destInput = destinazione.value.trim();
+/* Allarga le pagine dei monitor per far spazio alle tabelle */
+#pageMonitorIn, #pageMonitorOut {
+  max-width: 90%;
+}
 
-  if (!targaVal) return alert("Inserisci la targa!");
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 2px solid #333;
+  background: #2a2a2a;
+  color: #e5e5e5;
+  border-radius: 6px;
+}
 
-  const valid = validaDestinazione(destInput);
-  if (!valid) return alert("Destinazione NON valida!");
+button {
+  background: #0057b8;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
 
-  db.ref("camion").once("value", snapshot => {
-    const data = snapshot.val();
+button:hover { 
+  background: #003f82; 
+}
 
-    // Controllo se la destinazione selezionata ha già un mezzo presente
-    let occupato = false;
-    if (data) {
-      Object.entries(data).forEach(([id, c]) => {
-        if (c.destinazione === valid.valore && !c.uscita) {
-          occupato = true;
-        }
-      });
-    }
+video, canvas {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background: #000;
+}
 
-    if (occupato) {
-      alert("Destinazione già occupata! Libera lo spazio prima di registrare un altro mezzo.");
-      return;
-    }
+/* --------------------------------------------------------
+   TABELLE (MONITOR)
+-------------------------------------------------------- */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background: #1a1a1a;
+  border-radius: 6px;
+  overflow: hidden;
+}
 
-    // Se la stessa targa entrava già senza essere uscita, rimuovi il vecchio record sporco
-    if (data) {
-      Object.entries(data).forEach(([id, c]) => {
-        if (c.targa.toUpperCase() === targaVal && !c.uscita) {
-          db.ref("camion/" + id).remove();
-        }
-      });
-    }
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+  font-size: 14px;
+}
 
-    const nuovo = {
-      targa: targaVal,
-      vettore: vettoreVal,
-      quantita: quantitaVal,
-      linea: lineaVal,
-      destinazione: valid.valore,
-      tipo: valid.tipo,
-      ingresso: new Date().toLocaleString(),
-      uscita: null,
-      fotoIn: canvas.toDataURL(),
-      fotoOut: ""
-    };
+.table th {
+  background: #252525;
+  color: #4da3ff;
+  font-weight: 600;
+}
 
-    db.ref("camion").push(nuovo);
+.table tbody tr:hover {
+  background: #222;
+}
 
-    popupRegistrato();
-    resetInbound();
-  });
-};
+.table button {
+  width: auto;
+  padding: 5px 10px;
+  margin: 0;
+  font-size: 12px;
+}
 
-/* ------------------------------
-   LOGICA REGISTRAZIONE OUTBOUND
------------------------------- */
-registraOutbound.onclick = () => {
-  const targaOutVal = targaOut.value.trim().toUpperCase();
-  if (!targaOutVal) return alert("Inserisci la targa in uscita!");
+/* --------------------------------------------------------
+   GRIGLIA PARK MAP (ZONE E CELLE)
+-------------------------------------------------------- */
+#pagePark {
+  max-width: 95%;
+}
 
-  db.ref("camion").once("value", snapshot => {
-    const data = snapshot.val();
-    if (!data) return alert("Nessun mezzo presente all'interno del sito.");
+#parkGrid h3 {
+  margin: 25px 0 10px 0;
+  padding-left: 10px;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
 
-    const id = Object.keys(data).find(key =>
-      data[key].targa.toUpperCase() === targaOutVal && !data[key].uscita
-    );
+.parkRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
 
-    if (!id) return alert("Targa non trovata all'interno del sito!");
+.parkCell {
+  background: #2a2a2a;
+  color: #a0a0a0;
+  border: 1px solid #444;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 95px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: help;
+}
 
-    db.ref("camion/" + id).update({
-      uscita: new Date().toLocaleString(),
-      fotoOut: canvasOut.toDataURL()
-    });
+/* --- Indicatori delle sezioni del parcheggio --- */
+.title-buca { color: #4da3ff; border-left: 4px solid #0057b8; }
+.title-parkA { color: #4eff4d; border-left: 4px solid #00b806; }
+.title-parkB { color: #ffad4d; border-left: 4px solid #b86200; }
+.title-parkC { color: #d14dff; border-left: 4px solid #7d00b8; }
+.title-attesaC { color: #c49a6c; border-left: 4px solid #6e4a21; }
+.title-parkY2 { color: #ff4d4d; border-left: 4px solid #b80000; }
 
-    popupRegistrato();
-    resetOutbound();
-  });
-};
+/* --- Stili di occupazione dinamici gestiti via JS --- */
+.parkCell.occupato {
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 8px rgba(255,255,255,0.2);
+  font-weight: bold;
+}
 
-/* ------------------------------
-   TRATTORISTI: MODIFICA DESTINAZIONE INTERNA
------------------------------- */
-btnModificaDest.onclick = () => {
-  const inputTarga = trattTarga.value.trim().toUpperCase();
-  const inputDest = trattDest.value.trim().toUpperCase();
-
-  if (!inputTarga && !inputDest) {
-    alert("Inserisci TARGA oppure DESTINAZIONE attuale.");
-    return;
-  }
-
-  db.ref("camion").once("value", snapshot => {
-    const data = snapshot.val();
-    if (!data) return alert("Nessun camion presente in sito.");
-
-    let trovatoId = null;
-
-    if (inputTarga) {
-      Object.entries(data).forEach(([id, c]) => {
-        if (!c.uscita && c.targa.toUpperCase() === inputTarga) {
-          trovatoId = id;
-        }
-      });
-    }
-
-    if (!trovatoId && inputDest) {
-      Object.entries(data).forEach(([id, c]) => {
-        if (!c.uscita && c.destinazione.toUpperCase() === inputDest) {
-          trovatoId = id;
-        }
-      });
-    }
-
-    if (!trovatoId) {
-      alert("Nessun camion trovato con i dettagli inseriti.");
-      return;
-    }
-
-    const nuovaDest = nuovaDestinazione.value.trim().toUpperCase();
-    if (!nuovaDest) return alert("Inserisci la NUOVA DESTINAZIONE.");
-
-    const valid = validaDestinazione(nuovaDest);
-    if (!valid) return alert("Nuova destinazione NON valida!");
-
-    // Controlla se lo spazio di destinazione finale è libero
-    let occupato = false;
-    Object.values(data).forEach(c => {
-      if (!c.uscita && c.destinazione === valid.valore) {
-        occupato = true;
-      }
-    });
-
-    if (occupato) return alert("La nuova destinazione selezionata è già occupata!");
-
-    db.ref("camion/" + trovatoId).update({
-      destinazione: valid.valore,
-      tipo: valid.tipo
-    });
-
-    trattTarga.value = "";
-    trattDest.value = "";
-    nuovaDestinazione.value = "";
-
-    alert("SPOSTAMENTO REGISTRATO");
-  });
-};
-
-/* ------------------------------
-   ASCOLTO SINCRONO REALTIME (TABELLE + AGGIORNAMENTO PARK)
------------------------------- */
-db.ref("camion").on("value", snapshot => {
-  const data = snapshot.val();
-  
-  const monitorIn = document.getElementById("monitorIn");
-  const monitorOut = document.getElementById("monitorOut");
-  
-  monitorIn.innerHTML = "";
-  monitorOut.innerHTML = "";
-
-  // Reset visivo totale delle classi delle celle del parcheggio
-  document.querySelectorAll(".parkCell").forEach(cell => {
-    cell.className = "parkCell"; // Pulisce tutte le classi aggiuntive di occupazione
-    cell.title = "Libero";
-  });
-
-  if (!data) return;
-
-  // Mostra i record dal più recente invertendo la lista
-  const recordOrdinati = Object.entries(data).reverse();
-
-  recordOrdinati.forEach(([id, c]) => {
-    if (!c.uscita) {
-      // 1. Popola Monitor IN SITO
-      const rowIn = `<tr>
-        <td><b>${c.destinazione}</b></td>
-        <td>${c.tipo}</td>
-        <td>${c.targa}</td>
-        <td>${c.linea || "-"}</td>
-        <td>${c.ingresso}</td>
-        <td><button onclick="mostraFoto('${c.fotoIn}')"><i class="fa-solid fa-image"></i></button></td>
-        <td><button style="background:#cc0000;" onclick="cancella('${id}')"><i class="fa-solid fa-trash"></i></button></td>
-      </tr>`;
-      monitorIn.innerHTML += rowIn;
-
-      // 2. Colora la cella del parcheggio in base alla zona di appartenenza
-      const cellaElement = document.getElementById("cell-" + c.destinazione);
-      if (cellaElement) {
-        cellaElement.classList.add("occupato");
+/* Varianti colore per celle occupate */
+.parkCell.occupato.buca-full { background: #0057b8 !important; }
+.parkCell.occupato.parkA-full { background: #00b806 !important; }
+.parkCell.occupato.parkB-full { background: #b86200 !important; }
+.parkCell.occupato.parkC-full { background: #7d00b8 !important; }
+.parkCell.occupato.attesaC-full { background: #6e4a21 !important; }
+.parkCell.occupato.parkY2-full { background: #b80000 !important; }
