@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-   /* ------------------------------
+/* ------------------------------
    CAMBIO PAGINE
 ------------------------------ */
 function showPage(pageId) {
@@ -69,6 +68,28 @@ snapOut.onclick = () => {
 };
 
 /* ------------------------------
+   DESTINAZIONE
+------------------------------ */
+function validaDestinazione(dest) {
+  dest = dest.trim().toUpperCase();
+
+  const num = parseInt(dest);
+  if (!isNaN(num) && num >= 1 && num <= 199) {
+    return { tipo: "BAIA", valore: dest.padStart(2, "0") };
+  }
+
+  if (dest.startsWith("TRA")) {
+    return { tipo: "PARK", valore: dest };
+  }
+
+  if (/^[A-Z]/.test(dest)) {
+    return { tipo: "PARK", valore: dest };
+  }
+
+  return null;
+}
+
+/* ------------------------------
    RESET
 ------------------------------ */
 function resetInbound() {
@@ -108,10 +129,12 @@ registraInbound.onclick = () => {
   const vettoreVal = vettore.value.trim();
   const quantitaVal = quantita.value.trim();
   const lineaVal = linea.value.trim();
-  const destPulita = destinazione.value.trim(); // già pulita dal dropdown
+  const destInput = destinazione.value.trim();
 
   if (!targaVal) return alert("Inserisci la targa!");
-  if (!destPulita) return alert("Seleziona una destinazione!");
+
+  const valid = validaDestinazione(destInput);
+  if (!valid) return alert("Destinazione NON valida!");
 
   db.ref("camion").once("value", snapshot => {
     const data = snapshot.val();
@@ -119,14 +142,14 @@ registraInbound.onclick = () => {
     let occupato = false;
     if (data) {
       Object.entries(data).forEach(([id, c]) => {
-        if (c.destinazione === destPulita && !c.uscita) {
+        if (c.destinazione === valid.valore && !c.uscita) {
           occupato = true;
         }
       });
     }
 
     if (occupato) {
-      alert("Destinazione già occupata!");
+      alert("Destinazione già occupata! Libera la baia/park prima di registrare un altro mezzo.");
       return;
     }
 
@@ -143,8 +166,8 @@ registraInbound.onclick = () => {
       vettore: vettoreVal,
       quantita: quantitaVal,
       linea: lineaVal,
-      destinazione: destPulita,
-      tipo: "PARK",
+      destinazione: valid.valore,
+      tipo: valid.tipo,
       ingresso: new Date().toLocaleString(),
       uscita: null,
       fotoIn: canvas.toDataURL(),
@@ -185,20 +208,14 @@ registraOutbound.onclick = () => {
 };
 
 /* ------------------------------
-   TRATTORISTI
+   TRATTORISTI: modifica destinazione
 ------------------------------ */
 btnModificaDest.onclick = () => {
   const inputTarga = trattTarga.value.trim().toUpperCase();
   const inputDest = trattDest.value.trim().toUpperCase();
-  const nuovaDest = nuovaDestinazione.value.trim();
 
   if (!inputTarga && !inputDest) {
     alert("Inserisci TARGA oppure DESTINAZIONE.");
-    return;
-  }
-
-  if (!nuovaDest) {
-    alert("Seleziona la nuova destinazione.");
     return;
   }
 
@@ -228,13 +245,25 @@ btnModificaDest.onclick = () => {
     }
 
     if (!trovatoId) {
-      alert("Nessun camion trovato.");
+      alert("Nessun camion trovato con i dati inseriti.");
+      return;
+    }
+
+    const nuovaDest = nuovaDestinazione.value.trim().toUpperCase();
+    if (!nuovaDest) {
+      alert("Inserisci la NUOVA DESTINAZIONE.");
+      return;
+    }
+
+    const valid = validaDestinazione(nuovaDest);
+    if (!valid) {
+      alert("Nuova destinazione NON valida!");
       return;
     }
 
     let occupato = false;
     Object.values(data).forEach(c => {
-      if (!c.uscita && c.destinazione === nuovaDest) {
+      if (!c.uscita && c.destinazione === valid.valore) {
         occupato = true;
       }
     });
@@ -245,7 +274,8 @@ btnModificaDest.onclick = () => {
     }
 
     db.ref("camion/" + trovatoId).update({
-      destinazione: nuovaDest
+      destinazione: valid.valore,
+      tipo: valid.tipo
     });
 
     trattTarga.value = "";
@@ -258,7 +288,7 @@ btnModificaDest.onclick = () => {
 };
 
 /* ------------------------------
-   EXPORT EXCEL
+   EXPORT EXCEL (XLSX)
 ------------------------------ */
 function exportExcel(dataArray, filename) {
   const worksheet = XLSX.utils.aoa_to_sheet(dataArray);
@@ -272,10 +302,10 @@ function exportInExcel() {
     const data = snapshot.val();
     if (!data) return;
 
-    let rows = [["Destinazione","Targa","Linea","Ingresso"]];
+    let rows = [["Destinazione","Tipo","Targa","Linea","Ingresso"]];
     Object.values(data).forEach(c => {
       if (!c.uscita) {
-        rows.push([c.destinazione, c.targa, c.linea || "", c.ingresso]);
+        rows.push([c.destinazione, c.tipo, c.targa, c.linea || "", c.ingresso]);
       }
     });
 
@@ -288,10 +318,10 @@ function exportOutExcel() {
     const data = snapshot.val();
     if (!data) return;
 
-    let rows = [["Destinazione","Targa","Linea","Ingresso","Uscita"]];
+    let rows = [["Destinazione","Tipo","Targa","Linea","Ingresso","Uscita"]];
     Object.values(data).forEach(c => {
       if (c.uscita) {
-        rows.push([c.destinazione, c.targa, c.linea || "", c.ingresso, c.uscita]);
+        rows.push([c.destinazione, c.tipo, c.targa, c.linea || "", c.ingresso, c.uscita]);
       }
     });
 
@@ -338,7 +368,7 @@ db.ref("camion").on("value", snapshot => {
       monitorIn.innerHTML += `
         <tr>
           <td>${c.destinazione}</td>
-          <td>PARK</td>
+          <td>${c.tipo}</td>
           <td>${c.targa}</td>
           <td>${c.linea || ""}</td>
           <td>${c.ingresso}</td>
@@ -349,7 +379,7 @@ db.ref("camion").on("value", snapshot => {
       monitorOut.innerHTML += `
         <tr>
           <td>${c.destinazione}</td>
-          <td>PARK</td>
+          <td>${c.tipo}</td>
           <td>${c.targa}</td>
           <td>${c.linea || ""}</td>
           <td>${c.ingresso}</td>
