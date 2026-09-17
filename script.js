@@ -1,4 +1,5 @@
-/* ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+   /* ------------------------------
    CAMBIO PAGINE
 ------------------------------ */
 function showPage(pageId) {
