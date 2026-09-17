@@ -1,8 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   font-family: 'Segoe UI', Roboto, Arial, sans-serif;
@@ -24,14 +20,8 @@ header {
   z-index: 1000;
 }
 
-header img {
-  height: 40px;
-}
-
-header h1 {
-  font-size: 20px;
-  font-weight: 700;
-}
+header img { height: 40px; }
+header h1 { font-size: 20px; font-weight: 700; }
 
 #menu {
   margin-top: 80px;
@@ -56,10 +46,7 @@ header h1 {
   gap: 6px;
 }
 
-#menu button:hover {
-  background: #003f82;
-  transform: translateY(-2px);
-}
+#menu button:hover { background: #003f82; transform: translateY(-2px); }
 
 .page {
   background: #1f1f1f;
@@ -70,13 +57,9 @@ header h1 {
   margin: 20px auto;
 }
 
-.page h2 {
-  margin-bottom: 15px;
-  font-size: 22px;
-  color: #4da3ff;
-}
+.page h2 { margin-bottom: 15px; font-size: 22px; color: #4da3ff; }
 
-input, select {
+input {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
@@ -84,11 +67,6 @@ input, select {
   background: #2a2a2a;
   color: #e5e5e5;
   border-radius: 6px;
-}
-
-select optgroup {
-  color: #4da3ff;
-  font-weight: bold;
 }
 
 button {
@@ -103,9 +81,7 @@ button {
   margin-top: 8px;
 }
 
-button:hover {
-  background: #003f82;
-}
+button:hover { background: #003f82; }
 
 video, canvas {
   width: 100%;
@@ -161,8 +137,8 @@ video, canvas {
 }
 
 .parkCell {
-  width: 60px;
-  height: 35px;
+  width: 40px;
+  height: 30px;
   background: green;
   border-radius: 4px;
   display: flex;
@@ -170,14 +146,4 @@ video, canvas {
   justify-content: center;
   font-size: 12px;
   font-weight: 600;
-  border: 1px solid #333;
-  color: white;
-}
-
-.parkCell.red {
-  background: red !important;
-}
-
-.parkCell.green {
-  background: green !important;
 }
