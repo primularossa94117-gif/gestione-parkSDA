@@ -1,155 +1,858 @@
-<!-- PARK -->
-<div id="pagePark" class="page" style="display:none;">
-  <h2><i class="fa-solid fa-square"></i> PARK MAP</h2>
+<!DOCTYPE html>
+<html lang="en">
 
-  <div id="parkGrid">
-    <h3 class="title-buca">🟦 BUCA</h3>
-    <div class="parkRow">
-      <div class="parkCell zone-buca" id="cell-BUCA1">BUCA1</div>
-      <div class="parkCell zone-buca" id="cell-BUCA2">BUCA2</div>
-      <div class="parkCell zone-buca" id="cell-BUCA3">BUCA3</div>
-      <div class="parkCell zone-buca" id="cell-BUCA4">BUCA4</div>
-      <div class="parkCell zone-buca" id="cell-BUCA5">BUCA5</div>
-      <div class="parkCell zone-buca" id="cell-BUCA6">BUCA6</div>
-      <div class="parkCell zone-buca" id="cell-BUCA7">BUCA7</div>
-      <div class="parkCell zone-buca" id="cell-BUCA8">BUCA8</div>
-      <div class="parkCell zone-buca" id="cell-BUCA9">BUCA9</div>
-      <div class="parkCell zone-buca" id="cell-BUCA10">BUCA10</div>
-      <div class="parkCell zone-buca" id="cell-BUCA157">BUCA157</div>
-      <div class="parkCell zone-buca" id="cell-BUCA156">BUCA156</div>
-      <div class="parkCell zone-buca" id="cell-BUCA155">BUCA155</div>
-      <div class="parkCell zone-buca" id="cell-BUCA154">BUCA154</div>
-      <div class="parkCell zone-buca" id="cell-BUCA153">BUCA153</div>
-      <div class="parkCell zone-buca" id="cell-BUCA152">BUCA152</div>
-      <div class="parkCell zone-buca" id="cell-BUCA151">BUCA151</div>
-      <div class="parkCell zone-buca" id="cell-BUCA150">BUCA150</div>
-      <div class="parkCell zone-buca" id="cell-BUCA149">BUCA149</div>
-      <div class="parkCell zone-buca" id="cell-BUCA148">BUCA148</div>
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <title>Gestione Park SDA</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    >
+
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <!-- EXCEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="mainHeader">
+
+    <div class="headerLogo">
+        <div class="logoBox">
+            <span>PT</span>
+        </div>
+
+        <div class="headerTitle">
+            <span class="titleMain">Gestione Park SDA</span>
+            <span class="titleSub">Gestione mezzi e parcheggi</span>
+        </div>
     </div>
 
-    <h3 class="title-parkA">🟩 PARK A</h3>
-    <div class="parkRow">
-      <div class="parkCell zone-parkA" id="cell-A01">A01</div>
-      <div class="parkCell zone-parkA" id="cell-A02">A02</div>
-      <div class="parkCell zone-parkA" id="cell-A03">A03</div>
-      <div class="parkCell zone-parkA" id="cell-A04">A04</div>
-      <div class="parkCell zone-parkA" id="cell-A05">A05</div>
-      <div class="parkCell zone-parkA" id="cell-A06">A06</div>
-      <div class="parkCell zone-parkA" id="cell-A07">A07</div>
-      <div class="parkCell zone-parkA" id="cell-A08">A08</div>
-      <div class="parkCell zone-parkA" id="cell-A09">A09</div>
-      <div class="parkCell zone-parkA" id="cell-A10">A10</div>
-      <div class="parkCell zone-parkA" id="cell-A11">A11</div>
-      <div class="parkCell zone-parkA" id="cell-A12">A12</div>
-      <div class="parkCell zone-parkA" id="cell-A13">A13</div>
-      <div class="parkCell zone-parkA" id="cell-A14">A14</div>
-      <div class="parkCell zone-parkA" id="cell-A15">A15</div>
-      <div class="parkCell zone-parkA" id="cell-A16">A16</div>
-      <div class="parkCell zone-parkA" id="cell-TRA12-13">TRA12-13</div>
-      <div class="parkCell zone-parkA" id="cell-TRA18-19-1">TRA18-19-1</div>
-      <div class="parkCell zone-parkA" id="cell-TRA18-19-2">TRA18-19-2</div>
+</header>
+
+
+<!-- =========================================================
+     MENU
+========================================================= -->
+
+<nav class="mainMenu">
+
+    <button onclick="showPage('pageDashboard')" class="menuBtn active">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Dashboard</span>
+    </button>
+
+    <button onclick="showPage('pageInbound')" class="menuBtn">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        <span>Inbound</span>
+    </button>
+
+    <button onclick="showPage('pageOutbound')" class="menuBtn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Outbound</span>
+    </button>
+
+    <button onclick="showPage('pageInSito')" class="menuBtn">
+        <i class="fa-solid fa-truck"></i>
+        <span>In Sito</span>
+    </button>
+
+    <button onclick="showPage('pageUsciti')" class="menuBtn">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Usciti</span>
+    </button>
+
+    <button onclick="showPage('pageTrattoristi')" class="menuBtn">
+        <i class="fa-solid fa-tractor"></i>
+        <span>Trattoristi</span>
+    </button>
+
+    <button onclick="showPage('pagePark')" class="menuBtn">
+        <i class="fa-solid fa-square-parking"></i>
+        <span>Park</span>
+    </button>
+
+</nav>
+
+
+<main class="appMain">
+
+
+<!-- =========================================================
+     DASHBOARD
+========================================================= -->
+
+<section id="pageDashboard" class="page dashboardPage">
+
+    <div class="pageHeader">
+        <div>
+            <h1>
+                <i class="fa-solid fa-chart-line"></i>
+                Dashboard
+            </h1>
+
+            <p>Situazione aggiornata del piazzale</p>
+        </div>
     </div>
 
-    <h3 class="title-parkB">🟧 PARK B</h3>
-    <div class="parkRow">
-      <div class="parkCell zone-parkB" id="cell-INIZIOPARKB1">INIZIOPARKB1</div>
-      <div class="parkCell zone-parkB" id="cell-INIZIOPARKB2">INIZIOPARKB2</div>
-      <div class="parkCell zone-parkB" id="cell-B01">B01</div>
-      <div class="parkCell zone-parkB" id="cell-B02">B02</div>
-      <div class="parkCell zone-parkB" id="cell-B03">B03</div>
-      <div class="parkCell zone-parkB" id="cell-B04">B04</div>
-      <div class="parkCell zone-parkB" id="cell-B05">B05</div>
-      <div class="parkCell zone-parkB" id="cell-B06">B06</div>
-      <div class="parkCell zone-parkB" id="cell-B07">B07</div>
-      <div class="parkCell zone-parkB" id="cell-B08">B08</div>
-      <div class="parkCell zone-parkB" id="cell-B09">B09</div>
-      <div class="parkCell zone-parkB" id="cell-B010">B010</div>
-      <div class="parkCell zone-parkB" id="cell-B011">B011</div>
-      <div class="parkCell zone-parkB" id="cell-B012">B012</div>
-      <div class="parkCell zone-parkB" id="cell-B013">B013</div>
-      <div class="parkCell zone-parkB" id="cell-B014">B014</div>
-      <div class="parkCell zone-parkB" id="cell-B015">B015</div>
-      <div class="parkCell zone-parkB" id="cell-B016">B016</div>
+
+    <div class="dashboardCards">
+
+        <div class="dashboardCard">
+            <div class="dashboardIcon">
+                <i class="fa-solid fa-truck"></i>
+            </div>
+
+            <div>
+                <span>In Sito</span>
+                <strong id="dashInSito">0</strong>
+            </div>
+        </div>
+
+
+        <div class="dashboardCard">
+            <div class="dashboardIcon">
+                <i class="fa-solid fa-square-parking"></i>
+            </div>
+
+            <div>
+                <span>Park Occupati</span>
+                <strong id="dashParkOccupati">0</strong>
+            </div>
+        </div>
+
+
+        <div class="dashboardCard">
+            <div class="dashboardIcon">
+                <i class="fa-solid fa-square-parking"></i>
+            </div>
+
+            <div>
+                <span>Park Liberi</span>
+                <strong id="dashParkLiberi">0</strong>
+            </div>
+        </div>
+
+
+        <div class="dashboardCard">
+            <div class="dashboardIcon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div>
+                <span>Usciti</span>
+                <strong id="dashUsciti">0</strong>
+            </div>
+        </div>
+
     </div>
 
-    <h3 class="title-parkC">🟪 PARK C</h3>
-    <div class="parkRow">
-      <div class="parkCell zone-parkC" id="cell-C01">C01</div>
-      <div class="parkCell zone-parkC" id="cell-C02">C02</div>
-      <div class="parkCell zone-parkC" id="cell-C03">C03</div>
-      <div class="parkCell zone-parkC" id="cell-C04">C04</div>
-      <div class="parkCell zone-parkC" id="cell-C05">C05</div>
-      <div class="parkCell zone-parkC" id="cell-C06">C06</div>
-      <div class="parkCell zone-parkC" id="cell-C07">C07</div>
-      <div class="parkCell zone-parkC" id="cell-C08">C08</div>
-      <div class="parkCell zone-parkC" id="cell-C09">C09</div>
-      <div class="parkCell zone-parkC" id="cell-C10">C10</div>
-      <div class="parkCell zone-parkC" id="cell-C11">C11</div>
-      <div class="parkCell zone-parkC" id="cell-C13">C13</div>
-      <div class="parkCell zone-parkC" id="cell-C14">C14</div>
-      <div class="parkCell zone-parkC" id="cell-C15">C15</div>
-      <div class="parkCell zone-parkC" id="cell-C16">C16</div>
-      <div class="parkCell zone-parkC" id="cell-C17">C17</div>
-      <div class="parkCell zone-parkC" id="cell-C19">C19</div>
-      <div class="parkCell zone-parkC" id="cell-C21">C21</div>
-      <div class="parkCell zone-parkC" id="cell-C22">C22</div>
-      <div class="parkCell zone-parkC" id="cell-C24">C24</div>
-      <div class="parkCell zone-parkC" id="cell-C25">C25</div>
-      <div class="parkCell zone-parkC" id="cell-C26">C26</div>
-      <div class="parkCell zone-parkC" id="cell-C29">C29</div>
-      <div class="parkCell zone-parkC" id="cell-C30">C30</div>
-      <div class="parkCell zone-parkC" id="cell-C31">C31</div>
-      <div class="parkCell zone-parkC" id="cell-C32">C32</div>
-      <div class="parkCell zone-parkC" id="cell-C33">C33</div>
-      <div class="parkCell zone-parkC" id="cell-C34">C34</div>
-      <div class="parkCell zone-parkC" id="cell-C35">C35</div>
+
+    <div class="panel">
+
+        <div class="panelHeader">
+            <h2>
+                <i class="fa-solid fa-list"></i>
+                Mezzi attualmente in sito
+            </h2>
+        </div>
+
+        <div id="dashboardTruckList" class="dashboardTruckList"></div>
+
     </div>
 
-    <h3 class="title-attesaC">🟫 ATTESA PARK C</h3>
-    <div class="parkRow">
-      <div class="parkCell zone-attesaC" id="cell-C31ATTESA">C31ATTESA</div>
-      <div class="parkCell zone-attesaC" id="cell-C32ATTESA">C32ATTESA</div>
-      <div class="parkCell zone-attesaC" id="cell-C33ATTESA">C33ATTESA</div>
-      <div class="parkCell zone-attesaC" id="cell-C34ATTESA">C34ATTESA</div>
-      <div class="parkCell zone-attesaC" id="cell-C35ATTESA">C35ATTESA</div>
-      <div class="parkCell zone-attesaC" id="cell-C36ATTESA">C36ATTESA</div>
+</section>
+
+
+<!-- =========================================================
+     INBOUND
+========================================================= -->
+
+<section id="pageInbound" class="page">
+
+    <div class="pageHeader">
+        <div>
+            <h1>
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Inbound
+            </h1>
+
+            <p>Registrazione ingresso mezzo</p>
+        </div>
     </div>
 
-    <h3 class="title-parkY2">🟥 PARK Y2</h3>
-    <div class="parkRow">
-      <div class="parkCell zone-parkY2" id="cell-Y2-1">Y2-1</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-2">Y2-2</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-3">Y2-3</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-4">Y2-4</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-5">Y2-5</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-6">Y2-6</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-7">Y2-7</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-8">Y2-8</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-9">Y2-9</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-10">Y2-10</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-11">Y2-11</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-12">Y2-12</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-13">Y2-13</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-14">Y2-14</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-15">Y2-15</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-16">Y2-16</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-17">Y2-17</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-18">Y2-18</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-19">Y2-19</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-20">Y2-20</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-133-134">Y2-133-134</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-139-140">Y2-139-140</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-018-019-1">Y2-018-019-1</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-018-019-2">Y2-018-019-2</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-TRA12-13">Y2-TRA12-13</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-FRONTEC30">Y2-FRONTEC30</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-FRONTECOMP1">Y2-FRONTECOMP1</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-FRONTECOMP2">Y2-FRONTECOMP2</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-FRONTECOMP3">Y2-FRONTECOMP3</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-TRA132-133">Y2-TRA132-133</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-TRA128-129">Y2-TRA128-129</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-TRA123-124">Y2-TRA123-124</div>
-      <div class="parkCell zone-parkY2" id="cell-Y2-TRA152-152">Y2-TRA152-152</div>
+
+    <div class="panel">
+
+        <div class="cameraLayout">
+
+            <div class="cameraBox">
+
+                <div class="cameraTitle">
+                    <i class="fa-solid fa-camera"></i>
+                    Fotocamera
+                </div>
+
+                <video
+                    id="video"
+                    autoplay
+                    playsinline
+                    muted
+                ></video>
+
+                <canvas id="canvas"></canvas>
+
+                <button
+                    type="button"
+                    id="snap"
+                    class="secondaryBtn"
+                >
+                    <i class="fa-solid fa-camera"></i>
+                    Scatta foto
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="formGrid">
+
+            <div class="field">
+
+                <label for="targa">
+                    <i class="fa-solid fa-car"></i>
+                    Targa
+                </label>
+
+                <input
+                    type="text"
+                    id="targa"
+                    placeholder="Inserisci targa"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="vettore">
+                    <i class="fa-solid fa-building"></i>
+                    Vettore
+                </label>
+
+                <input
+                    type="text"
+                    id="vettore"
+                    placeholder="Inserisci vettore"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="quantita">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    Quantità
+                </label>
+
+                <input
+                    type="text"
+                    id="quantita"
+                    placeholder="Quantità"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="linea">
+                    <i class="fa-solid fa-route"></i>
+                    Linea
+                </label>
+
+                <input
+                    type="text"
+                    id="linea"
+                    placeholder="Linea"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="attesa">
+                    <i class="fa-solid fa-clock"></i>
+                    Attesa
+                </label>
+
+                <select id="attesa">
+                    <option value="L0">L0</option>
+                    <option value="L1">L1</option>
+                </select>
+
+            </div>
+
+
+            <div class="field fieldFull">
+
+                <label for="destinazione">
+                    <i class="fa-solid fa-square-parking"></i>
+                    Destinazione
+                </label>
+
+                <select id="destinazione">
+                    <option value="">Seleziona parcheggio...</option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="registraInbound"
+            class="primaryBtn"
+        >
+            <i class="fa-solid fa-right-to-bracket"></i>
+            REGISTRA INBOUND
+        </button>
+
     </div>
-  </div>
+
+</section>
+
+
+<!-- =========================================================
+     OUTBOUND
+========================================================= -->
+
+<section id="pageOutbound" class="page">
+
+    <div class="pageHeader">
+
+        <div>
+            <h1>
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Outbound
+            </h1>
+
+            <p>Registrazione uscita mezzo</p>
+        </div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div class="searchBox">
+
+            <label for="ricercaOutbound">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Cerca targa
+            </label>
+
+            <input
+                type="text"
+                id="ricercaOutbound"
+                placeholder="Inserisci la targa..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <div id="risultatoOutbound"></div>
+
+
+        <div class="cameraLayout">
+
+            <div class="cameraBox">
+
+                <div class="cameraTitle">
+                    <i class="fa-solid fa-camera"></i>
+                    Foto OUT
+                </div>
+
+                <video
+                    id="videoOut"
+                    autoplay
+                    playsinline
+                    muted
+                ></video>
+
+                <canvas id="canvasOut"></canvas>
+
+                <button
+                    type="button"
+                    id="snapOut"
+                    class="secondaryBtn"
+                >
+                    <i class="fa-solid fa-camera"></i>
+                    Scatta foto
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="formGrid">
+
+            <div class="field fieldFull">
+
+                <label for="targaOut">
+                    <i class="fa-solid fa-car"></i>
+                    Targa
+                </label>
+
+                <input
+                    type="text"
+                    id="targaOut"
+                    placeholder="Targa del mezzo"
+                    autocomplete="off"
+                >
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="registraOutbound"
+            class="primaryBtn"
+        >
+            <i class="fa-solid fa-right-from-bracket"></i>
+            REGISTRA OUTBOUND
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     IN SITO
+========================================================= -->
+
+<section id="pageInSito" class="page widePage">
+
+    <div class="pageHeader">
+
+        <div>
+            <h1>
+                <i class="fa-solid fa-truck"></i>
+                In Sito
+            </h1>
+
+            <p>Mezzi attualmente presenti</p>
+        </div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div class="filterBar">
+
+            <div class="searchBox">
+
+                <label for="ricercaInSito">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Ricerca
+                </label>
+
+                <input
+                    type="text"
+                    id="ricercaInSito"
+                    placeholder="Cerca targa, vettore, park..."
+                >
+
+            </div>
+
+
+            <div class="searchBox">
+
+                <label for="filtroAttesa">
+                    <i class="fa-solid fa-filter"></i>
+                    Attesa
+                </label>
+
+                <select id="filtroAttesa">
+
+                    <option value="">Tutte</option>
+                    <option value="L0">L0</option>
+                    <option value="L1">L1</option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="button"
+                onclick="exportInExcel()"
+                class="exportBtn"
+            >
+                <i class="fa-solid fa-file-excel"></i>
+                Esporta Excel
+            </button>
+
+        </div>
+
+
+        <div class="tableWrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>PK</th>
+                        <th>Attesa</th>
+                        <th>Tipo</th>
+                        <th>Targa</th>
+                        <th>Vettore</th>
+                        <th>Quantità</th>
+                        <th>Linea</th>
+                        <th>Ingresso</th>
+                        <th>Permanenza</th>
+                        <th>Foto IN</th>
+                        <th>Azioni</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="monitorIn"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     USCITI
+========================================================= -->
+
+<section id="pageUsciti" class="page widePage">
+
+    <div class="pageHeader">
+
+        <div>
+            <h1>
+                <i class="fa-solid fa-circle-check"></i>
+                Usciti
+            </h1>
+
+            <p>Storico dei mezzi usciti</p>
+        </div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div class="filterBar">
+
+            <div class="searchBox">
+
+                <label for="ricercaUsciti">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Ricerca
+                </label>
+
+                <input
+                    type="text"
+                    id="ricercaUsciti"
+                    placeholder="Cerca targa, vettore, park..."
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                onclick="exportOutExcel()"
+                class="exportBtn"
+            >
+                <i class="fa-solid fa-file-excel"></i>
+                Esporta Excel
+            </button>
+
+        </div>
+
+
+        <div class="tableWrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>PK</th>
+                        <th>Attesa</th>
+                        <th>Tipo</th>
+                        <th>Targa</th>
+                        <th>Vettore</th>
+                        <th>Quantità</th>
+                        <th>Linea</th>
+                        <th>Ingresso</th>
+                        <th>Uscita</th>
+                        <th>Foto OUT</th>
+                        <th>Azioni</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="monitorOut"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     TRATTORISTI
+========================================================= -->
+
+<section id="pageTrattoristi" class="page">
+
+    <div class="pageHeader">
+
+        <div>
+            <h1>
+                <i class="fa-solid fa-tractor"></i>
+                Trattoristi
+            </h1>
+
+            <p>Spostamento e gestione destinazione mezzi</p>
+        </div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div class="formGrid">
+
+            <div class="field">
+
+                <label for="trattTarga">
+                    <i class="fa-solid fa-car"></i>
+                    Targa
+                </label>
+
+                <input
+                    type="text"
+                    id="trattTarga"
+                    placeholder="Targa mezzo"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="trattDest">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Destinazione attuale
+                </label>
+
+                <input
+                    type="text"
+                    id="trattDest"
+                    placeholder="Destinazione attuale"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="field fieldFull">
+
+                <label for="nuovaDestinazione">
+                    <i class="fa-solid fa-square-parking"></i>
+                    Nuova destinazione
+                </label>
+
+                <select id="nuovaDestinazione">
+
+                    <option value="">
+                        Seleziona nuova destinazione...
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="btnModificaDest"
+            class="primaryBtn"
+        >
+            <i class="fa-solid fa-arrows-up-down-left-right"></i>
+            SPOSTA MEZZO
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     PARK
+========================================================= -->
+
+<section id="pagePark" class="page parkPage">
+
+    <div class="pageHeader">
+
+        <div>
+            <h1>
+                <i class="fa-solid fa-square-parking"></i>
+                Park
+            </h1>
+
+            <p>Situazione parcheggi in tempo reale</p>
+        </div>
+
+    </div>
+
+
+    <div class="parkLegend">
+
+        <div>
+            <span class="legendColor free"></span>
+            Libero
+        </div>
+
+        <div>
+            <span class="legendColor occupied"></span>
+            Occupato
+        </div>
+
+    </div>
+
+
+    <div id="parkGrid"></div>
+
+</section>
+
+</main>
+
+
+<!-- =========================================================
+     POPUP PARK
+========================================================= -->
+
+<div
+    id="parkPopupOverlay"
+    class="popupOverlay"
+>
+
+    <div class="parkPopup">
+
+        <div class="popupHeader">
+
+            <h2 id="popupParkTitle">
+                Parcheggio
+            </h2>
+
+            <button
+                type="button"
+                id="popupCloseButton"
+                class="popupClose"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div
+            id="popupParkContent"
+            class="popupContent"
+        ></div>
+
+
+        <div class="popupActions">
+
+            <button
+                type="button"
+                id="popupMoveButton"
+                class="primaryBtn"
+            >
+                <i class="fa-solid fa-arrows-up-down-left-right"></i>
+                Sposta mezzo
+            </button>
+
+            <button
+                type="button"
+                id="popupCloseButtonBottom"
+                class="secondaryBtn"
+            >
+                Chiudi
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
