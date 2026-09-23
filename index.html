@@ -13,24 +13,18 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Gestione Park SDA</title>
 
     <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
 
-    <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-    <!-- EXCEL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <link rel="stylesheet" href="style.css">
@@ -38,357 +32,415 @@
 
 <body>
 
-<!-- =========================================================
-     HEADER
-========================================================= -->
+<header>
 
-<header class="mainHeader">
+    <div class="headerContent">
 
-    <div class="headerLogo">
-        <div class="logoBox">
-            <span>PT</span>
+        <div class="headerLogo">
+            <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP8nYyQp6hsEgk9cdbQ2OL2ihsi4N6-sFy6KQ1IGhi1A&s=10"
+                alt="SDA Poste Italiane"
+            >
         </div>
+
+        <div class="headerSeparator"></div>
 
         <div class="headerTitle">
-            <span class="titleMain">Gestione Park SDA</span>
-            <span class="titleSub">Gestione mezzi e parcheggi</span>
+            <h1>Gestione Park SDA</h1>
+            <p>Gestione mezzi e parcheggi</p>
         </div>
+
+        <div class="operatorBox">
+            <label for="operatore">
+                <i class="fa-solid fa-user"></i>
+                Operatore
+            </label>
+
+            <input
+                type="text"
+                id="operatore"
+                placeholder="Nome operatore"
+                autocomplete="off"
+            >
+        </div>
+
     </div>
 
 </header>
 
 
-<!-- =========================================================
-     MENU
-========================================================= -->
+<nav>
 
-<nav class="mainMenu">
-
-    <button onclick="showPage('pageDashboard')" class="menuBtn active">
+    <button class="active" data-page="dashboard" onclick="showPage('dashboard')">
         <i class="fa-solid fa-chart-line"></i>
-        <span>Dashboard</span>
+        Dashboard
     </button>
 
-    <button onclick="showPage('pageInbound')" class="menuBtn">
-        <i class="fa-solid fa-right-to-bracket"></i>
-        <span>Inbound</span>
+    <button data-page="inbound" onclick="showPage('inbound')">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        Inbound
     </button>
 
-    <button onclick="showPage('pageOutbound')" class="menuBtn">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        <span>Outbound</span>
+    <button data-page="outbound" onclick="showPage('outbound')">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        Outbound
     </button>
 
-    <button onclick="showPage('pageInSito')" class="menuBtn">
+    <button data-page="inSito" onclick="showPage('inSito')">
         <i class="fa-solid fa-truck"></i>
-        <span>In Sito</span>
+        In Sito
     </button>
 
-    <button onclick="showPage('pageUsciti')" class="menuBtn">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>Usciti</span>
+    <button data-page="usciti" onclick="showPage('usciti')">
+        <i class="fa-solid fa-check"></i>
+        Usciti
     </button>
 
-    <button onclick="showPage('pageTrattoristi')" class="menuBtn">
-        <i class="fa-solid fa-tractor"></i>
-        <span>Trattoristi</span>
+    <button data-page="trattoristi" onclick="showPage('trattoristi')">
+        <i class="fa-solid fa-truck-moving"></i>
+        Trattoristi
     </button>
 
-    <button onclick="showPage('pagePark')" class="menuBtn">
+    <button data-page="park" onclick="showPage('park')">
         <i class="fa-solid fa-square-parking"></i>
-        <span>Park</span>
+        Park
+    </button>
+
+    <button data-page="movimenti" onclick="showPage('movimenti')">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        Movimenti
+    </button>
+
+    <button data-page="statistiche" onclick="showPage('statistiche')">
+        <i class="fa-solid fa-chart-pie"></i>
+        Statistiche
     </button>
 
 </nav>
 
 
-<main class="appMain">
+<main>
 
 
-<!-- =========================================================
+<!-- =====================================================
+     RICERCA GLOBALE
+     ===================================================== -->
+
+<div class="globalSearchBox">
+
+    <i class="fa-solid fa-magnifying-glass"></i>
+
+    <input
+        type="text"
+        id="ricercaGlobale"
+        placeholder="Cerca targa, vettore, parcheggio, linea..."
+        autocomplete="off"
+    >
+
+</div>
+
+<div
+    id="risultatoRicercaGlobale"
+    class="globalSearchResults"
+></div>
+
+
+<!-- =====================================================
      DASHBOARD
-========================================================= -->
+     ===================================================== -->
 
-<section id="pageDashboard" class="page dashboardPage">
+<section id="dashboard" class="page active">
 
-    <div class="pageHeader">
-        <div>
-            <h1>
-                <i class="fa-solid fa-chart-line"></i>
-                Dashboard
-            </h1>
+    <div class="pageTitle">
+        <h2>
+            <i class="fa-solid fa-chart-line"></i>
+            Dashboard
+        </h2>
 
-            <p>Situazione aggiornata del piazzale</p>
-        </div>
+        <p>
+            Situazione generale del piazzale
+        </p>
     </div>
 
 
     <div class="dashboardCards">
 
-        <div class="dashboardCard">
-            <div class="dashboardIcon">
-                <i class="fa-solid fa-truck"></i>
-            </div>
-
-            <div>
-                <span>In Sito</span>
-                <strong id="dashInSito">0</strong>
-            </div>
+        <div class="dashboardCard green">
+            <div class="cardTitle">MEZZI IN SITO</div>
+            <div class="cardValue" id="dashInSito">0</div>
         </div>
 
-
-        <div class="dashboardCard">
-            <div class="dashboardIcon">
-                <i class="fa-solid fa-square-parking"></i>
-            </div>
-
-            <div>
-                <span>Park Occupati</span>
-                <strong id="dashParkOccupati">0</strong>
-            </div>
+        <div class="dashboardCard red">
+            <div class="cardTitle">PARK OCCUPATI</div>
+            <div class="cardValue" id="dashParkOccupati">0</div>
         </div>
 
-
-        <div class="dashboardCard">
-            <div class="dashboardIcon">
-                <i class="fa-solid fa-square-parking"></i>
-            </div>
-
-            <div>
-                <span>Park Liberi</span>
-                <strong id="dashParkLiberi">0</strong>
-            </div>
+        <div class="dashboardCard green">
+            <div class="cardTitle">PARK LIBERI</div>
+            <div class="cardValue" id="dashParkLiberi">0</div>
         </div>
 
+        <div class="dashboardCard blue">
+            <div class="cardTitle">MEZZI USCITI</div>
+            <div class="cardValue" id="dashUsciti">0</div>
+        </div>
 
-        <div class="dashboardCard">
-            <div class="dashboardIcon">
-                <i class="fa-solid fa-check"></i>
-            </div>
+        <div class="dashboardCard orange">
+            <div class="cardTitle">OLTRE 8 ORE</div>
+            <div class="cardValue" id="dashOltre8">0</div>
+        </div>
 
-            <div>
-                <span>Usciti</span>
-                <strong id="dashUsciti">0</strong>
-            </div>
+        <div class="dashboardCard critical">
+            <div class="cardTitle">OLTRE 24 ORE</div>
+            <div class="cardValue" id="dashOltre24">0</div>
+        </div>
+
+        <div class="dashboardCard purple">
+            <div class="cardTitle">INGRESSI OGGI</div>
+            <div class="cardValue" id="dashIngressiOggi">0</div>
+        </div>
+
+        <div class="dashboardCard cyan">
+            <div class="cardTitle">USCITE OGGI</div>
+            <div class="cardValue" id="dashUsciteOggi">0</div>
         </div>
 
     </div>
 
 
-    <div class="panel">
+    <div class="dashboardSection">
 
-        <div class="panelHeader">
-            <h2>
-                <i class="fa-solid fa-list"></i>
-                Mezzi attualmente in sito
-            </h2>
+        <div class="sectionHeader">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Mezzi da controllare
         </div>
 
-        <div id="dashboardTruckList" class="dashboardTruckList"></div>
+        <div id="dashboardAlerts"></div>
+
+    </div>
+
+
+    <div class="dashboardSection">
+
+        <div class="sectionHeader">
+            <i class="fa-solid fa-square-parking"></i>
+            Situazione parcheggi
+        </div>
+
+        <div
+            id="dashboardParkSummary"
+            class="parkSummaryGrid"
+        ></div>
+
+    </div>
+
+
+    <div class="dashboardSection">
+
+        <div class="sectionHeader">
+            <i class="fa-solid fa-truck"></i>
+            Ultimi mezzi presenti
+        </div>
+
+        <div id="dashboardTruckList"></div>
 
     </div>
 
 </section>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
      INBOUND
-========================================================= -->
+     ===================================================== -->
 
-<section id="pageInbound" class="page">
+<section id="inbound" class="page">
 
-    <div class="pageHeader">
-        <div>
-            <h1>
-                <i class="fa-solid fa-right-to-bracket"></i>
-                Inbound
-            </h1>
+    <div class="pageTitle">
+        <h2>
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            Inbound
+        </h2>
 
-            <p>Registrazione ingresso mezzo</p>
-        </div>
+        <p>
+            Registrazione ingresso mezzo
+        </p>
     </div>
 
 
-    <div class="panel">
-
-        <div class="cameraLayout">
-
-            <div class="cameraBox">
-
-                <div class="cameraTitle">
-                    <i class="fa-solid fa-camera"></i>
-                    Fotocamera
-                </div>
-
-                <video
-                    id="video"
-                    autoplay
-                    playsinline
-                    muted
-                ></video>
-
-                <canvas id="canvas"></canvas>
-
-                <button
-                    type="button"
-                    id="snap"
-                    class="secondaryBtn"
-                >
-                    <i class="fa-solid fa-camera"></i>
-                    Scatta foto
-                </button>
-
-            </div>
-
-        </div>
-
+    <div class="formCard">
 
         <div class="formGrid">
 
-            <div class="field">
-
-                <label for="targa">
-                    <i class="fa-solid fa-car"></i>
-                    Targa
-                </label>
+            <div class="formGroup">
+                <label for="targa">Targa</label>
 
                 <input
                     type="text"
                     id="targa"
                     placeholder="Inserisci targa"
-                    autocomplete="off"
                 >
-
             </div>
 
 
-            <div class="field">
-
-                <label for="vettore">
-                    <i class="fa-solid fa-building"></i>
-                    Vettore
-                </label>
+            <div class="formGroup">
+                <label for="vettore">Vettore</label>
 
                 <input
                     type="text"
                     id="vettore"
                     placeholder="Inserisci vettore"
-                    autocomplete="off"
                 >
-
             </div>
 
 
-            <div class="field">
-
-                <label for="quantita">
-                    <i class="fa-solid fa-boxes-stacked"></i>
-                    Quantità
-                </label>
+            <div class="formGroup">
+                <label for="quantita">Quantità</label>
 
                 <input
                     type="text"
                     id="quantita"
                     placeholder="Quantità"
                 >
-
             </div>
 
 
-            <div class="field">
-
-                <label for="linea">
-                    <i class="fa-solid fa-route"></i>
-                    Linea
-                </label>
+            <div class="formGroup">
+                <label for="linea">Linea</label>
 
                 <input
                     type="text"
                     id="linea"
                     placeholder="Linea"
                 >
-
             </div>
 
 
-            <div class="field">
-
-                <label for="attesa">
-                    <i class="fa-solid fa-clock"></i>
-                    Attesa
-                </label>
+            <div class="formGroup">
+                <label for="attesa">Attesa</label>
 
                 <select id="attesa">
+                    <option value="">Vuoto</option>
                     <option value="L0">L0</option>
                     <option value="L1">L1</option>
                 </select>
-
             </div>
 
 
-            <div class="field fieldFull">
+            <div class="formGroup">
 
                 <label for="destinazione">
-                    <i class="fa-solid fa-square-parking"></i>
                     Destinazione
                 </label>
 
                 <select id="destinazione">
-                    <option value="">Seleziona parcheggio...</option>
+                    <option value="">
+                        -- Seleziona destinazione --
+                    </option>
                 </select>
+
+                <small class="fieldHint">
+                    I parcheggi occupati non sono selezionabili.
+                </small>
 
             </div>
 
         </div>
 
 
-        <button
-            type="button"
-            id="registraInbound"
-            class="primaryBtn"
-        >
-            <i class="fa-solid fa-right-to-bracket"></i>
-            REGISTRA INBOUND
-        </button>
+        <div class="cameraBox">
+
+            <video
+                id="video"
+                autoplay
+                playsinline
+            ></video>
+
+            <canvas
+                id="canvas"
+                style="display:none;"
+            ></canvas>
+
+            <div class="cameraButtons">
+
+                <button
+                    class="btn btnBlue"
+                    onclick="avviaCameraInbound()"
+                >
+                    <i class="fa-solid fa-camera"></i>
+                    Avvia fotocamera
+                </button>
+
+                <button
+                    class="btn"
+                    onclick="scattaFoto('inbound')"
+                >
+                    <i class="fa-solid fa-camera-retro"></i>
+                    Scatta foto
+                </button>
+
+            </div>
+
+            <div id="previewInbound"></div>
+
+        </div>
+
+
+        <div class="formActions">
+
+            <button
+                id="registraInbound"
+                class="btn btnPrimary"
+                onclick="registraInbound()"
+            >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Registra Inbound
+            </button>
+
+            <button
+                class="btn"
+                onclick="resetInbound()"
+            >
+                <i class="fa-solid fa-rotate-left"></i>
+                Reset
+            </button>
+
+        </div>
 
     </div>
 
 </section>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
      OUTBOUND
-========================================================= -->
+     ===================================================== -->
 
-<section id="pageOutbound" class="page">
+<section id="outbound" class="page">
 
-    <div class="pageHeader">
+    <div class="pageTitle">
 
-        <div>
-            <h1>
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Outbound
-            </h1>
+        <h2>
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            Outbound
+        </h2>
 
-            <p>Registrazione uscita mezzo</p>
-        </div>
+        <p>
+            Registrazione uscita mezzo
+        </p>
 
     </div>
 
 
-    <div class="panel">
+    <div class="formCard">
 
-        <div class="searchBox">
-
-            <label for="ricercaOutbound">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                Cerca targa
-            </label>
+        <div class="searchBar">
 
             <input
                 type="text"
                 id="ricercaOutbound"
-                placeholder="Inserisci la targa..."
+                placeholder="Cerca targa..."
                 autocomplete="off"
             >
 
@@ -398,332 +450,273 @@
         <div id="risultatoOutbound"></div>
 
 
-        <div class="cameraLayout">
+        <div class="formGroup">
 
-            <div class="cameraBox">
+            <label for="targaOut">
+                Targa selezionata
+            </label>
 
-                <div class="cameraTitle">
-                    <i class="fa-solid fa-camera"></i>
-                    Foto OUT
-                </div>
+            <input
+                type="text"
+                id="targaOut"
+                placeholder="Targa"
+                readonly
+            >
 
-                <video
-                    id="videoOut"
-                    autoplay
-                    playsinline
-                    muted
-                ></video>
+        </div>
 
-                <canvas id="canvasOut"></canvas>
+
+        <div class="cameraBox">
+
+            <video
+                id="videoOut"
+                autoplay
+                playsinline
+            ></video>
+
+            <canvas
+                id="canvasOut"
+                style="display:none;"
+            ></canvas>
+
+            <div class="cameraButtons">
 
                 <button
-                    type="button"
-                    id="snapOut"
-                    class="secondaryBtn"
+                    class="btn btnBlue"
+                    onclick="avviaCameraOutbound()"
                 >
                     <i class="fa-solid fa-camera"></i>
+                    Avvia fotocamera
+                </button>
+
+                <button
+                    class="btn"
+                    onclick="scattaFoto('outbound')"
+                >
+                    <i class="fa-solid fa-camera-retro"></i>
                     Scatta foto
                 </button>
 
             </div>
 
-        </div>
-
-
-        <div class="formGrid">
-
-            <div class="field fieldFull">
-
-                <label for="targaOut">
-                    <i class="fa-solid fa-car"></i>
-                    Targa
-                </label>
-
-                <input
-                    type="text"
-                    id="targaOut"
-                    placeholder="Targa del mezzo"
-                    autocomplete="off"
-                >
-
-            </div>
+            <div id="previewOutbound"></div>
 
         </div>
 
+
+        <div class="formActions">
+
+            <button
+                class="btn btnDanger"
+                onclick="registraOutbound()"
+            >
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                Registra Outbound
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     IN SITO
+     ===================================================== -->
+
+<section id="inSito" class="page">
+
+    <div class="pageTitle">
+
+        <h2>
+            <i class="fa-solid fa-truck"></i>
+            Mezzi In Sito
+        </h2>
+
+        <p>
+            Tutti i mezzi attualmente presenti
+        </p>
+
+    </div>
+
+
+    <div class="searchBar">
+
+        <input
+            type="text"
+            id="ricercaInSito"
+            placeholder="Cerca targa, vettore, park..."
+        >
+
+        <select id="filtroAttesa">
+            <option value="">Tutte le attese</option>
+            <option value="L0">L0</option>
+            <option value="L1">L1</option>
+        </select>
 
         <button
-            type="button"
-            id="registraOutbound"
-            class="primaryBtn"
+            class="btn btnBlue"
+            onclick="exportInExcel()"
         >
-            <i class="fa-solid fa-right-from-bracket"></i>
-            REGISTRA OUTBOUND
+            <i class="fa-solid fa-file-excel"></i>
+            Esporta Excel
         </button>
 
     </div>
 
-</section>
 
+    <div class="tableWrap">
 
-<!-- =========================================================
-     IN SITO
-========================================================= -->
+        <table>
 
-<section id="pageInSito" class="page widePage">
+            <thead>
+                <tr>
+                    <th>PK</th>
+                    <th>Attesa</th>
+                    <th>Tipo</th>
+                    <th>Targa</th>
+                    <th>Vettore</th>
+                    <th>Quantità</th>
+                    <th>Linea</th>
+                    <th>Ingresso</th>
+                    <th>Permanenza</th>
+                    <th>Foto IN</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
 
-    <div class="pageHeader">
+            <tbody id="monitorIn"></tbody>
 
-        <div>
-            <h1>
-                <i class="fa-solid fa-truck"></i>
-                In Sito
-            </h1>
-
-            <p>Mezzi attualmente presenti</p>
-        </div>
-
-    </div>
-
-
-    <div class="panel">
-
-        <div class="filterBar">
-
-            <div class="searchBox">
-
-                <label for="ricercaInSito">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    Ricerca
-                </label>
-
-                <input
-                    type="text"
-                    id="ricercaInSito"
-                    placeholder="Cerca targa, vettore, park..."
-                >
-
-            </div>
-
-
-            <div class="searchBox">
-
-                <label for="filtroAttesa">
-                    <i class="fa-solid fa-filter"></i>
-                    Attesa
-                </label>
-
-                <select id="filtroAttesa">
-
-                    <option value="">Tutte</option>
-                    <option value="L0">L0</option>
-                    <option value="L1">L1</option>
-
-                </select>
-
-            </div>
-
-
-            <button
-                type="button"
-                onclick="exportInExcel()"
-                class="exportBtn"
-            >
-                <i class="fa-solid fa-file-excel"></i>
-                Esporta Excel
-            </button>
-
-        </div>
-
-
-        <div class="tableWrapper">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-                        <th>PK</th>
-                        <th>Attesa</th>
-                        <th>Tipo</th>
-                        <th>Targa</th>
-                        <th>Vettore</th>
-                        <th>Quantità</th>
-                        <th>Linea</th>
-                        <th>Ingresso</th>
-                        <th>Permanenza</th>
-                        <th>Foto IN</th>
-                        <th>Azioni</th>
-                    </tr>
-
-                </thead>
-
-                <tbody id="monitorIn"></tbody>
-
-            </table>
-
-        </div>
+        </table>
 
     </div>
 
 </section>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
      USCITI
-========================================================= -->
+     ===================================================== -->
 
-<section id="pageUsciti" class="page widePage">
+<section id="usciti" class="page">
 
-    <div class="pageHeader">
+    <div class="pageTitle">
 
-        <div>
-            <h1>
-                <i class="fa-solid fa-circle-check"></i>
-                Usciti
-            </h1>
+        <h2>
+            <i class="fa-solid fa-check"></i>
+            Usciti
+        </h2>
 
-            <p>Storico dei mezzi usciti</p>
-        </div>
+        <p>
+            Storico mezzi usciti
+        </p>
 
     </div>
 
 
-    <div class="panel">
+    <div class="searchBar">
 
-        <div class="filterBar">
+        <input
+            type="text"
+            id="ricercaUsciti"
+            placeholder="Cerca targa, vettore, park..."
+        >
 
-            <div class="searchBox">
+        <button
+            class="btn btnBlue"
+            onclick="exportOutExcel()"
+        >
+            <i class="fa-solid fa-file-excel"></i>
+            Esporta Excel
+        </button>
 
-                <label for="ricercaUsciti">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    Ricerca
-                </label>
-
-                <input
-                    type="text"
-                    id="ricercaUsciti"
-                    placeholder="Cerca targa, vettore, park..."
-                >
-
-            </div>
-
-
-            <button
-                type="button"
-                onclick="exportOutExcel()"
-                class="exportBtn"
-            >
-                <i class="fa-solid fa-file-excel"></i>
-                Esporta Excel
-            </button>
-
-        </div>
+    </div>
 
 
-        <div class="tableWrapper">
+    <div class="tableWrap">
 
-            <table>
+        <table>
 
-                <thead>
+            <thead>
 
-                    <tr>
-                        <th>PK</th>
-                        <th>Attesa</th>
-                        <th>Tipo</th>
-                        <th>Targa</th>
-                        <th>Vettore</th>
-                        <th>Quantità</th>
-                        <th>Linea</th>
-                        <th>Ingresso</th>
-                        <th>Uscita</th>
-                        <th>Foto OUT</th>
-                        <th>Azioni</th>
-                    </tr>
+                <tr>
+                    <th>PK</th>
+                    <th>Attesa</th>
+                    <th>Tipo</th>
+                    <th>Targa</th>
+                    <th>Vettore</th>
+                    <th>Quantità</th>
+                    <th>Linea</th>
+                    <th>Ingresso</th>
+                    <th>Uscita</th>
+                    <th>Foto OUT</th>
+                    <th>Azioni</th>
+                </tr>
 
-                </thead>
+            </thead>
 
-                <tbody id="monitorOut"></tbody>
+            <tbody id="monitorOut"></tbody>
 
-            </table>
-
-        </div>
+        </table>
 
     </div>
 
 </section>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
      TRATTORISTI
-========================================================= -->
+     ===================================================== -->
 
-<section id="pageTrattoristi" class="page">
+<section id="trattoristi" class="page">
 
-    <div class="pageHeader">
+    <div class="pageTitle">
 
-        <div>
-            <h1>
-                <i class="fa-solid fa-tractor"></i>
-                Trattoristi
-            </h1>
+        <h2>
+            <i class="fa-solid fa-truck-moving"></i>
+            Trattoristi
+        </h2>
 
-            <p>Spostamento e gestione destinazione mezzi</p>
-        </div>
+        <p>
+            Spostamento mezzo
+        </p>
 
     </div>
 
 
-    <div class="panel">
+    <div class="formCard">
 
         <div class="formGrid">
 
-            <div class="field">
+            <div class="formGroup">
 
                 <label for="trattTarga">
-                    <i class="fa-solid fa-car"></i>
                     Targa
                 </label>
 
                 <input
                     type="text"
                     id="trattTarga"
-                    placeholder="Targa mezzo"
-                    autocomplete="off"
+                    placeholder="Inserisci targa"
                 >
 
             </div>
 
 
-            <div class="field">
-
-                <label for="trattDest">
-                    <i class="fa-solid fa-location-dot"></i>
-                    Destinazione attuale
-                </label>
-
-                <input
-                    type="text"
-                    id="trattDest"
-                    placeholder="Destinazione attuale"
-                    autocomplete="off"
-                >
-
-            </div>
-
-
-            <div class="field fieldFull">
+            <div class="formGroup">
 
                 <label for="nuovaDestinazione">
-                    <i class="fa-solid fa-square-parking"></i>
                     Nuova destinazione
                 </label>
 
                 <select id="nuovaDestinazione">
-
                     <option value="">
-                        Seleziona nuova destinazione...
+                        -- Seleziona destinazione --
                     </option>
-
                 </select>
 
             </div>
@@ -731,50 +724,63 @@
         </div>
 
 
-        <button
-            type="button"
-            id="btnModificaDest"
-            class="primaryBtn"
-        >
-            <i class="fa-solid fa-arrows-up-down-left-right"></i>
-            SPOSTA MEZZO
-        </button>
+        <div id="trattoristaInfo"></div>
+
+
+        <div class="formActions">
+
+            <button
+                id="btnModificaDest"
+                class="btn btnPrimary"
+                onclick="modificaDestinazioneTrattorista()"
+            >
+                <i class="fa-solid fa-arrows-rotate"></i>
+                Modifica destinazione
+            </button>
+
+        </div>
 
     </div>
 
 </section>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
      PARK
-========================================================= -->
+     ===================================================== -->
 
-<section id="pagePark" class="page parkPage">
+<section id="park" class="page">
 
-    <div class="pageHeader">
+    <div class="pageTitle">
 
-        <div>
-            <h1>
-                <i class="fa-solid fa-square-parking"></i>
-                Park
-            </h1>
+        <h2>
+            <i class="fa-solid fa-square-parking"></i>
+            Park
+        </h2>
 
-            <p>Situazione parcheggi in tempo reale</p>
-        </div>
+        <p>
+            Stato attuale dei parcheggi
+        </p>
 
     </div>
 
 
     <div class="parkLegend">
 
-        <div>
-            <span class="legendColor free"></span>
+        <div class="legendItem">
+            <div class="legendBox legendFree"></div>
             Libero
         </div>
 
-        <div>
-            <span class="legendColor occupied"></span>
+        <div class="legendItem">
+            <div class="legendBox legendOccupied"></div>
             Occupato
+        </div>
+
+        <div class="legendItem">
+            <div class="legendBox legendOver24"></div>
+            Oltre 24 ore
         </div>
 
     </div>
@@ -784,12 +790,208 @@
 
 </section>
 
+
+
+<!-- =====================================================
+     MOVIMENTI
+     ===================================================== -->
+
+<section id="movimenti" class="page">
+
+    <div class="pageTitle">
+
+        <h2>
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Movimenti
+        </h2>
+
+        <p>
+            Storico degli spostamenti dei mezzi
+        </p>
+
+    </div>
+
+
+    <div class="searchBar">
+
+        <input
+            type="text"
+            id="ricercaMovimenti"
+            placeholder="Cerca targa, da, a, operatore..."
+        >
+
+    </div>
+
+
+    <div class="tableWrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Data/Ora</th>
+                    <th>Targa</th>
+                    <th>Da</th>
+                    <th>A</th>
+                    <th>Operatore</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="monitorMovimenti"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     STATISTICHE
+     ===================================================== -->
+
+<section id="statistiche" class="page">
+
+    <div class="pageTitle">
+
+        <h2>
+            <i class="fa-solid fa-chart-pie"></i>
+            Statistiche
+        </h2>
+
+        <p>
+            Dati riepilogativi del piazzale
+        </p>
+
+    </div>
+
+
+    <div class="statsCards">
+
+        <div class="statCard">
+            <span>Ingressi oggi</span>
+            <strong id="statIngressi">0</strong>
+        </div>
+
+        <div class="statCard">
+            <span>Uscite oggi</span>
+            <strong id="statUscite">0</strong>
+        </div>
+
+        <div class="statCard">
+            <span>Presenti</span>
+            <strong id="statPresenti">0</strong>
+        </div>
+
+        <div class="statCard">
+            <span>Oltre 8 ore</span>
+            <strong id="statOltre8">0</strong>
+        </div>
+
+        <div class="statCard critical">
+            <span>Oltre 24 ore</span>
+            <strong id="statOltre24">0</strong>
+        </div>
+
+        <div class="statCard">
+            <span>Spostamenti oggi</span>
+            <strong id="statSpostamenti">0</strong>
+        </div>
+
+        <div class="statCard">
+            <span>Permanenza media</span>
+            <strong id="statMedia">0h 00m</strong>
+        </div>
+
+        <div class="statCard">
+            <span>Permanenza massima</span>
+            <strong id="statMassima">0h 00m</strong>
+        </div>
+
+    </div>
+
+
+    <div class="dashboardSection">
+
+        <div class="sectionHeader">
+            <i class="fa-solid fa-square-parking"></i>
+            Utilizzo parcheggi
+        </div>
+
+        <div id="statPark"></div>
+
+    </div>
+
+</section>
+
 </main>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
+     POPUP SCHEDA MEZZO
+     ===================================================== -->
+
+<div
+    id="mezzoPopupOverlay"
+    class="popupOverlay"
+>
+
+    <div class="parkPopup mezzoPopup">
+
+        <div class="popupHeader">
+
+            <h3 id="mezzoPopupTitle">
+                Scheda mezzo
+            </h3>
+
+            <button
+                class="popupClose"
+                onclick="chiudiMezzoPopup()"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div
+            id="mezzoPopupContent"
+            class="popupContent"
+        ></div>
+
+
+        <div class="popupActions">
+
+            <button
+                class="btn btnBlue"
+                onclick="apriSpostamentoDaScheda()"
+            >
+                <i class="fa-solid fa-arrows-up-down-left-right"></i>
+                Sposta
+            </button>
+
+            <button
+                class="btn"
+                onclick="chiudiMezzoPopup()"
+            >
+                Chiudi
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
      POPUP PARK
-========================================================= -->
+     ===================================================== -->
 
 <div
     id="parkPopupOverlay"
@@ -800,14 +1002,14 @@
 
         <div class="popupHeader">
 
-            <h2 id="popupParkTitle">
+            <h3 id="popupParkTitle">
                 Parcheggio
-            </h2>
+            </h3>
 
             <button
-                type="button"
                 id="popupCloseButton"
                 class="popupClose"
+                onclick="chiudiPopup()"
             >
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -824,18 +1026,17 @@
         <div class="popupActions">
 
             <button
-                type="button"
                 id="popupMoveButton"
-                class="primaryBtn"
+                class="btn btnBlue"
+                onclick="spostaDaPopup()"
             >
                 <i class="fa-solid fa-arrows-up-down-left-right"></i>
                 Sposta mezzo
             </button>
 
             <button
-                type="button"
-                id="popupCloseButtonBottom"
-                class="secondaryBtn"
+                class="btn"
+                onclick="chiudiPopup()"
             >
                 Chiudi
             </button>

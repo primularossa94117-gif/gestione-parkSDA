@@ -1,943 +1,802 @@
-/* =========================================================
-   RESET
-========================================================= */
-
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
-html {
-    width: 100%;
+html,
+body {
+    margin: 0;
+    padding: 0;
     min-height: 100%;
-    scroll-behavior: smooth;
 }
 
 body {
-    width: 100%;
-    min-height: 100vh;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    background: #121212;
-    color: #e5e5e5;
-
-    padding-top: 145px;
-
-    overflow-x: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #111;
+    color: #f5f5f5;
+    font-size: 14px;
 }
 
 button,
 input,
 select {
-    font: inherit;
-    touch-action: manipulation;
+    font-family: inherit;
 }
+
+button {
+    cursor: pointer;
+}
+
 
 
 /* =========================================================
    HEADER
-========================================================= */
+   ========================================================= */
 
-.mainHeader {
-    position: fixed;
-
+header {
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-
     z-index: 1000;
-
-    height: 70px;
-
-    display: flex;
-    align-items: center;
-
-    padding: 0 28px;
-
-    background: #1b1b1b;
-
+    background: #181818;
     border-bottom: 1px solid #333;
-
-    box-shadow:
-        0 2px 12px rgba(0, 0, 0, 0.35);
+    padding: 8px 20px;
 }
 
+.headerContent {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-height: 68px;
+}
 
 .headerLogo {
     display: flex;
     align-items: center;
-    gap: 14px;
-}
-
-
-.logoBox {
-    width: 42px;
-    height: 42px;
-
-    display: flex;
-    align-items: center;
     justify-content: center;
-
-    border-radius: 8px;
-
-    background: #ffffff;
-
-    color: #e30613;
-
-    font-size: 15px;
-    font-weight: 900;
+    flex-shrink: 0;
+    width: 190px;
+    height: 64px;
+    overflow: hidden;
 }
 
+.headerLogo img {
+    display: block;
+    width: 180px;
+    max-width: 100%;
+    max-height: 62px;
+    height: auto;
+    object-fit: contain;
+}
 
-.headerTitle {
+.headerSeparator {
+    width: 1px;
+    height: 48px;
+    background: #444;
+    flex-shrink: 0;
+}
+
+.headerTitle h1 {
+    margin: 0;
+    font-size: 23px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.headerTitle p {
+    margin: 4px 0 0;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.operatorBox {
+    margin-left: auto;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
+    min-width: 190px;
 }
 
-
-.titleMain {
-    font-size: 21px;
-    font-weight: 800;
+.operatorBox label {
+    color: #aaa;
+    font-size: 11px;
+    font-weight: 700;
 }
 
-
-.titleSub {
-    font-size: 12px;
-    color: #999;
+.operatorBox input {
+    width: 100%;
+    height: 34px;
+    padding: 7px 10px;
+    background: #101010;
+    border: 1px solid #3c3c3c;
+    border-radius: 6px;
+    color: #fff;
 }
+
 
 
 /* =========================================================
    MENU
-========================================================= */
+   ========================================================= */
 
-.mainMenu {
-    position: fixed;
-
-    top: 70px;
-    left: 0;
-    right: 0;
-
+nav {
+    position: sticky;
+    top: 84px;
     z-index: 999;
-
-    min-height: 65px;
-
     display: flex;
-    justify-content: center;
-    align-items: center;
-
-    gap: 8px;
-
-    padding: 8px 20px;
-
-    background: #181818;
-
-    border-bottom: 1px solid #303030;
-
-    box-shadow:
-        0 3px 12px rgba(0, 0, 0, 0.25);
+    gap: 6px;
+    padding: 8px 12px;
+    background: #151515;
+    border-bottom: 1px solid #333;
+    overflow-x: auto;
 }
 
-
-.menuBtn {
-    width: auto !important;
-
-    min-width: 125px;
-    min-height: 45px;
-
-    padding: 10px 16px;
-
-    border: 1px solid #303030;
-    border-radius: 8px;
-
-    background: #252525;
+nav button {
+    flex: 0 0 auto;
+    border: 1px solid #333;
+    background: #222;
     color: #ddd;
-
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 8px;
-
-    font-weight: 600;
-
-    transition:
-        background 0.2s,
-        color 0.2s,
-        transform 0.15s;
+    border-radius: 7px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 700;
 }
 
-
-.menuBtn:hover {
+nav button:hover {
     background: #303030;
 }
 
-
-.menuBtn:active {
-    transform: scale(0.98);
-}
-
-
-.menuBtn.active {
-    background: #007bff;
+nav button.active {
+    background: #168a2f;
+    border-color: #168a2f;
     color: #fff;
-
-    border-color: #007bff;
 }
 
-
-.menuBtn i {
-    font-size: 15px;
+nav button i {
+    margin-right: 6px;
 }
+
 
 
 /* =========================================================
    MAIN
-========================================================= */
+   ========================================================= */
 
-.appMain {
+main {
     width: 100%;
-    max-width: 1700px;
-
+    max-width: 1900px;
     margin: 0 auto;
-
-    padding: 0 24px 40px;
+    padding: 20px;
 }
-
-
-/* =========================================================
-   PAGINE
-========================================================= */
 
 .page {
     display: none;
-
-    width: 100%;
-    max-width: 760px;
-
-    margin: 0 auto;
 }
 
-
-.page.widePage,
-.dashboardPage,
-.parkPage {
-    max-width: 1600px;
+.page.active {
+    display: block;
 }
 
-
-.pageHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    margin-bottom: 20px;
-}
-
-
-.pageHeader h1 {
-    font-size: 26px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 10px;
-}
-
-
-.pageHeader h1 i {
-    color: #007bff;
-}
-
-
-.pageHeader p {
-    margin-top: 5px;
-
-    color: #888;
-
-    font-size: 14px;
-}
 
 
 /* =========================================================
-   PANEL
-========================================================= */
+   GLOBAL SEARCH
+   ========================================================= */
 
-.panel {
-    background: #1b1b1b;
-
-    border: 1px solid #303030;
-
-    border-radius: 12px;
-
-    padding: 24px;
-
-    box-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.22);
-}
-
-
-.panelHeader {
-    margin-bottom: 20px;
-}
-
-
-.panelHeader h2 {
-    font-size: 19px;
-
+.globalSearchBox {
     display: flex;
     align-items: center;
+    gap: 10px;
+    background: #1b1b1b;
+    border: 1px solid #383838;
+    border-radius: 9px;
+    padding: 9px 13px;
+    margin-bottom: 14px;
+}
 
-    gap: 9px;
+.globalSearchBox i {
+    color: #999;
+}
+
+.globalSearchBox input {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+}
+
+.globalSearchResults {
+    display: none;
+    margin-bottom: 15px;
+}
+
+.globalSearchResults.visible {
+    display: block;
+}
+
+.globalResult {
+    background: #1d1d1d;
+    border: 1px solid #3b3b3b;
+    border-radius: 9px;
+    padding: 12px;
+    margin-bottom: 7px;
+    cursor: pointer;
+}
+
+.globalResult:hover {
+    background: #272727;
+}
+
+.globalResultMain {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.globalResultPlate {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.globalResultPark {
+    color: #4da6ff;
+    font-weight: 700;
+}
+
+.globalResultDetails {
+    margin-top: 5px;
+    color: #aaa;
+    font-size: 12px;
 }
 
 
-.panelHeader h2 i {
-    color: #007bff;
+
+/* =========================================================
+   TITOLI
+   ========================================================= */
+
+.pageTitle {
+    margin-bottom: 18px;
 }
+
+.pageTitle h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.pageTitle h2 i {
+    margin-right: 7px;
+}
+
+.pageTitle p {
+    margin: 5px 0 0;
+    color: #999;
+}
+
 
 
 /* =========================================================
    DASHBOARD
-========================================================= */
+   ========================================================= */
 
 .dashboardCards {
     display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-    gap: 16px;
-
-    margin-bottom: 20px;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
 }
-
 
 .dashboardCard {
-    min-height: 120px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 15px;
-
-    padding: 20px;
-
     background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 17px;
+}
 
-    border: 1px solid #303030;
+.dashboardCard .cardTitle {
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 700;
+}
 
-    border-radius: 12px;
+.dashboardCard .cardValue {
+    margin-top: 6px;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.dashboardCard.green .cardValue {
+    color: #31c45b;
+}
+
+.dashboardCard.red .cardValue {
+    color: #e63946;
+}
+
+.dashboardCard.blue .cardValue {
+    color: #3498db;
+}
+
+.dashboardCard.orange .cardValue {
+    color: #f39c12;
+}
+
+.dashboardCard.critical .cardValue {
+    color: #ff2222;
+}
+
+.dashboardCard.purple .cardValue {
+    color: #b56cff;
+}
+
+.dashboardCard.cyan .cardValue {
+    color: #36c9d4;
 }
 
 
-.dashboardIcon {
-    width: 50px;
-    height: 50px;
 
-    flex: 0 0 50px;
+/* =========================================================
+   DASHBOARD SECTIONS
+   ========================================================= */
 
+.dashboardSection {
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 18px;
+}
+
+.sectionHeader {
+    padding: 13px 15px;
+    border-bottom: 1px solid #333;
+    font-weight: 800;
+}
+
+.sectionHeader i {
+    margin-right: 7px;
+}
+
+#dashboardAlerts {
+    padding: 10px;
+}
+
+.alertItem {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 11px;
+    margin-bottom: 7px;
+    background: #222;
+    border-radius: 7px;
+    cursor: pointer;
+}
 
-    border-radius: 10px;
+.alertItem:last-child {
+    margin-bottom: 0;
+}
 
-    background: #252525;
+.alertItem.over8 {
+    border-left: 4px solid #f39c12;
+}
 
-    color: #007bff;
+.alertItem.over24 {
+    border-left: 4px solid #ff0000;
+    animation: alertPulse 1.2s infinite;
+}
 
-    font-size: 20px;
+.alertPlate {
+    font-weight: 800;
+}
+
+.alertTime {
+    font-size: 12px;
+    color: #aaa;
+}
+
+@keyframes alertPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .65;
+    }
 }
 
 
-.dashboardCard span {
-    display: block;
 
-    color: #999;
+/* =========================================================
+   PARK SUMMARY
+   ========================================================= */
 
-    font-size: 13px;
-
-    margin-bottom: 4px;
-}
-
-
-.dashboardCard strong {
-    display: block;
-
-    font-size: 30px;
-
-    color: #fff;
-}
-
-
-.dashboardTruckList {
+.parkSummaryGrid {
+    padding: 12px;
     display: grid;
-
-    grid-template-columns:
-        repeat(auto-fill, minmax(300px, 1fr));
-
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
 }
 
-
-.dashboardTruck {
-    padding: 15px;
-
+.parkSummaryCard {
+    padding: 12px;
     background: #242424;
-
-    border: 1px solid #333;
-
-    border-radius: 9px;
+    border: 1px solid #373737;
+    border-radius: 8px;
+    cursor: pointer;
 }
+
+.parkSummaryCard:hover {
+    background: #2b2b2b;
+}
+
+.parkSummaryName {
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.parkSummaryNumbers {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.parkFreeNumber {
+    color: #31c45b;
+    font-weight: 800;
+}
+
+.parkOccupiedNumber {
+    color: #e63946;
+    font-weight: 800;
+}
+
 
 
 /* =========================================================
    FORM
-========================================================= */
+   ========================================================= */
+
+.formCard {
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 11px;
+    padding: 20px;
+}
 
 .formGrid {
     display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 18px;
-
-    margin-bottom: 20px;
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: 15px;
 }
 
-
-.field {
-    min-width: 0;
-}
-
-
-.fieldFull {
-    grid-column: 1 / -1;
-}
-
-
-.field label,
-.searchBox label {
+.formGroup {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 6px;
+}
 
-    gap: 7px;
-
-    margin-bottom: 7px;
-
-    color: #cfcfcf;
-
+.formGroup label {
+    color: #aaa;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
-
-.field label i,
-.searchBox label i {
-    color: #007bff;
-}
-
-
-input,
-select {
+.formGroup input,
+.formGroup select {
     width: 100%;
-
-    min-height: 46px;
-
-    padding: 10px 13px;
-
-    background: #252525;
-
-    border: 1px solid #3b3b3b;
-
-    border-radius: 8px;
-
+    min-height: 40px;
+    padding: 9px 11px;
+    background: #111;
     color: #fff;
-
+    border: 1px solid #3b3b3b;
+    border-radius: 7px;
     outline: none;
-
-    transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
 }
 
+.formGroup input:focus,
+.formGroup select:focus {
+    border-color: #168a2f;
+}
 
-input::placeholder {
+.fieldHint {
     color: #777;
+    font-size: 11px;
 }
 
-
-input:focus,
-select:focus {
-    border-color: #007bff;
-
-    box-shadow:
-        0 0 0 3px rgba(0, 123, 255, 0.13);
+.formActions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
 }
 
-
-select {
-    cursor: pointer;
-}
 
 
 /* =========================================================
-   BUTTONS
-========================================================= */
+   BUTTON
+   ========================================================= */
 
-.primaryBtn,
-.secondaryBtn,
-.exportBtn {
-    width: 100%;
-
-    min-height: 46px;
-
-    padding: 11px 16px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 8px;
-
-    font-weight: 700;
-
-    transition:
-        background 0.2s,
-        transform 0.15s,
-        opacity 0.2s;
-}
-
-
-.primaryBtn {
-    background: #007bff;
-
-    border: 1px solid #007bff;
-
-    color: #fff;
-}
-
-
-.primaryBtn:hover {
-    background: #006fe6;
-}
-
-
-.secondaryBtn {
+.btn {
+    border: 1px solid #444;
+    border-radius: 7px;
+    padding: 10px 16px;
+    font-weight: 800;
     background: #292929;
-
-    border: 1px solid #414141;
-
-    color: #eee;
-}
-
-
-.secondaryBtn:hover {
-    background: #333;
-}
-
-
-.exportBtn {
-    background: #188038;
-
-    border: 1px solid #188038;
-
     color: #fff;
-
-    width: auto;
-
-    min-width: 170px;
+    transition: .15s;
 }
 
-
-.exportBtn:hover {
-    background: #146c2f;
+.btn:hover {
+    filter: brightness(1.12);
 }
 
-
-.primaryBtn:active,
-.secondaryBtn:active,
-.exportBtn:active {
-    transform: scale(0.98);
+.btnPrimary {
+    background: #168a2f;
+    border-color: #168a2f;
 }
+
+.btnDanger {
+    background: #b51f2e;
+    border-color: #b51f2e;
+}
+
+.btnBlue {
+    background: #1769aa;
+    border-color: #1769aa;
+}
+
+.btnSmall {
+    padding: 6px 9px;
+    font-size: 11px;
+}
+
 
 
 /* =========================================================
    CAMERA
-========================================================= */
-
-.cameraLayout {
-    width: 100%;
-
-    margin-bottom: 22px;
-}
-
+   ========================================================= */
 
 .cameraBox {
-    width: 100%;
-
-    background: #111;
-
-    border: 1px solid #303030;
-
+    margin-top: 18px;
+    background: #101010;
+    border: 1px solid #333;
     border-radius: 10px;
-
     padding: 12px;
-
-    overflow: hidden;
 }
 
-
-.cameraTitle {
-    margin-bottom: 10px;
-
-    color: #ccc;
-
-    font-weight: 700;
-
-    display: flex;
-    align-items: center;
-
-    gap: 8px;
-}
-
-
-.cameraTitle i {
-    color: #007bff;
-}
-
-
-.cameraBox video,
-.cameraBox canvas {
+.cameraBox video {
     display: block;
-
     width: 100%;
-
-    max-height: 430px;
-
+    max-height: 400px;
     object-fit: cover;
-
-    border-radius: 8px;
-
-    background: #050505;
+    border-radius: 7px;
+    background: #000;
 }
 
-
-.cameraBox canvas {
-    display: none;
+.cameraButtons {
+    display: flex;
+    gap: 8px;
     margin-top: 10px;
+    flex-wrap: wrap;
 }
 
-
-.cameraBox .secondaryBtn {
+.previewPhoto {
+    max-width: 250px;
+    max-height: 180px;
     margin-top: 10px;
+    border-radius: 7px;
+    border: 1px solid #444;
 }
+
 
 
 /* =========================================================
-   SEARCH / FILTER
-========================================================= */
+   SEARCH
+   ========================================================= */
 
-.searchBox {
-    width: 100%;
+.searchBar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
-
-.filterBar {
-    display: grid;
-
-    grid-template-columns:
-        minmax(250px, 1fr)
-        minmax(180px, 260px)
-        auto;
-
-    align-items: end;
-
-    gap: 15px;
-
-    margin-bottom: 20px;
+.searchBar input,
+.searchBar select {
+    flex: 1;
+    min-height: 40px;
+    background: #111;
+    color: #fff;
+    border: 1px solid #3a3a3a;
+    border-radius: 7px;
+    padding: 9px 11px;
 }
 
-
-/* =========================================================
-   OUTBOUND RESULT
-========================================================= */
-
-#risultatoOutbound {
-    margin-bottom: 20px;
-}
-
-
-.outboundResult {
-    padding: 15px;
-
-    background: #242424;
-
-    border: 1px solid #343434;
-
-    border-radius: 9px;
-}
 
 
 /* =========================================================
    TABLE
-========================================================= */
+   ========================================================= */
 
-.tableWrapper {
+.tableWrap {
     width: 100%;
-
     overflow-x: auto;
-
-    overflow-y: hidden;
-
-    -webkit-overflow-scrolling: touch;
-
-    border: 1px solid #303030;
-
-    border-radius: 9px;
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 10px;
 }
-
 
 table {
     width: 100%;
-
-    min-width: 1150px;
-
     border-collapse: collapse;
-
-    background: #191919;
+    min-width: 1200px;
 }
-
 
 thead {
-    background: #242424;
+    background: #252525;
 }
-
-
-th,
-td {
-    padding: 12px 10px;
-
-    border-bottom: 1px solid #303030;
-
-    text-align: left;
-
-    white-space: nowrap;
-
-    font-size: 13px;
-}
-
 
 th {
-    color: #aaa;
-
+    padding: 11px 10px;
+    text-align: left;
+    color: #ddd;
     font-size: 12px;
-
-    text-transform: uppercase;
-
-    letter-spacing: 0.3px;
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 2;
+    white-space: nowrap;
+    border-bottom: 1px solid #3b3b3b;
 }
 
+td {
+    padding: 10px;
+    border-bottom: 1px solid #292929;
+    vertical-align: middle;
+    white-space: nowrap;
+}
 
 tbody tr:hover {
-    background: #222;
+    background: #202020;
 }
 
-
-td img {
-    width: 70px;
-    height: 48px;
-
-    object-fit: cover;
-
-    border-radius: 5px;
-
-    border: 1px solid #333;
+.clickablePlate {
+    color: #4da6ff;
+    font-weight: 800;
+    cursor: pointer;
 }
+
+.clickablePlate:hover {
+    text-decoration: underline;
+}
+
 
 
 /* =========================================================
-   BADGES
-========================================================= */
-
-.badge {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    min-height: 28px;
-
-    padding: 4px 9px;
-
-    border-radius: 20px;
-
-    font-size: 11px;
-
-    font-weight: 700;
-}
-
-
-.badgePark {
-    background: rgba(0, 123, 255, 0.15);
-
-    color: #4da3ff;
-}
-
-
-.badgeBaia {
-    background: rgba(255, 193, 7, 0.15);
-
-    color: #ffc107;
-}
-
+   PERMANENZA
+   ========================================================= */
 
 .permanenzaNormal {
-    color: #49d17d;
+    color: #31c45b;
+    font-weight: 800;
 }
-
 
 .permanenzaMedium {
-    color: #ffc107;
+    color: #f39c12;
+    font-weight: 800;
 }
-
 
 .permanenzaLong {
-    color: #ff5b5b;
+    color: #e63946;
+    font-weight: 800;
 }
+
+
+
+/* =========================================================
+   FOTO
+   ========================================================= */
+
+.fotoThumb {
+    width: 50px;
+    height: 38px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #444;
+}
+
+.fotoThumb:hover {
+    transform: scale(1.08);
+}
+
 
 
 /* =========================================================
    PARK
-========================================================= */
+   ========================================================= */
 
 .parkLegend {
     display: flex;
-    flex-wrap: wrap;
-
+    align-items: center;
     gap: 18px;
-
     margin-bottom: 18px;
-
-    padding: 14px 18px;
-
-    background: #1b1b1b;
-
-    border: 1px solid #303030;
-
-    border-radius: 10px;
+    flex-wrap: wrap;
 }
 
-
-.parkLegend > div {
+.legendItem {
     display: flex;
     align-items: center;
-
-    gap: 8px;
-
+    gap: 7px;
     font-size: 13px;
-
-    color: #ccc;
 }
 
-
-.legendColor {
-    width: 20px;
-    height: 20px;
-
-    display: inline-block;
-
-    border-radius: 5px;
+.legendBox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
 }
 
-
-.legendColor.free {
+.legendFree {
     background: #168a2f;
 }
 
-
-.legendColor.occupied {
+.legendOccupied {
     background: #d62828;
 }
 
-
-#parkGrid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit, minmax(330px, 1fr));
-
-    gap: 18px;
-
-    align-items: start;
+.legendOver24 {
+    background: #ff0000;
+    animation: legendaLampeggio .8s infinite;
 }
 
+@keyframes legendaLampeggio {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .25;
+    }
+}
 
 .parkSection {
-    background: #1b1b1b;
-
+    margin-bottom: 24px;
+    background: #171717;
     border: 1px solid #303030;
-
-    border-radius: 12px;
-
-    padding: 15px;
+    border-radius: 11px;
+    padding: 14px;
 }
 
-
-.parkGroupTitle {
-    margin-bottom: 13px;
-
-    padding-bottom: 10px;
-
-    border-bottom: 1px solid #303030;
-
+.parkSection h3 {
+    margin: 0 0 6px;
     font-size: 16px;
+}
 
-    font-weight: 800;
+.parkStats {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 12px;
+    color: #aaa;
+    font-size: 12px;
+}
 
+.parkStats strong {
     color: #fff;
 }
 
-
-.parkRow {
+.parkGrid {
     display: grid;
-
-    grid-template-columns:
-        repeat(auto-fill, minmax(75px, 1fr));
-
+    grid-template-columns: repeat(6, minmax(65px, 1fr));
     gap: 7px;
 }
 
+.parkSection.bucaSection .parkGrid {
+    grid-template-columns: repeat(12, minmax(60px, 1fr));
+}
 
 .parkCell {
     min-height: 48px;
-
-    padding: 7px;
-
+    height: 48px;
+    padding: 4px;
     border-radius: 7px;
-
     background: #168a2f;
-
     color: #fff;
 
     display: flex;
@@ -945,596 +804,446 @@ td img {
     justify-content: center;
 
     text-align: center;
-
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
 
     cursor: pointer;
-
     user-select: none;
 
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,.08);
 
-    transition:
-        transform 0.12s,
-        filter 0.15s;
+    transition: transform .12s, filter .15s;
+
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.1;
 }
-
 
 .parkCell:hover {
-    filter: brightness(1.08);
+    filter: brightness(1.12);
+    transform: translateY(-1px);
 }
-
-
-.parkCell:active {
-    transform: scale(0.96);
-}
-
 
 .parkCell.occupato {
     background: #d62828 !important;
-
     color: #fff;
 }
+
+.parkCell.oltre24 {
+    animation: lampeggio24 .8s infinite !important;
+    background: #ff0000 !important;
+    color: #fff !important;
+    border: 2px solid #fff !important;
+}
+
+@keyframes lampeggio24 {
+
+    0% {
+        background: #ff0000 !important;
+        box-shadow: 0 0 5px rgba(255,0,0,.5);
+        transform: scale(1);
+    }
+
+    50% {
+        background: #7a0000 !important;
+        box-shadow: 0 0 25px rgba(255,0,0,1);
+        transform: scale(1.04);
+    }
+
+    100% {
+        background: #ff0000 !important;
+        box-shadow: 0 0 5px rgba(255,0,0,.5);
+        transform: scale(1);
+    }
+}
+
+
+
+/* =========================================================
+   PARK STATUS
+   ========================================================= */
+
+.parkStatusBar {
+    height: 6px;
+    background: #333;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.parkStatusFill {
+    height: 100%;
+    background: #168a2f;
+    transition: width .2s;
+}
+
+.parkStatusFill.medium {
+    background: #f39c12;
+}
+
+.parkStatusFill.full {
+    background: #d62828;
+}
+
+
+
+/* =========================================================
+   MOVIMENTI
+   ========================================================= */
+
+.moveFrom {
+    color: #aaa;
+}
+
+.moveTo {
+    color: #4da6ff;
+    font-weight: 800;
+}
+
+
+
+/* =========================================================
+   STATISTICHE
+   ========================================================= */
+
+.statsCards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(150px,1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.statCard {
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 17px;
+}
+
+.statCard span {
+    display: block;
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.statCard strong {
+    display: block;
+    margin-top: 7px;
+    font-size: 25px;
+}
+
+.statCard.critical strong {
+    color: #ff2222;
+}
+
+.statParkRow {
+    padding: 12px 15px;
+    border-bottom: 1px solid #292929;
+}
+
+.statParkRow:last-child {
+    border-bottom: 0;
+}
+
+.statParkHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
 
 
 /* =========================================================
    POPUP
-========================================================= */
+   ========================================================= */
 
 .popupOverlay {
     position: fixed;
-
     inset: 0;
-
     z-index: 2000;
-
     display: none;
-
     align-items: center;
     justify-content: center;
-
     padding: 20px;
-
-    background:
-        rgba(0, 0, 0, 0.72);
+    background: rgba(0,0,0,.72);
 }
 
+.popupOverlay.active {
+    display: flex;
+}
 
 .parkPopup {
     width: 100%;
-    max-width: 520px;
-
+    max-width: 560px;
     max-height: calc(100vh - 40px);
-
     overflow-y: auto;
-
     background: #1b1b1b;
-
     border: 1px solid #3a3a3a;
-
     border-radius: 13px;
-
-    box-shadow:
-        0 15px 60px rgba(0,0,0,0.55);
+    box-shadow: 0 15px 60px rgba(0,0,0,.55);
 }
-
 
 .popupHeader {
     display: flex;
-
     align-items: center;
     justify-content: space-between;
-
-    padding: 16px 18px;
-
-    border-bottom: 1px solid #303030;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #333;
 }
 
-
-.popupHeader h2 {
-    font-size: 19px;
+.popupHeader h3 {
+    margin: 0;
+    font-size: 18px;
 }
-
 
 .popupClose {
-    width: 42px !important;
-    min-height: 42px;
-
-    border: none;
-
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 7px;
     background: #292929;
-
-    color: #ddd;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: #fff;
+    font-size: 18px;
 }
-
 
 .popupContent {
     padding: 20px;
 }
 
+.popupRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 9px 0;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.popupRow:last-child {
+    border-bottom: 0;
+}
+
+.popupRow strong {
+    color: #aaa;
+}
+
+.popupRow span {
+    text-align: right;
+    font-weight: 700;
+}
 
 .popupActions {
     display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
-
     padding: 0 20px 20px;
 }
 
+.popupPhoto {
+    width: 100%;
+    max-height: 320px;
+    object-fit: contain;
+    background: #000;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+
 
 /* =========================================================
-   EMPTY STATE
-========================================================= */
+   EMPTY
+   ========================================================= */
 
-.emptyState {
-    padding: 35px 20px;
-
-    text-align: center;
-
+.emptyMessage {
+    padding: 20px;
     color: #777;
+    text-align: center;
 }
 
-
-.emptyState i {
-    display: block;
-
-    margin-bottom: 10px;
-
-    font-size: 30px;
-}
 
 
 /* =========================================================
-   DESKTOP GRANDE
-========================================================= */
+   RESPONSIVE
+   ========================================================= */
 
-@media (min-width: 1400px) {
-
-    .appMain {
-        padding-left: 35px;
-        padding-right: 35px;
-    }
-
-    .formGrid {
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
-    }
-
-    .fieldFull {
-        grid-column: 1 / -1;
-    }
-
-    .cameraBox {
-        max-width: 900px;
-        margin: 0 auto;
-    }
-
-}
-
-
-/* =========================================================
-   TABLET / PC PICCOLO
-========================================================= */
-
-@media (max-width: 1100px) {
-
-    body {
-        padding-top: 175px;
-    }
-
-
-    .mainMenu {
-        top: 70px;
-
-        justify-content: flex-start;
-
-        overflow-x: auto;
-
-        padding: 8px 14px;
-    }
-
-
-    .menuBtn {
-        flex: 0 0 auto;
-
-        min-width: 120px;
-    }
-
+@media (max-width: 1300px) {
 
     .dashboardCards {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(4,1fr);
     }
-
-
-    #parkGrid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-
-
-    .filterBar {
-        grid-template-columns:
-            1fr 1fr;
-    }
-
-
-    .filterBar .exportBtn {
-        width: 100%;
-        grid-column: 1 / -1;
-    }
-
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (min-width: 601px) and (max-width: 900px) {
-
-    body {
-        padding-top: 178px;
-    }
-
-
-    .mainHeader {
-        padding: 0 20px;
-    }
-
-
-    .appMain {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
-
-
-    .pageHeader h1 {
-        font-size: 23px;
-    }
-
-
-    .panel {
-        padding: 20px;
-    }
-
 
     .formGrid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2,1fr);
     }
 
-
-    .fieldFull {
-        grid-column: 1 / -1;
+    .parkSection.bucaSection .parkGrid {
+        grid-template-columns: repeat(9,minmax(60px,1fr));
     }
 
-
-    .cameraBox video {
-        max-height: 480px;
+    .statsCards {
+        grid-template-columns: repeat(4,1fr);
     }
-
-
-    .parkRow {
-        grid-template-columns:
-            repeat(auto-fill, minmax(82px, 1fr));
-    }
-
-
-    .parkCell {
-        min-height: 54px;
-
-        font-size: 12px;
-    }
-
 }
 
 
-/* =========================================================
-   SMARTPHONE
-========================================================= */
+@media (max-width: 1000px) {
+
+    .dashboardCards {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .statsCards {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .parkSummaryGrid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .operatorBox {
+        min-width: 150px;
+    }
+}
+
+
+@media (max-width: 800px) {
+
+    .headerContent {
+        gap: 10px;
+    }
+
+    .headerLogo {
+        width: 130px;
+    }
+
+    .headerLogo img {
+        width: 125px;
+    }
+
+    .headerTitle h1 {
+        font-size: 18px;
+    }
+
+    .operatorBox {
+        display: none;
+    }
+
+    .parkSection.bucaSection .parkGrid {
+        grid-template-columns: repeat(6,minmax(55px,1fr));
+    }
+}
+
 
 @media (max-width: 600px) {
 
-    body {
-        padding-top: 164px;
-    }
-
-
-    .mainHeader {
-        height: 62px;
-
-        padding: 0 12px;
-    }
-
-
-    .logoBox {
-        width: 36px;
-        height: 36px;
-
-        font-size: 12px;
-    }
-
-
-    .headerTitle {
-        gap: 0;
-    }
-
-
-    .titleMain {
-        font-size: 17px;
-    }
-
-
-    .titleSub {
-        font-size: 10px;
-    }
-
-
-    .mainMenu {
-        top: 62px;
-
-        min-height: 96px;
-
-        padding: 8px;
-
-        display: grid;
-
-        grid-template-columns:
-            repeat(4, minmax(0, 1fr));
-
-        gap: 5px;
-
-        overflow: visible;
-    }
-
-
-    .menuBtn {
-        min-width: 0;
-
-        min-height: 40px;
-
-        padding: 6px 3px;
-
-        flex-direction: column;
-
-        gap: 3px;
-
-        font-size: 10px;
-    }
-
-
-    .menuBtn i {
-        font-size: 13px;
-    }
-
-
-    .appMain {
-        padding:
-            0 10px 25px;
-    }
-
-
-    .pageHeader {
-        margin-bottom: 14px;
-    }
-
-
-    .pageHeader h1 {
-        font-size: 20px;
-    }
-
-
-    .pageHeader p {
-        font-size: 12px;
-    }
-
-
-    .panel {
-        padding: 14px;
-
-        border-radius: 10px;
-    }
-
-
-    .dashboardCards {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap: 8px;
-    }
-
-
-    .dashboardCard {
-        min-height: 95px;
-
+    main {
         padding: 12px;
-
-        gap: 9px;
     }
 
+    header {
+        padding: 7px 10px;
+    }
 
-    .dashboardIcon {
-        width: 38px;
+    .headerContent {
+        min-height: 52px;
+    }
+
+    .headerLogo {
+        width: 100px;
+        height: 48px;
+    }
+
+    .headerLogo img {
+        width: 98px;
+        max-height: 45px;
+    }
+
+    .headerSeparator {
         height: 38px;
+    }
 
-        flex-basis: 38px;
-
+    .headerTitle h1 {
         font-size: 15px;
     }
 
-
-    .dashboardCard span {
+    .headerTitle p {
         font-size: 10px;
     }
 
-
-    .dashboardCard strong {
-        font-size: 23px;
+    nav {
+        top: 67px;
     }
 
-
-    .dashboardTruckList {
-        grid-template-columns: 1fr;
+    .dashboardCards,
+    .statsCards {
+        grid-template-columns: 1fr 1fr;
     }
-
 
     .formGrid {
         grid-template-columns: 1fr;
-
-        gap: 13px;
     }
 
-
-    .fieldFull {
-        grid-column: auto;
+    .parkGrid,
+    .parkSection.bucaSection .parkGrid {
+        grid-template-columns: repeat(4,1fr);
     }
 
-
-    .filterBar {
+    .parkSummaryGrid {
         grid-template-columns: 1fr;
     }
 
-
-    .filterBar .exportBtn {
-        grid-column: auto;
+    .searchBar {
+        flex-direction: column;
     }
-
-
-    .exportBtn {
-        width: 100%;
-    }
-
-
-    .cameraBox video {
-        max-height: 330px;
-    }
-
-
-    #parkGrid {
-        grid-template-columns: 1fr;
-    }
-
-
-    .parkRow {
-        grid-template-columns:
-            repeat(4, minmax(0, 1fr));
-    }
-
-
-    .parkCell {
-        min-height: 48px;
-
-        padding: 5px 2px;
-
-        font-size: 10px;
-    }
-
-
-    .popupOverlay {
-        padding: 10px;
-    }
-
-
-    .parkPopup {
-        max-height: calc(100vh - 20px);
-    }
-
 
     .popupActions {
         grid-template-columns: 1fr;
     }
 
-}
-
-
-/* =========================================================
-   TOUCH DEVICES
-========================================================= */
-
-@media (hover: none) {
-
-    .menuBtn:hover,
-    .primaryBtn:hover,
-    .secondaryBtn:hover,
-    .exportBtn:hover,
-    .parkCell:hover {
-        filter: none;
-
-        transform: none;
+    .popupRow {
+        flex-direction: column;
+        gap: 3px;
     }
 
+    .popupRow span {
+        text-align: left;
+    }
 }
 
 
-/* =========================================================
-   ORIZZONTALE TABLET
-========================================================= */
+@media (max-width: 420px) {
 
-@media
-    (min-width: 601px)
-    and (max-width: 1100px)
-    and (orientation: landscape) {
-
-    body {
-        padding-top: 130px;
+    .headerLogo {
+        width: 80px;
     }
 
-
-    .mainMenu {
-        top: 70px;
-
-        min-height: 60px;
+    .headerLogo img {
+        width: 78px;
     }
 
-
-    .cameraBox video {
-        max-height: 330px;
+    .headerTitle h1 {
+        font-size: 13px;
     }
 
-
-    #parkGrid {
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
+    .headerTitle p {
+        display: none;
     }
 
-}
+    .dashboardCards,
+    .statsCards {
+        grid-template-columns: 1fr;
+    }
 
+    .parkGrid,
+    .parkSection.bucaSection .parkGrid {
+        grid-template-columns: repeat(3,1fr);
+    }
 
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar {
-    width: 9px;
-    height: 9px;
-}
-
-
-::-webkit-scrollbar-track {
-    background: #151515;
-}
-
-
-::-webkit-scrollbar-thumb {
-    background: #3b3b3b;
-
-    border-radius: 10px;
-}
-
-
-::-webkit-scrollbar-thumb:hover {
-    background: #4a4a4a;
+    .parkCell {
+        font-size: 10px;
+    }
 }

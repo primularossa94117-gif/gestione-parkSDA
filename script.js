@@ -1,6 +1,6 @@
 /* =========================================================
    FIREBASE
-========================================================= */
+   ========================================================= */
 
 const firebaseConfig = {
     apiKey: "TUO_API_KEY",
@@ -17,314 +17,427 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 
+
 /* =========================================================
-   STATO
-========================================================= */
+   VARIABILI
+   ========================================================= */
 
 let camionData = {};
+
 let selectedParkId = null;
+
+let selectedMezzoId = null;
+
+let fotoInbound = null;
+
+let fotoOutbound = null;
+
+let streamInbound = null;
+
+let streamOutbound = null;
+
 
 
 /* =========================================================
    PARCHEGGI
-========================================================= */
+   ========================================================= */
 
 const parkGroups = [
 
     {
         nome: "BUCA",
         parcheggi: [
-            "BUCA1",
-            "BUCA2",
-            "BUCA3",
-            "BUCA4",
-            "BUCA5",
-            "BUCA6",
-            "BUCA7",
-            "BUCA8",
-            "BUCA9",
-            "BUCA10",
+            "BUCA1","BUCA2","BUCA3","BUCA4","BUCA5",
+            "BUCA6","BUCA7","BUCA8","BUCA9","BUCA10",
+            "BUCA11","BUCA12","BUCA13","BUCA14","BUCA15",
+            "BUCA16","BUCA17","BUCA18","BUCA19","BUCA20",
+            "BUCA21","BUCA22","BUCA23","BUCA24","BUCA25",
+            "BUCA26","BUCA27","BUCA28","BUCA29","BUCA30",
+            "BUCA31","BUCA32","BUCA33","BUCA34","BUCA35",
+            "BUCA36","BUCA37","BUCA38","BUCA39","BUCA40",
+            "BUCA41","BUCA42","BUCA43","BUCA44","BUCA45",
+            "BUCA46","BUCA47","BUCA48","BUCA49","BUCA50",
 
-            "BUCA157",
-            "BUCA156",
-            "BUCA155",
-            "BUCA154",
-            "BUCA153",
-            "BUCA152",
-            "BUCA151",
-            "BUCA150",
-            "BUCA149",
-            "BUCA148"
+            "BUCA101","BUCA102","BUCA103","BUCA104","BUCA105",
+            "BUCA106","BUCA107","BUCA108","BUCA109","BUCA110",
+            "BUCA111","BUCA112","BUCA113","BUCA114","BUCA115",
+            "BUCA116","BUCA117","BUCA118","BUCA119","BUCA120",
+            "BUCA121","BUCA122","BUCA123","BUCA124","BUCA125",
+            "BUCA126","BUCA127","BUCA128","BUCA129","BUCA130",
+            "BUCA131","BUCA132","BUCA133","BUCA134","BUCA135",
+            "BUCA136","BUCA137","BUCA138","BUCA139","BUCA140",
+            "BUCA141","BUCA142","BUCA143","BUCA144","BUCA145",
+            "BUCA146","BUCA147","BUCA148","BUCA149","BUCA150",
+            "BUCA151","BUCA152","BUCA153","BUCA154","BUCA155",
+            "BUCA156","BUCA157"
         ]
     },
 
     {
         nome: "PARK A",
         parcheggi: [
-            "A01",
-            "A02",
-            "A03",
-            "A04",
-            "A05",
-            "A06",
-            "A07",
-            "A08",
-            "A09",
-            "A10",
-            "A11",
-            "A12",
-            "A13",
-            "A14",
-            "A15",
-            "A16",
-
-            "TRA12-13",
-            "TRA18-19-1",
-            "TRA18-19-2"
+            "A01","A02","A03","A04","A05","A06","A07","A08",
+            "A09","A10","A11","A12","A13","A14","A15","A16",
+            "TRA12-13","TRA18-19-1","TRA18-19-2"
         ]
     },
 
     {
         nome: "PARK B",
         parcheggi: [
-            "INIZIOPARKB1",
-            "INIZIOPARKB2",
-
-            "B01",
-            "B02",
-            "B03",
-            "B04",
-            "B05",
-            "B06",
-            "B07",
-            "B08",
-            "B09",
-
-            "B010",
-            "B011",
-            "B012",
-            "B013",
-            "B014",
-            "B015",
-            "B016"
+            "INIZIOPARKB1","INIZIOPARKB2",
+            "B01","B02","B03","B04","B05","B06","B07","B08","B09",
+            "B010","B011","B012","B013","B014","B015","B016"
         ]
     },
 
     {
         nome: "PARK C",
         parcheggi: [
-            "C01",
-            "C02",
-            "C03",
-            "C04",
-            "C05",
-            "C06",
-            "C07",
-            "C08",
-            "C09",
-            "C10",
-            "C11",
-
-            "C13",
-            "C14",
-            "C15",
-            "C16",
-            "C17",
-
-            "C19",
-            "C21",
-            "C22",
-
-            "C24",
-            "C25",
-            "C26",
-
-            "C29",
-            "C30",
-            "C31",
-            "C32",
-            "C33",
-            "C34",
-            "C35"
+            "C01","C02","C03","C04","C05","C06","C07","C08","C09","C10","C11",
+            "C13","C14","C15","C16","C17",
+            "C19","C21","C22",
+            "C24","C25","C26",
+            "C29","C30","C31","C32","C33","C34","C35"
         ]
     },
 
     {
         nome: "ATTESA PARK C",
         parcheggi: [
-            "C31ATTESA",
-            "C32ATTESA",
-            "C33ATTESA",
-            "C34ATTESA",
-            "C35ATTESA",
-            "C36ATTESA"
+            "C31ATTESA","C32ATTESA","C33ATTESA",
+            "C34ATTESA","C35ATTESA","C36ATTESA"
         ]
     },
 
     {
         nome: "PARK Y2",
         parcheggi: [
-            "Y2-1",
-            "Y2-2",
-            "Y2-3",
-            "Y2-4",
-            "Y2-5",
-            "Y2-6",
-            "Y2-7",
-            "Y2-8",
-            "Y2-9",
-            "Y2-10",
-            "Y2-11",
-            "Y2-12",
-            "Y2-13",
-            "Y2-14",
-            "Y2-15",
-            "Y2-16",
-            "Y2-17",
-            "Y2-18",
-            "Y2-19",
-            "Y2-20",
-
-            "Y2-133-134",
-            "Y2-139-140",
-            "Y2-018-019-1",
-            "Y2-018-019-2",
-            "Y2-TRA12-13",
-            "Y2-FRONTEC30",
-            "Y2-FRONTECOMP1",
-            "Y2-FRONTECOMP2",
-            "Y2-FRONTECOMP3",
-            "Y2-TRA132-133",
-            "Y2-TRA128-129",
-            "Y2-TRA123-124",
-            "Y2-TRA152-152"
+            "Y2-1","Y2-2","Y2-3","Y2-4","Y2-5","Y2-6","Y2-7","Y2-8","Y2-9","Y2-10",
+            "Y2-11","Y2-12","Y2-13","Y2-14","Y2-15","Y2-16","Y2-17","Y2-18","Y2-19","Y2-20",
+            "Y2-133-134","Y2-139-140","Y2-018-019-1","Y2-018-019-2",
+            "Y2-TRA12-13","Y2-FRONTEC30","Y2-FRONTECOMP1","Y2-FRONTECOMP2","Y2-FRONTECOMP3",
+            "Y2-TRA132-133","Y2-TRA128-129","Y2-TRA123-124","Y2-TRA152-152"
         ]
     }
 
 ];
 
 
-const parcheggi = parkGroups.flatMap(
-    gruppo => gruppo.parcheggi
-);
+
+/* =========================================================
+   INIT
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const operatore = document.getElementById("operatore");
+
+    if (operatore) {
+
+        operatore.value =
+            localStorage.getItem("park_operatore") || "";
+
+        operatore.addEventListener("input", () => {
+
+            localStorage.setItem(
+                "park_operatore",
+                operatore.value.trim()
+            );
+
+        });
+
+    }
+
+
+    creaPark();
+
+    popolaSelectDestinazioni();
+
+    setupEventi();
+
+    aggiornaDashboard();
+
+    aggiornaMonitor();
+
+});
+
 
 
 /* =========================================================
-   CAMBIO PAGINA
-========================================================= */
+   EVENTI
+   ========================================================= */
+
+function setupEventi() {
+
+    const ricercaGlobale =
+        document.getElementById("ricercaGlobale");
+
+    if (ricercaGlobale) {
+
+        ricercaGlobale.addEventListener(
+            "input",
+            ricercaGlobaleHandler
+        );
+
+    }
+
+
+    const ricercaOutbound =
+        document.getElementById("ricercaOutbound");
+
+    if (ricercaOutbound) {
+
+        ricercaOutbound.addEventListener(
+            "input",
+            cercaOutbound
+        );
+
+    }
+
+
+    const ricercaInSito =
+        document.getElementById("ricercaInSito");
+
+    if (ricercaInSito) {
+
+        ricercaInSito.addEventListener(
+            "input",
+            aggiornaMonitor
+        );
+
+    }
+
+
+    const filtroAttesa =
+        document.getElementById("filtroAttesa");
+
+    if (filtroAttesa) {
+
+        filtroAttesa.addEventListener(
+            "change",
+            aggiornaMonitor
+        );
+
+    }
+
+
+    const ricercaUsciti =
+        document.getElementById("ricercaUsciti");
+
+    if (ricercaUsciti) {
+
+        ricercaUsciti.addEventListener(
+            "input",
+            aggiornaMonitor
+        );
+
+    }
+
+
+    const ricercaMovimenti =
+        document.getElementById("ricercaMovimenti");
+
+    if (ricercaMovimenti) {
+
+        ricercaMovimenti.addEventListener(
+            "input",
+            aggiornaMovimenti
+        );
+
+    }
+
+
+    const trattTarga =
+        document.getElementById("trattTarga");
+
+    if (trattTarga) {
+
+        trattTarga.addEventListener(
+            "input",
+            aggiornaInfoTrattorista
+        );
+
+    }
+
+
+    document.addEventListener(
+        "keydown",
+        e => {
+
+            if (e.key === "Escape") {
+
+                chiudiPopup();
+
+                chiudiMezzoPopup();
+
+            }
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   NAVIGAZIONE
+   ========================================================= */
 
 function showPage(pageId) {
 
     document
         .querySelectorAll(".page")
         .forEach(page => {
-            page.style.display = "none";
+
+            page.classList.remove("active");
+
         });
+
+
+    const page =
+        document.getElementById(pageId);
+
+    if (page) {
+
+        page.classList.add("active");
+
+    }
 
 
     document
-        .querySelectorAll(".menuBtn")
+        .querySelectorAll("nav button")
         .forEach(button => {
-            button.classList.remove("active");
+
+            button.classList.toggle(
+                "active",
+                button.dataset.page === pageId
+            );
+
         });
 
 
-    const page = document.getElementById(pageId);
+    if (pageId === "dashboard") {
 
-    if (page) {
-        page.style.display = "block";
-    }
-
-
-    const buttons = document.querySelectorAll(".menuBtn");
-
-    buttons.forEach(button => {
-
-        const onclick = button.getAttribute("onclick") || "";
-
-        if (onclick.includes(pageId)) {
-            button.classList.add("active");
-        }
-
-    });
-
-
-    if (pageId === "pageDashboard") {
         aggiornaDashboard();
+
     }
 
 
-    if (pageId === "pagePark") {
+    if (pageId === "park") {
+
         aggiornaPark();
+
     }
 
 
-    if (
-        pageId === "pageInSito" ||
-        pageId === "pageUsciti"
-    ) {
+    if (pageId === "inSito" || pageId === "usciti") {
+
         aggiornaMonitor();
+
+    }
+
+
+    if (pageId === "movimenti") {
+
+        aggiornaMovimenti();
+
+    }
+
+
+    if (pageId === "statistiche") {
+
+        aggiornaStatistiche();
+
     }
 
 }
 
 
+
 /* =========================================================
    CREA PARK
-========================================================= */
+   ========================================================= */
 
 function creaPark() {
 
-    const container = document.getElementById("parkGrid");
+    const container =
+        document.getElementById("parkGrid");
 
     if (!container) return;
 
     container.innerHTML = "";
 
 
-    parkGroups.forEach(gruppo => {
+    parkGroups.forEach(group => {
 
-        const section = document.createElement("div");
+        const section =
+            document.createElement("div");
 
         section.className = "parkSection";
 
 
-        const title = document.createElement("div");
+        if (group.nome === "BUCA") {
 
-        title.className = "parkGroupTitle";
+            section.classList.add("bucaSection");
 
-        title.textContent = gruppo.nome;
-
-
-        const row = document.createElement("div");
-
-        row.className = "parkRow";
+        }
 
 
-        gruppo.parcheggi.forEach(location => {
+        const title =
+            document.createElement("h3");
 
-            const cell = document.createElement("div");
+        title.textContent = group.nome;
+
+
+        const stats =
+            document.createElement("div");
+
+        stats.className = "parkStats";
+
+        stats.id =
+            "parkStats-" +
+            sanitizeId(group.nome);
+
+
+        const grid =
+            document.createElement("div");
+
+        grid.className = "parkGrid";
+
+
+        group.parcheggi.forEach(location => {
+
+            const cell =
+                document.createElement("div");
 
             cell.className = "parkCell";
 
             cell.id =
                 "cell-" +
-                location.replace(/[^a-zA-Z0-9_-]/g, "_");
+                sanitizeId(location);
 
             cell.textContent = location;
 
-            cell.onclick = () =>
-                apriDettaglioPark(location);
+            cell.title = "Libero";
 
 
-            row.appendChild(cell);
+            cell.addEventListener(
+                "click",
+                () => apriDettaglioPark(location)
+            );
+
+
+            grid.appendChild(cell);
 
         });
 
 
         section.appendChild(title);
 
-        section.appendChild(row);
+        section.appendChild(stats);
+
+        section.appendChild(grid);
 
         container.appendChild(section);
 
@@ -333,15 +446,32 @@ function creaPark() {
 }
 
 
+
 /* =========================================================
-   SELECT DESTINAZIONI
-========================================================= */
+   SANITIZE
+   ========================================================= */
+
+function sanitizeId(value) {
+
+    return String(value)
+        .replace(/[^a-zA-Z0-9]/g, "_");
+
+}
+
+
+
+/* =========================================================
+   POPOLA SELECT
+   ========================================================= */
 
 function popolaSelectDestinazioni() {
 
     const selects = [
+
         document.getElementById("destinazione"),
+
         document.getElementById("nuovaDestinazione")
+
     ];
 
 
@@ -350,57 +480,57 @@ function popolaSelectDestinazioni() {
         if (!select) return;
 
 
-        const valoreAttuale = select.value;
+        const valoreAttuale =
+            select.value;
 
 
         select.innerHTML = "";
 
 
-        const defaultOption =
+        const first =
             document.createElement("option");
 
-        defaultOption.value = "";
+        first.value = "";
 
-        defaultOption.textContent =
-            select.id === "destinazione"
-                ? "Seleziona parcheggio..."
-                : "Seleziona nuova destinazione...";
+        first.textContent =
+            "-- Seleziona destinazione --";
 
-
-        select.appendChild(defaultOption);
+        select.appendChild(first);
 
 
-        parkGroups.forEach(gruppo => {
+        parkGroups.forEach(group => {
 
             const optgroup =
                 document.createElement("optgroup");
 
-            optgroup.label = gruppo.nome;
+            optgroup.label =
+                group.nome;
 
 
-            gruppo.parcheggi.forEach(park => {
+            group.parcheggi.forEach(location => {
 
                 const option =
                     document.createElement("option");
 
-                option.value = park;
-
-                option.textContent = park;
+                option.value =
+                    location;
 
 
                 const camion =
-                    trovaCamionPark(park);
+                    trovaCamionPark(location);
 
 
-                if (
-                    select.id === "destinazione" &&
-                    camion
-                ) {
+                if (camion) {
 
                     option.disabled = true;
 
                     option.textContent =
-                        `${park} — OCCUPATO`;
+                        `${location} — OCCUPATO`;
+
+                } else {
+
+                    option.textContent =
+                        `${location} — LIBERO`;
 
                 }
 
@@ -417,11 +547,12 @@ function popolaSelectDestinazioni() {
 
         if (
             valoreAttuale &&
-            [...select.options].some(
-                option => option.value === valoreAttuale
-            )
+            Array.from(select.options)
+                .some(o => o.value === valoreAttuale && !o.disabled)
         ) {
+
             select.value = valoreAttuale;
+
         }
 
     });
@@ -429,91 +560,44 @@ function popolaSelectDestinazioni() {
 }
 
 
+
 /* =========================================================
-   TROVA CAMION PARK
-========================================================= */
+   TROVA CAMION NEL PARK
+   ========================================================= */
 
 function trovaCamionPark(location) {
 
-    for (const id in camionData) {
+    return Object.values(camionData)
+        .find(camion => {
 
-        const camion = camionData[id];
+            if (!camion) return false;
 
-        if (
-            camion &&
-            !camion.uscita &&
-            camion.destinazione === location
-        ) {
+            if (camion.uscita) return false;
 
-            return {
-                id,
-                ...camion
-            };
+            return camion.destinazione === location;
 
-        }
-
-    }
-
-    return null;
-}
-
-
-/* =========================================================
-   AGGIORNA PARK
-========================================================= */
-
-function aggiornaPark() {
-
-    parcheggi.forEach(location => {
-
-        const id =
-            "cell-" +
-            location.replace(/[^a-zA-Z0-9_-]/g, "_");
-
-
-        const cell =
-            document.getElementById(id);
-
-
-        if (!cell) return;
-
-
-        cell.classList.remove("occupato");
-
-        cell.title = "Libero";
-
-
-        const camion =
-            trovaCamionPark(location);
-
-
-        if (camion) {
-
-            cell.classList.add("occupato");
-
-            cell.title =
-                `Occupato - ${camion.targa || ""}`;
-
-        }
-
-    });
-
-
-    popolaSelectDestinazioni();
+        }) || null;
 
 }
+
 
 
 /* =========================================================
    VALIDAZIONE DESTINAZIONE
-========================================================= */
+   ========================================================= */
 
 function validaDestinazione(dest) {
 
     if (!dest) return null;
 
 
-    if (parcheggi.includes(dest)) {
+    const parkValido =
+        parkGroups.some(group =>
+            group.parcheggi.includes(dest)
+        );
+
+
+    if (parkValido) {
 
         return {
             tipo: "PARK",
@@ -523,20 +607,19 @@ function validaDestinazione(dest) {
     }
 
 
-    const numero =
-        parseInt(dest, 10);
+    if (/^\d+$/.test(dest)) {
 
+        const numero =
+            Number(dest);
 
-    if (
-        !isNaN(numero) &&
-        numero >= 1 &&
-        numero <= 199
-    ) {
+        if (numero >= 1 && numero <= 199) {
 
-        return {
-            tipo: "BAIA",
-            valore: String(numero).padStart(2, "0")
-        };
+            return {
+                tipo: "BAIA",
+                valore: dest
+            };
+
+        }
 
     }
 
@@ -546,79 +629,443 @@ function validaDestinazione(dest) {
 }
 
 
+
 /* =========================================================
-   CAMERA
-========================================================= */
+   AGGIORNA PARK
+   ========================================================= */
 
-async function startRearCamera(video) {
+function aggiornaPark() {
 
-    if (!video) return;
+    document
+        .querySelectorAll(".parkCell")
+        .forEach(cell => {
 
+            cell.classList.remove("occupato");
+
+            cell.classList.remove("oltre24");
+
+            cell.title = "Libero";
+
+        });
+
+
+    parkGroups.forEach(group => {
+
+        let occupati = 0;
+
+        group.parcheggi.forEach(location => {
+
+            const cell =
+                document.getElementById(
+                    "cell-" +
+                    sanitizeId(location)
+                );
+
+
+            if (!cell) return;
+
+
+            const camion =
+                trovaCamionPark(location);
+
+
+            if (camion) {
+
+                occupati++;
+
+
+                cell.classList.add("occupato");
+
+                cell.title =
+                    `Occupato - ${camion.targa || ""}`;
+
+
+                const ingresso =
+                    parseDateTime(
+                        camion.ingresso
+                    );
+
+
+                if (ingresso) {
+
+                    const tempo =
+                        Date.now() -
+                        ingresso.getTime();
+
+
+                    const ventiquattroOre =
+                        24 * 60 * 60 * 1000;
+
+
+                    if (tempo >= ventiquattroOre) {
+
+                        cell.classList.add("oltre24");
+
+                        cell.title =
+                            `OLTRE 24 ORE - ${camion.targa || ""}`;
+
+                    }
+
+                }
+
+            }
+
+        });
+
+
+        const stats =
+            document.getElementById(
+                "parkStats-" +
+                sanitizeId(group.nome)
+            );
+
+
+        if (stats) {
+
+            const totale =
+                group.parcheggi.length;
+
+            const liberi =
+                totale - occupati;
+
+
+            stats.innerHTML = `
+                <span>
+                    Totale:
+                    <strong>${totale}</strong>
+                </span>
+
+                <span class="parkFreeNumber">
+                    Liberi:
+                    <strong>${liberi}</strong>
+                </span>
+
+                <span class="parkOccupiedNumber">
+                    Occupati:
+                    <strong>${occupati}</strong>
+                </span>
+            `;
+
+        }
+
+    });
+
+
+    popolaSelectDestinazioni();
+
+    aggiornaDashboardParkSummary();
+
+}
+
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+function parseDateTime(value) {
+
+    if (!value) return null;
+
+
+    if (value instanceof Date) {
+
+        return value;
+
+    }
+
+
+    const str =
+        String(value).trim();
+
+
+    const match =
+        str.match(
+            /^(\d{2})\/(\d{2})\/(\d{4}),?\s*(\d{2}):(\d{2})(?::(\d{2}))?$/
+        );
+
+
+    if (match) {
+
+        return new Date(
+            Number(match[3]),
+            Number(match[2]) - 1,
+            Number(match[1]),
+            Number(match[4]),
+            Number(match[5]),
+            Number(match[6] || 0)
+        );
+
+    }
+
+
+    const parsed =
+        new Date(str);
+
+
+    return isNaN(parsed.getTime())
+        ? null
+        : parsed;
+
+}
+
+
+
+function formatDateTime(date) {
+
+    if (!date) return "";
+
+
+    const d =
+        date instanceof Date
+            ? date
+            : new Date(date);
+
+
+    if (isNaN(d.getTime())) return "";
+
+
+    return (
+        String(d.getDate()).padStart(2,"0")
+        + "/" +
+        String(d.getMonth()+1).padStart(2,"0")
+        + "/" +
+        d.getFullYear()
+        + ", " +
+        String(d.getHours()).padStart(2,"0")
+        + ":" +
+        String(d.getMinutes()).padStart(2,"0")
+        + ":" +
+        String(d.getSeconds()).padStart(2,"0")
+    );
+
+}
+
+
+
+/* =========================================================
+   PERMANENZA
+   ========================================================= */
+
+function calcolaPermanenza(ingresso) {
+
+    const dataIngresso =
+        parseDateTime(ingresso);
+
+
+    if (!dataIngresso) {
+
+        return {
+            testo: "",
+            classe: ""
+        };
+
+    }
+
+
+    const minuti =
+        Math.max(
+            0,
+            Math.floor(
+                (
+                    Date.now() -
+                    dataIngresso.getTime()
+                ) / 60000
+            )
+        );
+
+
+    const giorni =
+        Math.floor(minuti / 1440);
+
+
+    const ore =
+        Math.floor(
+            (minuti % 1440) / 60
+        );
+
+
+    const min =
+        minuti % 60;
+
+
+    let testo = "";
+
+
+    if (giorni > 0) {
+
+        testo += `${giorni}g `;
+
+    }
+
+
+    testo +=
+        `${ore}h ${String(min).padStart(2,"0")}m`;
+
+
+    let classe =
+        "permanenzaNormal";
+
+
+    if (minuti >= 1440) {
+
+        classe =
+            "permanenzaLong";
+
+    } else if (minuti >= 480) {
+
+        classe =
+            "permanenzaLong";
+
+    } else if (minuti >= 240) {
+
+        classe =
+            "permanenzaMedium";
+
+    }
+
+
+    return {
+        testo,
+        classe,
+        minuti
+    };
+
+}
+
+
+
+/* =========================================================
+   OPERATORE
+   ========================================================= */
+
+function getOperatore() {
+
+    const element =
+        document.getElementById("operatore");
+
+
+    const valore =
+        element
+            ? element.value.trim()
+            : "";
+
+
+    return valore || "Operatore non specificato";
+
+}
+
+
+
+/* =========================================================
+   FOTO
+   ========================================================= */
+
+function avviaCameraInbound() {
+
+    startRearCamera(
+        "video",
+        stream => {
+
+            streamInbound = stream;
+
+        }
+    );
+
+}
+
+
+
+function avviaCameraOutbound() {
+
+    startRearCamera(
+        "videoOut",
+        stream => {
+
+            streamOutbound = stream;
+
+        }
+    );
+
+}
+
+
+
+async function startRearCamera(videoId, callback) {
 
     try {
 
+        const video =
+            document.getElementById(videoId);
+
+
+        if (!video) return;
+
+
         const stream =
             await navigator.mediaDevices.getUserMedia({
+
                 video: {
                     facingMode: {
                         ideal: "environment"
                     }
                 },
+
                 audio: false
+
             });
 
 
-        video.srcObject = stream;
+        video.srcObject =
+            stream;
+
+
+        callback(stream);
 
     } catch (error) {
-
-        console.error(
-            "Errore fotocamera:",
-            error
-        );
 
         alert(
             "Impossibile accedere alla fotocamera."
         );
+
+        console.error(error);
 
     }
 
 }
 
 
-/* =========================================================
-   SCATTO FOTO INBOUND
-========================================================= */
 
-function scattaFoto(videoId, canvasId) {
+function scattaFoto(tipo) {
 
     const video =
-        document.getElementById(videoId);
+        tipo === "inbound"
+            ? document.getElementById("video")
+            : document.getElementById("videoOut");
+
 
     const canvas =
-        document.getElementById(canvasId);
+        tipo === "inbound"
+            ? document.getElementById("canvas")
+            : document.getElementById("canvasOut");
 
 
-    if (!video || !canvas) return null;
-
-
-    if (
-        !video.videoWidth ||
-        !video.videoHeight
-    ) {
+    if (!video || !video.videoWidth) {
 
         alert(
-            "La fotocamera non è ancora pronta."
+            "Avvia prima la fotocamera."
         );
 
-        return null;
+        return;
 
     }
 
 
-    canvas.width = video.videoWidth;
+    canvas.width =
+        video.videoWidth;
 
-    canvas.height = video.videoHeight;
+    canvas.height =
+        video.videoHeight;
 
 
     const ctx =
@@ -634,61 +1081,92 @@ function scattaFoto(videoId, canvasId) {
     );
 
 
-    canvas.style.display = "block";
+    const foto =
+        canvas.toDataURL(
+            "image/jpeg",
+            0.75
+        );
 
 
-    return canvas.toDataURL(
-        "image/jpeg",
-        0.8
-    );
+    if (tipo === "inbound") {
+
+        fotoInbound = foto;
+
+        const preview =
+            document.getElementById(
+                "previewInbound"
+            );
+
+
+        if (preview) {
+
+            preview.innerHTML =
+                `<img class="previewPhoto" src="${foto}">`;
+
+        }
+
+    } else {
+
+        fotoOutbound = foto;
+
+        const preview =
+            document.getElementById(
+                "previewOutbound"
+            );
+
+
+        if (preview) {
+
+            preview.innerHTML =
+                `<img class="previewPhoto" src="${foto}">`;
+
+        }
+
+    }
 
 }
 
 
+
 /* =========================================================
    INBOUND
-========================================================= */
+   ========================================================= */
 
-async function registraInbound() {
+function registraInbound() {
 
     const targa =
-        document
-            .getElementById("targa")
-            .value
-            .trim()
+        document.getElementById("targa")
+            .value.trim()
             .toUpperCase();
 
 
     const vettore =
-        document
-            .getElementById("vettore")
-            .value
-            .trim();
+        document.getElementById("vettore")
+            .value.trim();
 
 
     const quantita =
-        document
-            .getElementById("quantita")
-            .value
-            .trim();
+        document.getElementById("quantita")
+            .value.trim();
 
 
     const linea =
-        document
-            .getElementById("linea")
-            .value
-            .trim();
+        document.getElementById("linea")
+            .value.trim();
+
+
+    const attesaElement =
+        document.getElementById("attesa");
 
 
     const attesa =
-        document
-            .getElementById("attesa")
-            .value;
+        attesaElement
+            ? attesaElement.value.trim()
+            : "";
 
 
     const destinazione =
-        document
-            .getElementById("destinazione")
+        document.getElementById("destinazione")
             .value;
 
 
@@ -703,9 +1181,7 @@ async function registraInbound() {
 
     if (!destinazione) {
 
-        alert(
-            "Seleziona una destinazione."
-        );
+        alert("Seleziona una destinazione.");
 
         return;
 
@@ -718,25 +1194,20 @@ async function registraInbound() {
 
     if (!destinazioneValida) {
 
-        alert(
-            "Destinazione non valida."
-        );
+        alert("Destinazione non valida.");
 
         return;
 
     }
 
 
-    const occupato =
-        trovaCamionPark(
-            destinazione
-        );
-
-
-    if (occupato) {
+    if (
+        destinazioneValida.tipo === "PARK" &&
+        trovaCamionPark(destinazioneValida.valore)
+    ) {
 
         alert(
-            `Il parcheggio ${destinazione} è già occupato.`
+            "Il parcheggio selezionato è già occupato."
         );
 
         aggiornaPark();
@@ -746,43 +1217,15 @@ async function registraInbound() {
     }
 
 
-    const foto =
-        scattaFoto(
-            "video",
-            "canvas"
-        );
-
-
-    let existingId = null;
-
-
-    for (const id in camionData) {
-
-        const camion = camionData[id];
-
-
-        if (
-            camion &&
-            !camion.uscita &&
-            String(camion.targa).toUpperCase() === targa
-        ) {
-
-            existingId = id;
-
-            break;
-
-        }
-
-    }
-
-
     const ingresso =
-        formatDataItaliana(
-            new Date()
-        );
+        formatDateTime(new Date());
 
 
-    const record = {
+    const nuovoId =
+        db.ref("camion").push().key;
+
+
+    const nuovoCamion = {
 
         targa,
 
@@ -805,45 +1248,49 @@ async function registraInbound() {
         uscita: null,
 
         fotoIn:
-            foto || null,
+            fotoInbound || null,
 
-        fotoOut: null
+        fotoOut: null,
+
+        operatoreIngresso:
+            getOperatore(),
+
+        operatoreUscita: null,
+
+        ingressoPark:
+            destinazioneValida.tipo === "PARK"
+                ? ingresso
+                : null
 
     };
 
 
-    try {
+    db.ref(
+        "camion/" + nuovoId
+    )
+    .set(nuovoCamion)
+    .then(() => {
 
-        if (existingId) {
-
-            await db
-                .ref("camion/" + existingId)
-                .update(record);
-
-        } else {
-
-            await db
-                .ref("camion")
-                .push(record);
-
-        }
+        registraMovimento(
+            nuovoId,
+            "",
+            destinazioneValida.valore,
+            getOperatore(),
+            targa
+        );
 
 
         alert(
-            "Inbound registrato correttamente."
+            `Inbound registrato per ${targa}.`
         );
 
 
         resetInbound();
 
+        showPage("inSito");
 
-        aggiornaPark();
-
-        aggiornaDashboard();
-
-        aggiornaMonitor();
-
-    } catch (error) {
+    })
+    .catch(error => {
 
         console.error(error);
 
@@ -851,14 +1298,15 @@ async function registraInbound() {
             "Errore durante la registrazione dell'inbound."
         );
 
-    }
+    });
 
 }
 
 
+
 /* =========================================================
    RESET INBOUND
-========================================================= */
+   ========================================================= */
 
 function resetInbound() {
 
@@ -869,329 +1317,198 @@ function resetInbound() {
         "linea"
     ].forEach(id => {
 
-        const element =
+        const el =
             document.getElementById(id);
 
-        if (element) {
-            element.value = "";
-        }
+        if (el) el.value = "";
 
     });
+
+
+    const attesa =
+        document.getElementById("attesa");
+
+
+    if (attesa) {
+
+        attesa.value = "";
+
+    }
 
 
     const destinazione =
         document.getElementById("destinazione");
 
+
     if (destinazione) {
+
         destinazione.value = "";
+
     }
 
 
-    const canvas =
-        document.getElementById("canvas");
+    fotoInbound = null;
 
 
-    if (canvas) {
-
-        canvas.style.display = "none";
-
-        const ctx =
-            canvas.getContext("2d");
-
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
+    const preview =
+        document.getElementById(
+            "previewInbound"
         );
+
+
+    if (preview) {
+
+        preview.innerHTML = "";
 
     }
 
 }
+
 
 
 /* =========================================================
    OUTBOUND
-========================================================= */
-
-async function registraOutbound() {
-
-    const targa =
-        document
-            .getElementById("targaOut")
-            .value
-            .trim()
-            .toUpperCase();
-
-
-    if (!targa) {
-
-        alert(
-            "Inserisci la targa."
-        );
-
-        return;
-
-    }
-
-
-    let idTrovato = null;
-
-
-    for (const id in camionData) {
-
-        const camion = camionData[id];
-
-
-        if (
-            camion &&
-            !camion.uscita &&
-            String(camion.targa).toUpperCase() === targa
-        ) {
-
-            idTrovato = id;
-
-            break;
-
-        }
-
-    }
-
-
-    if (!idTrovato) {
-
-        alert(
-            "Mezzo non trovato tra quelli presenti in sito."
-        );
-
-        return;
-
-    }
-
-
-    const foto =
-        scattaFoto(
-            "videoOut",
-            "canvasOut"
-        );
-
-
-    try {
-
-        await db
-            .ref("camion/" + idTrovato)
-            .update({
-
-                uscita:
-                    formatDataItaliana(
-                        new Date()
-                    ),
-
-                fotoOut:
-                    foto || null
-
-            });
-
-
-        alert(
-            "Outbound registrato correttamente."
-        );
-
-
-        resetOutbound();
-
-        aggiornaMonitor();
-
-        aggiornaDashboard();
-
-        aggiornaPark();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Errore durante la registrazione dell'outbound."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   RESET OUTBOUND
-========================================================= */
-
-function resetOutbound() {
-
-    const targa =
-        document.getElementById("targaOut");
-
-    if (targa) {
-        targa.value = "";
-    }
-
-
-    const ricerca =
-        document.getElementById("ricercaOutbound");
-
-    if (ricerca) {
-        ricerca.value = "";
-    }
-
-
-    const risultato =
-        document.getElementById("risultatoOutbound");
-
-    if (risultato) {
-        risultato.innerHTML = "";
-    }
-
-
-    const canvas =
-        document.getElementById("canvasOut");
-
-
-    if (canvas) {
-
-        canvas.style.display = "none";
-
-        const ctx =
-            canvas.getContext("2d");
-
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   CERCA OUTBOUND
-========================================================= */
+   ========================================================= */
 
 function cercaOutbound() {
 
-    const testo =
-        document
-            .getElementById("ricercaOutbound")
-            .value
-            .trim()
-            .toUpperCase();
+    const ricerca =
+        document.getElementById(
+            "ricercaOutbound"
+        )
+        .value
+        .trim()
+        .toUpperCase();
 
 
-    const risultato =
+    const container =
         document.getElementById(
             "risultatoOutbound"
         );
 
 
-    if (!testo) {
-
-        risultato.innerHTML = "";
-
-        return;
-
-    }
+    if (!container) return;
 
 
-    const trovati = [];
+    container.innerHTML = "";
 
 
-    for (const id in camionData) {
-
-        const camion = camionData[id];
+    if (!ricerca) return;
 
 
-        if (
-            camion &&
-            !camion.uscita &&
-            String(camion.targa)
+    const risultati =
+        Object.entries(camionData)
+            .filter(([id, camion]) => {
+
+                if (!camion || camion.uscita)
+                    return false;
+
+
+                return String(
+                    camion.targa || ""
+                )
                 .toUpperCase()
-                .includes(testo)
-        ) {
+                .includes(ricerca);
 
-            trovati.push({
-                id,
-                ...camion
             });
 
-        }
 
-    }
+    if (!risultati.length) {
 
-
-    if (!trovati.length) {
-
-        risultato.innerHTML = `
-            <div class="emptyState">
-                <i class="fa-solid fa-circle-exclamation"></i>
+        container.innerHTML =
+            `<div class="emptyMessage">
                 Nessun mezzo trovato.
-            </div>
-        `;
+            </div>`;
 
         return;
 
     }
 
 
-    risultato.innerHTML =
-        trovati.map(camion => `
+    risultati.forEach(([id, camion]) => {
 
-            <div class="outboundResult">
+        const div =
+            document.createElement("div");
 
-                <strong>
+        div.className =
+            "globalResult";
+
+
+        div.innerHTML = `
+
+            <div class="globalResultMain">
+
+                <span class="globalResultPlate">
                     ${escapeHtml(camion.targa || "")}
-                </strong>
+                </span>
 
-                <div style="margin-top:6px;color:#aaa;">
-                    ${escapeHtml(camion.vettore || "")}
-                    -
+                <span class="globalResultPark">
                     ${escapeHtml(camion.destinazione || "")}
-                </div>
+                </span>
 
             </div>
 
-        `).join("");
+            <div class="globalResultDetails">
+
+                ${escapeHtml(camion.vettore || "")}
+                ·
+                ${escapeHtml(camion.linea || "")}
+
+            </div>
+
+        `;
 
 
-    document
-        .getElementById("targaOut")
-        .value = trovati[0].targa || "";
+        div.onclick = () => {
+
+            document.getElementById(
+                "targaOut"
+            ).value =
+                camion.targa || "";
+
+
+            document.getElementById(
+                "targaOut"
+            ).dataset.id =
+                id;
+
+        };
+
+
+        container.appendChild(div);
+
+    });
 
 }
 
 
-/* =========================================================
-   MODIFICA DESTINAZIONE
-========================================================= */
 
-async function modificaDestinazione() {
+/* =========================================================
+   REGISTRA OUTBOUND
+   ========================================================= */
+
+function registraOutbound() {
+
+    const targaInput =
+        document.getElementById("targaOut");
+
+
+    const id =
+        targaInput
+            ? targaInput.dataset.id
+            : "";
+
 
     const targa =
-        document
-            .getElementById("trattTarga")
-            .value
-            .trim()
-            .toUpperCase();
+        targaInput
+            ? targaInput.value.trim().toUpperCase()
+            : "";
 
 
-    const destinazione =
-        document
-            .getElementById("nuovaDestinazione")
-            .value;
-
-
-    if (!targa) {
+    if (!id || !targa) {
 
         alert(
-            "Inserisci la targa."
+            "Seleziona prima un mezzo."
         );
 
         return;
@@ -1199,10 +1516,23 @@ async function modificaDestinazione() {
     }
 
 
-    if (!destinazione) {
+    const camion =
+        camionData[id];
+
+
+    if (!camion) {
+
+        alert("Mezzo non trovato.");
+
+        return;
+
+    }
+
+
+    if (camion.uscita) {
 
         alert(
-            "Seleziona la nuova destinazione."
+            "Questo mezzo risulta già uscito."
         );
 
         return;
@@ -1210,297 +1540,278 @@ async function modificaDestinazione() {
     }
 
 
-    const destinazioneValida =
-        validaDestinazione(destinazione);
+    const uscita =
+        formatDateTime(new Date());
 
 
-    if (!destinazioneValida) {
+    db.ref(
+        "camion/" + id
+    )
+    .update({
 
-        alert(
-            "Destinazione non valida."
+        uscita,
+
+        fotoOut:
+            fotoOutbound || null,
+
+        operatoreUscita:
+            getOperatore()
+
+    })
+    .then(() => {
+
+        registraMovimento(
+            id,
+            camion.destinazione || "",
+            "USCITO",
+            getOperatore(),
+            camion.targa || ""
         );
 
-        return;
 
-    }
-
-
-    let idTrovato = null;
+        alert(
+            `Outbound registrato per ${targa}.`
+        );
 
 
-    for (const id in camionData) {
+        targaInput.value = "";
 
-        const camion = camionData[id];
+        delete targaInput.dataset.id;
+
+        document.getElementById(
+            "ricercaOutbound"
+        ).value = "";
 
 
-        if (
-            camion &&
-            !camion.uscita &&
-            String(camion.targa).toUpperCase() === targa
-        ) {
+        document.getElementById(
+            "risultatoOutbound"
+        ).innerHTML = "";
 
-            idTrovato = id;
 
-            break;
+        fotoOutbound = null;
+
+
+        const preview =
+            document.getElementById(
+                "previewOutbound"
+            );
+
+
+        if (preview) {
+
+            preview.innerHTML = "";
 
         }
 
-    }
 
+        showPage("usciti");
 
-    if (!idTrovato) {
-
-        alert(
-            "Mezzo non trovato."
-        );
-
-        return;
-
-    }
-
-
-    const occupato =
-        trovaCamionPark(
-            destinazione
-        );
-
-
-    if (
-        occupato &&
-        occupato.id !== idTrovato
-    ) {
-
-        alert(
-            `Il parcheggio ${destinazione} è già occupato.`
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        await db
-            .ref(
-                "camion/" + idTrovato
-            )
-            .update({
-
-                destinazione:
-                    destinazioneValida.valore,
-
-                tipo:
-                    destinazioneValida.tipo
-
-            });
-
-
-        alert(
-            "Destinazione modificata correttamente."
-        );
-
-
-        document
-            .getElementById("nuovaDestinazione")
-            .value = "";
-
-
-        aggiornaPark();
-
-        aggiornaMonitor();
-
-        aggiornaDashboard();
-
-    } catch (error) {
+    })
+    .catch(error => {
 
         console.error(error);
 
         alert(
-            "Errore durante lo spostamento."
+            "Errore durante l'outbound."
         );
 
-    }
+    });
 
 }
 
 
+
 /* =========================================================
-   MONITOR
-========================================================= */
+   RICERCA GLOBALE
+   ========================================================= */
 
-function aggiornaMonitor() {
+function ricercaGlobaleHandler() {
 
-    const tbodyIn =
-        document.getElementById("monitorIn");
+    const input =
+        document.getElementById(
+            "ricercaGlobale"
+        );
 
-    const tbodyOut =
-        document.getElementById("monitorOut");
+
+    const container =
+        document.getElementById(
+            "risultatoRicercaGlobale"
+        );
 
 
-    if (tbodyIn) {
+    if (!input || !container) return;
 
-        const ricerca =
-            (
-                document
-                    .getElementById("ricercaInSito")
-                    ?.value || ""
-            )
+
+    const ricerca =
+        input.value
             .trim()
-            .toLowerCase();
+            .toUpperCase();
 
 
-        const filtroAttesa =
-            document
-                .getElementById("filtroAttesa")
-                ?.value || "";
+    container.innerHTML = "";
 
 
-        const righe = [];
+    if (ricerca.length < 2) {
 
+        container.classList.remove("visible");
 
-        for (const id in camionData) {
-
-            const camion = camionData[id];
-
-
-            if (!camion || camion.uscita) {
-                continue;
-            }
-
-
-            const testo =
-                [
-                    camion.targa,
-                    camion.vettore,
-                    camion.destinazione,
-                    camion.linea,
-                    camion.tipo
-                ]
-                .join(" ")
-                .toLowerCase();
-
-
-            if (
-                ricerca &&
-                !testo.includes(ricerca)
-            ) {
-                continue;
-            }
-
-
-            if (
-                filtroAttesa &&
-                camion.attesa !== filtroAttesa
-            ) {
-                continue;
-            }
-
-
-            righe.push(
-                creaRigaMonitorIn(
-                    id,
-                    camion
-                )
-            );
-
-        }
-
-
-        tbodyIn.innerHTML =
-            righe.length
-                ? righe.join("")
-                : `
-                    <tr>
-                        <td colspan="11">
-                            <div class="emptyState">
-                                Nessun mezzo presente.
-                            </div>
-                        </td>
-                    </tr>
-                `;
+        return;
 
     }
 
 
-    if (tbodyOut) {
+    const risultati =
+        Object.entries(camionData)
+            .filter(([id, camion]) => {
 
-        const ricerca =
-            (
-                document
-                    .getElementById("ricercaUsciti")
-                    ?.value || ""
-            )
-            .trim()
-            .toLowerCase();
+                if (!camion) return false;
 
 
-        const righe = [];
+                const testo = [
 
-
-        for (const id in camionData) {
-
-            const camion = camionData[id];
-
-
-            if (!camion || !camion.uscita) {
-                continue;
-            }
-
-
-            const testo =
-                [
                     camion.targa,
                     camion.vettore,
                     camion.destinazione,
                     camion.linea,
-                    camion.tipo
+                    camion.attesa
+
                 ]
                 .join(" ")
-                .toLowerCase();
+                .toUpperCase();
 
 
-            if (
-                ricerca &&
-                !testo.includes(ricerca)
-            ) {
-                continue;
-            }
+                return testo.includes(ricerca);
+
+            })
+            .slice(0, 20);
 
 
-            righe.push(
-                creaRigaMonitorOut(
-                    id,
-                    camion
-                )
-            );
+    if (!risultati.length) {
 
-        }
+        container.innerHTML =
+            `<div class="emptyMessage">
+                Nessun risultato.
+            </div>`;
 
+        container.classList.add("visible");
 
-        tbodyOut.innerHTML =
-            righe.length
-                ? righe.join("")
-                : `
-                    <tr>
-                        <td colspan="11">
-                            <div class="emptyState">
-                                Nessun mezzo uscito.
-                            </div>
-                        </td>
-                    </tr>
-                `;
+        return;
 
     }
+
+
+    risultati.forEach(([id, camion]) => {
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "globalResult";
+
+
+        const permanenza =
+            calcolaPermanenza(
+                camion.ingresso
+            );
+
+
+        div.innerHTML = `
+
+            <div class="globalResultMain">
+
+                <span class="globalResultPlate">
+                    ${escapeHtml(camion.targa || "")}
+                </span>
+
+                <span class="globalResultPark">
+                    ${escapeHtml(camion.destinazione || "")}
+                </span>
+
+            </div>
+
+            <div class="globalResultDetails">
+
+                Vettore:
+                ${escapeHtml(camion.vettore || "")}
+
+                ·
+
+                Linea:
+                ${escapeHtml(camion.linea || "")}
+
+                ·
+
+                Permanenza:
+                ${escapeHtml(permanenza.testo)}
+
+            </div>
+
+        `;
+
+
+        div.onclick = () => {
+
+            apriSchedaMezzo(id);
+
+            container.classList.remove(
+                "visible"
+            );
+
+        };
+
+
+        container.appendChild(div);
+
+    });
+
+
+    container.classList.add("visible");
 
 }
 
 
-/* =========================================================
-   RIGA MONITOR IN
-========================================================= */
 
-function creaRigaMonitorIn(id, camion) {
+/* =========================================================
+   SCHEDA MEZZO
+   ========================================================= */
+
+function apriSchedaMezzo(id) {
+
+    const camion =
+        camionData[id];
+
+
+    if (!camion) return;
+
+
+    selectedMezzoId = id;
+
+
+    const overlay =
+        document.getElementById(
+            "mezzoPopupOverlay"
+        );
+
+
+    const title =
+        document.getElementById(
+            "mezzoPopupTitle"
+        );
+
+
+    const content =
+        document.getElementById(
+            "mezzoPopupContent"
+        );
+
+
+    if (!overlay || !title || !content)
+        return;
+
+
+    title.textContent =
+        `Mezzo ${camion.targa || ""}`;
+
 
     const permanenza =
         calcolaPermanenza(
@@ -1508,520 +1819,180 @@ function creaRigaMonitorIn(id, camion) {
         );
 
 
-    const foto =
-        camion.fotoIn
-            ? `
-                <img
-                    src="${camion.fotoIn}"
-                    alt="Foto IN"
-                >
-            `
-            : "-";
-
-
-    const badgeTipo =
-        camion.tipo === "PARK"
-            ? `<span class="badge badgePark">PARK ${escapeHtml(camion.destinazione || "")}</span>`
-            : `<span class="badge badgeBaia">BAIA ${escapeHtml(camion.destinazione || "")}</span>`;
-
-
-    return `
-        <tr>
-
-            <td>
-                ${badgeTipo}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.attesa || "")}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.tipo || "")}
-            </td>
-
-            <td>
-                <strong>
-                    ${escapeHtml(camion.targa || "")}
-                </strong>
-            </td>
-
-            <td>
-                ${escapeHtml(camion.vettore || "")}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.quantita || "")}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.linea || "")}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.ingresso || "")}
-            </td>
-
-            <td class="${permanenza.classe}">
-                ${permanenza.testo}
-            </td>
-
-            <td>
-                ${foto}
-            </td>
-
-            <td>
-
-                <button
-                    type="button"
-                    class="secondaryBtn"
-                    style="width:auto;min-width:100px;"
-                    onclick="apriSpostamento('${id}')"
-                >
-                    <i class="fa-solid fa-arrows-up-down-left-right"></i>
-                    Sposta
-                </button>
-
-            </td>
-
-        </tr>
-    `;
-
-}
-
-
-/* =========================================================
-   RIGA MONITOR OUT
-========================================================= */
-
-function creaRigaMonitorOut(id, camion) {
-
-    const foto =
-        camion.fotoOut
-            ? `
-                <img
-                    src="${camion.fotoOut}"
-                    alt="Foto OUT"
-                >
-            `
-            : "-";
-
-
-    const badgeTipo =
-        camion.tipo === "PARK"
-            ? `<span class="badge badgePark">PARK ${escapeHtml(camion.destinazione || "")}</span>`
-            : `<span class="badge badgeBaia">BAIA ${escapeHtml(camion.destinazione || "")}</span>`;
-
-
-    return `
-        <tr>
-
-            <td>
-                ${badgeTipo}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.attesa || "")}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.tipo || "")}
-            </td>
-
-            <td>
-                <strong>
-                    ${escapeHtml(camion.targa || "")}
-                </strong>
-            </td>
-
-            <td>
-                ${escapeHtml(camion.vettore || "")}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.quantita || "")}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.linea || "")}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.ingresso || "")}
-            </td>
-
-            <td>
-                ${escapeHtml(camion.uscita || "")}
-            </td>
-
-            <td>
-                ${foto}
-            </td>
-
-            <td>
-
-                <button
-                    type="button"
-                    class="secondaryBtn"
-                    style="width:auto;min-width:90px;"
-                    onclick="cancella('${id}')"
-                >
-                    <i class="fa-solid fa-trash"></i>
-                    Elimina
-                </button>
-
-            </td>
-
-        </tr>
-    `;
-
-}
-
-
-/* =========================================================
-   PERMANENZA
-========================================================= */
-
-function calcolaPermanenza(ingresso) {
-
-    const data =
-        parseDataItaliana(ingresso);
-
-
-    if (!data) {
-
-        return {
-            testo: "-",
-            classe: ""
-        };
-
-    }
-
-
-    const minuti =
-        Math.max(
-            0,
-            Math.floor(
-                (
-                    new Date() - data
-                ) / 60000
-            )
-        );
-
-
-    const ore =
-        Math.floor(
-            minuti / 60
-        );
-
-
-    const min =
-        minuti % 60;
-
-
-    let testo;
-
-
-    if (ore > 0) {
-
-        testo =
-            `${ore}h ${min}m`;
-
-    } else {
-
-        testo =
-            `${min} min`;
-
-    }
-
-
-    let classe =
-        "permanenzaNormal";
-
-
-    if (minuti >= 120) {
-
-        classe =
-            "permanenzaLong";
-
-    } else if (minuti >= 60) {
-
-        classe =
-            "permanenzaMedium";
-
-    }
-
-
-    return {
-        testo,
-        classe
-    };
-
-}
-
-
-/* =========================================================
-   PARSE DATA
-========================================================= */
-
-function parseDataItaliana(value) {
-
-    if (!value) return null;
-
-
-    const match =
-        String(value).match(
-            /^(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s*(\d{1,2}):(\d{2})(?::(\d{2}))?$/
-        );
-
-
-    if (!match) return null;
-
-
-    const giorno =
-        parseInt(match[1], 10);
-
-
-    const mese =
-        parseInt(match[2], 10) - 1;
-
-
-    const anno =
-        parseInt(match[3], 10);
-
-
-    const ora =
-        parseInt(match[4], 10);
-
-
-    const minuti =
-        parseInt(match[5], 10);
-
-
-    const secondi =
-        parseInt(match[6] || "0", 10);
-
-
-    return new Date(
-        anno,
-        mese,
-        giorno,
-        ora,
-        minuti,
-        secondi
-    );
-
-}
-
-
-/* =========================================================
-   FORMAT DATA
-========================================================= */
-
-function formatDataItaliana(date) {
-
-    const giorno =
-        String(
-            date.getDate()
-        ).padStart(2, "0");
-
-
-    const mese =
-        String(
-            date.getMonth() + 1
-        ).padStart(2, "0");
-
-
-    const anno =
-        date.getFullYear();
-
-
-    const ore =
-        String(
-            date.getHours()
-        ).padStart(2, "0");
-
-
-    const minuti =
-        String(
-            date.getMinutes()
-        ).padStart(2, "0");
-
-
-    const secondi =
-        String(
-            date.getSeconds()
-        ).padStart(2, "0");
-
-
-    return `${giorno}/${mese}/${anno}, ${ore}:${minuti}:${secondi}`;
-
-}
-
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-function aggiornaDashboard() {
-
-    let inSito = 0;
-
-    let usciti = 0;
-
-    let occupati = 0;
-
-
-    const camionAttivi = [];
-
-
-    for (const id in camionData) {
-
-        const camion = camionData[id];
-
-
-        if (!camion) continue;
-
-
-        if (camion.uscita) {
-
-            usciti++;
-
-        } else {
-
-            inSito++;
-
-            camionAttivi.push({
-                id,
-                ...camion
-            });
-
+    content.innerHTML = `
+
+        <div class="popupRow">
+            <strong>Targa</strong>
+            <span>${escapeHtml(camion.targa || "")}</span>
+        </div>
+
+        <div class="popupRow">
+            <strong>Vettore</strong>
+            <span>${escapeHtml(camion.vettore || "")}</span>
+        </div>
+
+        <div class="popupRow">
+            <strong>Quantità</strong>
+            <span>${escapeHtml(camion.quantita || "")}</span>
+        </div>
+
+        <div class="popupRow">
+            <strong>Linea</strong>
+            <span>${escapeHtml(camion.linea || "")}</span>
+        </div>
+
+        <div class="popupRow">
+            <strong>Attesa</strong>
+            <span>${escapeHtml(camion.attesa || "")}</span>
+        </div>
+
+        <div class="popupRow">
+            <strong>Destinazione</strong>
+            <span>${escapeHtml(camion.destinazione || "")}</span>
+        </div>
+
+        <div class="popupRow">
+            <strong>Ingresso</strong>
+            <span>${escapeHtml(camion.ingresso || "")}</span>
+        </div>
+
+        <div class="popupRow">
+            <strong>Permanenza</strong>
+            <span class="${permanenza.classe}">
+                ${escapeHtml(permanenza.testo)}
+            </span>
+        </div>
+
+        <div class="popupRow">
+            <strong>Operatore ingresso</strong>
+            <span>
+                ${escapeHtml(camion.operatoreIngresso || "")}
+            </span>
+        </div>
+
+        ${
+            camion.fotoIn
+                ? `
+                    <div>
+                        <strong>Foto ingresso</strong>
+                        <img
+                            class="popupPhoto"
+                            src="${camion.fotoIn}"
+                            onclick="apriFoto('${camion.fotoIn}')"
+                        >
+                    </div>
+                `
+                : ""
         }
 
-    }
-
-
-    parcheggi.forEach(location => {
-
-        if (
-            trovaCamionPark(location)
-        ) {
-            occupati++;
+        ${
+            camion.fotoOut
+                ? `
+                    <div>
+                        <strong>Foto uscita</strong>
+                        <img
+                            class="popupPhoto"
+                            src="${camion.fotoOut}"
+                            onclick="apriFoto('${camion.fotoOut}')"
+                        >
+                    </div>
+                `
+                : ""
         }
 
-    });
+    `;
 
 
-    const liberi =
-        Math.max(
-            0,
-            parcheggi.length - occupati
-        );
-
-
-    const inSitoElement =
-        document.getElementById(
-            "dashInSito"
-        );
-
-
-    const occupatiElement =
-        document.getElementById(
-            "dashParkOccupati"
-        );
-
-
-    const liberiElement =
-        document.getElementById(
-            "dashParkLiberi"
-        );
-
-
-    const uscitiElement =
-        document.getElementById(
-            "dashUsciti"
-        );
-
-
-    if (inSitoElement)
-        inSitoElement.textContent =
-            inSito;
-
-
-    if (occupatiElement)
-        occupatiElement.textContent =
-            occupati;
-
-
-    if (liberiElement)
-        liberiElement.textContent =
-            liberi;
-
-
-    if (uscitiElement)
-        uscitiElement.textContent =
-            usciti;
-
-
-    const list =
-        document.getElementById(
-            "dashboardTruckList"
-        );
-
-
-    if (!list) return;
-
-
-    if (!camionAttivi.length) {
-
-        list.innerHTML = `
-            <div class="emptyState">
-                <i class="fa-solid fa-truck"></i>
-                Nessun mezzo attualmente in sito.
-            </div>
-        `;
-
-        return;
-
-    }
-
-
-    list.innerHTML =
-        camionAttivi.map(camion => `
-
-            <div class="dashboardTruck">
-
-                <strong>
-                    ${escapeHtml(camion.targa || "")}
-                </strong>
-
-                <div style="margin-top:8px;color:#aaa;">
-                    ${escapeHtml(camion.vettore || "")}
-                </div>
-
-                <div style="margin-top:5px;">
-                    <span class="badge badgePark">
-                        ${escapeHtml(camion.destinazione || "N/D")}
-                    </span>
-                </div>
-
-                <div style="margin-top:8px;color:#888;font-size:12px;">
-                    Ingresso:
-                    ${escapeHtml(camion.ingresso || "")}
-                </div>
-
-            </div>
-
-        `).join("");
+    overlay.classList.add("active");
 
 }
 
 
+
 /* =========================================================
-   DETTAGLIO PARK
-========================================================= */
+   FOTO GRANDE
+   ========================================================= */
+
+function apriFoto(url) {
+
+    if (!url) return;
+
+
+    const win =
+        window.open("", "_blank");
+
+
+    if (!win) return;
+
+
+    win.document.write(`
+        <html>
+        <head>
+            <title>Foto mezzo</title>
+
+            <style>
+                body {
+                    margin:0;
+                    background:#000;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    min-height:100vh;
+                }
+
+                img {
+                    max-width:100%;
+                    max-height:100vh;
+                    object-fit:contain;
+                }
+            </style>
+
+        </head>
+
+        <body>
+
+            <img src="${url}">
+
+        </body>
+        </html>
+    `);
+
+}
+
+
+
+/* =========================================================
+   CHIUDI SCHEDA
+   ========================================================= */
+
+function chiudiMezzoPopup() {
+
+    const overlay =
+        document.getElementById(
+            "mezzoPopupOverlay"
+        );
+
+
+    if (overlay) {
+
+        overlay.classList.remove(
+            "active"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   PARK POPUP
+   ========================================================= */
 
 function apriDettaglioPark(location) {
+
+    selectedParkId = location;
+
 
     const overlay =
         document.getElementById(
@@ -2047,35 +2018,28 @@ function apriDettaglioPark(location) {
         );
 
 
-    if (!overlay) return;
-
-
-    title.textContent =
-        `Parcheggio ${location}`;
-
-
     const camion =
         trovaCamionPark(location);
 
 
-    selectedParkId =
-        camion ? camion.id : null;
+    title.textContent =
+        location;
 
 
     if (!camion) {
 
         content.innerHTML = `
 
-            <div class="emptyState">
+            <div class="emptyMessage">
 
                 <i class="fa-solid fa-square-parking"></i>
 
-                <strong>
-                    PARCHEGGIO LIBERO
-                </strong>
+                <h3>PARCHEGGIO LIBERO</h3>
 
-                <p style="margin-top:8px;">
-                    ${escapeHtml(location)}
+                <p>
+                    Il parcheggio
+                    <strong>${escapeHtml(location)}</strong>
+                    è disponibile.
                 </p>
 
             </div>
@@ -2083,322 +2047,98 @@ function apriDettaglioPark(location) {
         `;
 
 
-        if (moveButton) {
+        moveButton.style.display =
+            "none";
 
-            moveButton.style.display =
-                "none";
-
-        }
 
     } else {
 
+        const permanenza =
+            calcolaPermanenza(
+                camion.ingresso
+            );
+
+
         content.innerHTML = `
 
-            <div>
-
-                <div style="
-                    display:grid;
-                    grid-template-columns:120px 1fr;
-                    gap:12px;
-                    margin-bottom:12px;
-                ">
-
-                    <strong>Targa</strong>
-
-                    <span>
-                        ${escapeHtml(camion.targa || "")}
-                    </span>
-
-                    <strong>Vettore</strong>
-
-                    <span>
-                        ${escapeHtml(camion.vettore || "")}
-                    </span>
-
-                    <strong>Destinazione</strong>
-
-                    <span>
-                        ${escapeHtml(camion.destinazione || "")}
-                    </span>
-
-                    <strong>Attesa</strong>
-
-                    <span>
-                        ${escapeHtml(camion.attesa || "")}
-                    </span>
-
-                    <strong>Ingresso</strong>
-
-                    <span>
-                        ${escapeHtml(camion.ingresso || "")}
-                    </span>
-
-                </div>
-
+            <div class="popupRow">
+                <strong>Targa</strong>
+                <span>${escapeHtml(camion.targa || "")}</span>
             </div>
+
+            <div class="popupRow">
+                <strong>Vettore</strong>
+                <span>${escapeHtml(camion.vettore || "")}</span>
+            </div>
+
+            <div class="popupRow">
+                <strong>Quantità</strong>
+                <span>${escapeHtml(camion.quantita || "")}</span>
+            </div>
+
+            <div class="popupRow">
+                <strong>Linea</strong>
+                <span>${escapeHtml(camion.linea || "")}</span>
+            </div>
+
+            <div class="popupRow">
+                <strong>Destinazione</strong>
+                <span>${escapeHtml(camion.destinazione || "")}</span>
+            </div>
+
+            <div class="popupRow">
+                <strong>Attesa</strong>
+                <span>${escapeHtml(camion.attesa || "")}</span>
+            </div>
+
+            <div class="popupRow">
+                <strong>Ingresso</strong>
+                <span>${escapeHtml(camion.ingresso || "")}</span>
+            </div>
+
+            <div class="popupRow">
+                <strong>Permanenza</strong>
+                <span class="${permanenza.classe}">
+                    ${escapeHtml(permanenza.testo)}
+                </span>
+            </div>
+
+            ${
+                camion.fotoIn
+                    ? `
+                        <div>
+                            <strong>Foto ingresso</strong>
+
+                            <img
+                                class="popupPhoto"
+                                src="${camion.fotoIn}"
+                                onclick="apriFoto('${camion.fotoIn}')"
+                            >
+                        </div>
+                    `
+                    : ""
+            }
 
         `;
 
 
-        if (moveButton) {
-
-            moveButton.style.display =
-                "flex";
-
-        }
+        moveButton.style.display =
+            "block";
 
     }
 
 
-    overlay.style.display =
-        "flex";
+    overlay.classList.add(
+        "active"
+    );
 
 }
 
 
-/* =========================================================
-   SPOSTA DA POPUP
-========================================================= */
-
-async function spostaDaPopup() {
-
-    if (!selectedParkId) return;
-
-
-    const camion =
-        camionData[selectedParkId];
-
-
-    if (!camion) {
-
-        alert(
-            "Mezzo non trovato."
-        );
-
-        return;
-
-    }
-
-
-    const nuovaDestinazione =
-        prompt(
-            "Inserisci la nuova destinazione:"
-        );
-
-
-    if (
-        nuovaDestinazione === null
-    ) {
-        return;
-    }
-
-
-    const destinazione =
-        nuovaDestinazione
-            .trim()
-            .toUpperCase();
-
-
-    const valida =
-        validaDestinazione(
-            destinazione
-        );
-
-
-    if (!valida) {
-
-        alert(
-            "Destinazione non valida."
-        );
-
-        return;
-
-    }
-
-
-    const occupato =
-        trovaCamionPark(
-            destinazione
-        );
-
-
-    if (
-        occupato &&
-        occupato.id !== selectedParkId
-    ) {
-
-        alert(
-            `Il parcheggio ${destinazione} è occupato.`
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        await db
-            .ref(
-                "camion/" + selectedParkId
-            )
-            .update({
-
-                destinazione:
-                    valida.valore,
-
-                tipo:
-                    valida.tipo
-
-            });
-
-
-        alert(
-            "Mezzo spostato correttamente."
-        );
-
-
-        chiudiPopup();
-
-
-        aggiornaPark();
-
-        aggiornaMonitor();
-
-        aggiornaDashboard();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Errore durante lo spostamento."
-        );
-
-    }
-
-}
-
 
 /* =========================================================
-   SPOSTAMENTO DA MONITOR
-========================================================= */
-
-async function apriSpostamento(id) {
-
-    const camion =
-        camionData[id];
-
-
-    if (!camion) {
-
-        alert(
-            "Mezzo non trovato."
-        );
-
-        return;
-
-    }
-
-
-    const nuovaDestinazione =
-        prompt(
-            `Nuova destinazione per ${camion.targa}:`
-        );
-
-
-    if (
-        nuovaDestinazione === null
-    ) {
-        return;
-    }
-
-
-    const destinazione =
-        nuovaDestinazione
-            .trim()
-            .toUpperCase();
-
-
-    const valida =
-        validaDestinazione(
-            destinazione
-        );
-
-
-    if (!valida) {
-
-        alert(
-            "Destinazione non valida."
-        );
-
-        return;
-
-    }
-
-
-    const occupato =
-        trovaCamionPark(
-            destinazione
-        );
-
-
-    if (
-        occupato &&
-        occupato.id !== id
-    ) {
-
-        alert(
-            `Il parcheggio ${destinazione} è già occupato.`
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        await db
-            .ref("camion/" + id)
-            .update({
-
-                destinazione:
-                    valida.valore,
-
-                tipo:
-                    valida.tipo
-
-            });
-
-
-        alert(
-            "Destinazione modificata."
-        );
-
-
-        aggiornaPark();
-
-        aggiornaMonitor();
-
-        aggiornaDashboard();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Errore durante la modifica."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   CHIUDI POPUP
-========================================================= */
+   CHIUDI PARK POPUP
+   ========================================================= */
 
 function chiudiPopup() {
 
@@ -2410,78 +2150,1831 @@ function chiudiPopup() {
 
     if (overlay) {
 
-        overlay.style.display =
-            "none";
+        overlay.classList.remove(
+            "active"
+        );
 
     }
-
-
-    selectedParkId = null;
 
 }
 
 
+
 /* =========================================================
-   CANCELLA
-========================================================= */
+   SPOSTAMENTO DA POPUP
+   ========================================================= */
 
-async function cancella(id) {
+function spostaDaPopup() {
 
-    if (
-        !confirm(
-            "Vuoi eliminare questo record?"
-        )
-    ) {
-        return;
-    }
-
-
-    try {
-
-        await db
-            .ref("camion/" + id)
-            .remove();
-
-
-        alert(
-            "Record eliminato."
+    const camion =
+        trovaCamionPark(
+            selectedParkId
         );
 
 
-        aggiornaMonitor();
+    if (!camion) return;
 
-        aggiornaDashboard();
+
+    const id =
+        Object.keys(camionData)
+            .find(
+                key =>
+                    camionData[key] === camion
+            );
+
+
+    if (!id) return;
+
+
+    selectedMezzoId = id;
+
+
+    chiudiPopup();
+
+
+    apriSpostamentoDaScheda();
+
+}
+
+
+
+/* =========================================================
+   SPOSTAMENTO DA SCHEDA
+   ========================================================= */
+
+function apriSpostamentoDaScheda() {
+
+    if (!selectedMezzoId) return;
+
+
+    const camion =
+        camionData[
+            selectedMezzoId
+        ];
+
+
+    if (!camion) return;
+
+
+    showPage("trattoristi");
+
+
+    const targa =
+        document.getElementById(
+            "trattTarga"
+        );
+
+
+    if (targa) {
+
+        targa.value =
+            camion.targa || "";
+
+    }
+
+
+    aggiornaInfoTrattorista();
+
+
+    const select =
+        document.getElementById(
+            "nuovaDestinazione"
+        );
+
+
+    if (select) {
+
+        select.focus();
+
+    }
+
+}
+
+
+
+/* =========================================================
+   TRATTORISTA
+   ========================================================= */
+
+function aggiornaInfoTrattorista() {
+
+    const targa =
+        document.getElementById(
+            "trattTarga"
+        )
+        .value
+        .trim()
+        .toUpperCase();
+
+
+    const container =
+        document.getElementById(
+            "trattoristaInfo"
+        );
+
+
+    if (!container) return;
+
+
+    container.innerHTML = "";
+
+
+    if (!targa) return;
+
+
+    const result =
+        Object.entries(camionData)
+            .find(([id, camion]) => {
+
+                return camion &&
+                    !camion.uscita &&
+                    String(camion.targa || "")
+                        .toUpperCase() === targa;
+
+            });
+
+
+    if (!result) {
+
+        container.innerHTML =
+            `<div class="emptyMessage">
+                Mezzo non trovato.
+            </div>`;
+
+        return;
+
+    }
+
+
+    const [id, camion] =
+        result;
+
+
+    selectedMezzoId = id;
+
+
+    container.innerHTML = `
+
+        <div class="popupRow">
+
+            <strong>
+                Destinazione attuale
+            </strong>
+
+            <span>
+                ${escapeHtml(
+                    camion.destinazione || ""
+                )}
+            </span>
+
+        </div>
+
+    `;
+
+
+    popolaSelectDestinazioni();
+
+}
+
+
+
+/* =========================================================
+   MODIFICA DESTINAZIONE
+   ========================================================= */
+
+function modificaDestinazioneTrattorista() {
+
+    const targa =
+        document.getElementById(
+            "trattTarga"
+        )
+        .value
+        .trim()
+        .toUpperCase();
+
+
+    const destinazione =
+        document.getElementById(
+            "nuovaDestinazione"
+        )
+        .value;
+
+
+    if (!targa) {
+
+        alert(
+            "Inserisci la targa."
+        );
+
+        return;
+
+    }
+
+
+    if (!destinazione) {
+
+        alert(
+            "Seleziona una nuova destinazione."
+        );
+
+        return;
+
+    }
+
+
+    const risultato =
+        Object.entries(camionData)
+            .find(([id, camion]) => {
+
+                return camion &&
+                    !camion.uscita &&
+                    String(camion.targa || "")
+                        .toUpperCase() === targa;
+
+            });
+
+
+    if (!risultato) {
+
+        alert(
+            "Mezzo non trovato."
+        );
+
+        return;
+
+    }
+
+
+    const [id, camion] =
+        risultato;
+
+
+    if (
+        destinazione !== camion.destinazione &&
+        trovaCamionPark(destinazione)
+    ) {
+
+        alert(
+            "Il parcheggio selezionato è occupato."
+        );
 
         aggiornaPark();
 
-    } catch (error) {
+        return;
+
+    }
+
+
+    const vecchiaDestinazione =
+        camion.destinazione || "";
+
+
+    const updates = {
+
+        destinazione,
+
+        tipo: "PARK",
+
+        operatoreUltimoSpostamento:
+            getOperatore()
+
+    };
+
+
+    if (
+        !camion.ingressoPark
+        ||
+        camion.tipo !== "PARK"
+    ) {
+
+        updates.ingressoPark =
+            formatDateTime(new Date());
+
+    }
+
+
+    db.ref(
+        "camion/" + id
+    )
+    .update(updates)
+    .then(() => {
+
+        registraMovimento(
+            id,
+            vecchiaDestinazione,
+            destinazione,
+            getOperatore(),
+            camion.targa || ""
+        );
+
+
+        alert(
+            `Mezzo ${targa} spostato da ${vecchiaDestinazione || "—"} a ${destinazione}.`
+        );
+
+
+        document.getElementById(
+            "nuovaDestinazione"
+        ).value = "";
+
+
+        aggiornaInfoTrattorista();
+
+    })
+    .catch(error => {
 
         console.error(error);
 
         alert(
-            "Errore durante l'eliminazione."
+            "Errore durante lo spostamento."
         );
+
+    });
+
+}
+
+
+
+/* =========================================================
+   STORICO MOVIMENTI
+   ========================================================= */
+
+function registraMovimento(
+    camionId,
+    da,
+    a,
+    operatore,
+    targa
+) {
+
+    const movimento = {
+
+        camionId,
+
+        targa,
+
+        da: da || "",
+
+        a: a || "",
+
+        operatore:
+
+            operatore ||
+            "Operatore non specificato",
+
+        dataOra:
+            formatDateTime(new Date())
+
+    };
+
+
+    return db
+        .ref("movimenti")
+        .push(movimento);
+
+}
+
+
+
+/* =========================================================
+   MONITOR
+   ========================================================= */
+
+function aggiornaMonitor() {
+
+    aggiornaMonitorIn();
+
+    aggiornaMonitorOut();
+
+}
+
+
+
+/* =========================================================
+   MONITOR IN
+   ========================================================= */
+
+function aggiornaMonitorIn() {
+
+    const tbody =
+        document.getElementById(
+            "monitorIn"
+        );
+
+
+    if (!tbody) return;
+
+
+    tbody.innerHTML = "";
+
+
+    const ricerca =
+        (
+            document.getElementById(
+                "ricercaInSito"
+            )?.value || ""
+        )
+        .trim()
+        .toUpperCase();
+
+
+    const filtro =
+        document.getElementById(
+            "filtroAttesa"
+        )?.value || "";
+
+
+    Object.entries(camionData)
+        .filter(([id, camion]) => {
+
+            if (!camion || camion.uscita)
+                return false;
+
+
+            if (
+                filtro &&
+                (camion.attesa || "") !== filtro
+            ) {
+
+                return false;
+
+            }
+
+
+            const testo = [
+
+                camion.targa,
+                camion.vettore,
+                camion.destinazione,
+                camion.linea,
+                camion.attesa
+
+            ]
+            .join(" ")
+            .toUpperCase();
+
+
+            return !ricerca ||
+                testo.includes(ricerca);
+
+        })
+        .sort((a,b) => {
+
+            const da =
+                parseDateTime(
+                    a[1].ingresso
+                )?.getTime() || 0;
+
+
+            const dbb =
+                parseDateTime(
+                    b[1].ingresso
+                )?.getTime() || 0;
+
+
+            return da - dbb;
+
+        })
+        .forEach(([id, camion]) => {
+
+            const tr =
+                document.createElement("tr");
+
+
+            const permanenza =
+                calcolaPermanenza(
+                    camion.ingresso
+                );
+
+
+            const foto =
+                camion.fotoIn
+                    ? `
+                        <img
+                            class="fotoThumb"
+                            src="${camion.fotoIn}"
+                            onclick="apriFoto('${camion.fotoIn}')"
+                        >
+                    `
+                    : "—";
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${escapeHtml(
+                        camion.destinazione || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.attesa || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.tipo || ""
+                    )}
+                </td>
+
+                <td
+                    class="clickablePlate"
+                    onclick="apriSchedaMezzo('${id}')"
+                >
+                    ${escapeHtml(
+                        camion.targa || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.vettore || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.quantita || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.linea || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.ingresso || ""
+                    )}
+                </td>
+
+                <td class="${permanenza.classe}">
+                    ${escapeHtml(
+                        permanenza.testo
+                    )}
+                </td>
+
+                <td>
+                    ${foto}
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn btnSmall btnBlue"
+                        onclick="apriSpostamentoRapido('${id}')"
+                    >
+                        Sposta
+                    </button>
+
+                    <button
+                        class="btn btnSmall"
+                        onclick="apriSchedaMezzo('${id}')"
+                    >
+                        Scheda
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(tr);
+
+        });
+
+}
+
+
+
+/* =========================================================
+   MONITOR OUT
+   ========================================================= */
+
+function aggiornaMonitorOut() {
+
+    const tbody =
+        document.getElementById(
+            "monitorOut"
+        );
+
+
+    if (!tbody) return;
+
+
+    tbody.innerHTML = "";
+
+
+    const ricerca =
+        (
+            document.getElementById(
+                "ricercaUsciti"
+            )?.value || ""
+        )
+        .trim()
+        .toUpperCase();
+
+
+    Object.entries(camionData)
+        .filter(([id, camion]) => {
+
+            if (!camion || !camion.uscita)
+                return false;
+
+
+            const testo = [
+
+                camion.targa,
+                camion.vettore,
+                camion.destinazione,
+                camion.linea,
+                camion.attesa
+
+            ]
+            .join(" ")
+            .toUpperCase();
+
+
+            return !ricerca ||
+                testo.includes(ricerca);
+
+        })
+        .sort((a,b) => {
+
+            const da =
+                parseDateTime(
+                    a[1].uscita
+                )?.getTime() || 0;
+
+
+            const dbb =
+                parseDateTime(
+                    b[1].uscita
+                )?.getTime() || 0;
+
+
+            return dbb - da;
+
+        })
+        .forEach(([id, camion]) => {
+
+            const tr =
+                document.createElement("tr");
+
+
+            const foto =
+                camion.fotoOut
+                    ? `
+                        <img
+                            class="fotoThumb"
+                            src="${camion.fotoOut}"
+                            onclick="apriFoto('${camion.fotoOut}')"
+                        >
+                    `
+                    : "—";
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${escapeHtml(
+                        camion.destinazione || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.attesa || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.tipo || ""
+                    )}
+                </td>
+
+                <td
+                    class="clickablePlate"
+                    onclick="apriSchedaMezzo('${id}')"
+                >
+                    ${escapeHtml(
+                        camion.targa || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.vettore || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.quantita || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.linea || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.ingresso || ""
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        camion.uscita || ""
+                    )}
+                </td>
+
+                <td>
+                    ${foto}
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn btnSmall"
+                        onclick="apriSchedaMezzo('${id}')"
+                    >
+                        Scheda
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(tr);
+
+        });
+
+}
+
+
+
+/* =========================================================
+   SPOSTAMENTO RAPIDO
+   ========================================================= */
+
+function apriSpostamentoRapido(id) {
+
+    selectedMezzoId = id;
+
+    apriSpostamentoDaScheda();
+
+}
+
+
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+function aggiornaDashboard() {
+
+    aggiornaDashboardCards();
+
+    aggiornaDashboardAlerts();
+
+    aggiornaDashboardParkSummary();
+
+    aggiornaDashboardTruckList();
+
+}
+
+
+
+/* =========================================================
+   DASHBOARD CARDS
+   ========================================================= */
+
+function aggiornaDashboardCards() {
+
+    const mezzi =
+        Object.values(camionData)
+            .filter(c => c && !c.uscita);
+
+
+    const usciti =
+        Object.values(camionData)
+            .filter(c => c && c.uscita);
+
+
+    let occupati = 0;
+
+    parkGroups.forEach(group => {
+
+        group.parcheggi.forEach(location => {
+
+            if (trovaCamionPark(location)) {
+
+                occupati++;
+
+            }
+
+        });
+
+    });
+
+
+    const totalePark =
+        parkGroups.reduce(
+            (sum, group) =>
+                sum + group.parcheggi.length,
+            0
+        );
+
+
+    const oltre8 =
+        mezzi.filter(c => {
+
+            const p =
+                calcolaPermanenza(c.ingresso);
+
+            return p.minuti >= 480;
+
+        }).length;
+
+
+    const oltre24 =
+        mezzi.filter(c => {
+
+            const p =
+                calcolaPermanenza(c.ingresso);
+
+            return p.minuti >= 1440;
+
+        }).length;
+
+
+    const ingressiOggi =
+        mezzi.filter(c =>
+            isToday(
+                parseDateTime(c.ingresso)
+            )
+        ).length
+        +
+        usciti.filter(c =>
+            isToday(
+                parseDateTime(c.ingresso)
+            )
+        ).length;
+
+
+    const usciteOggi =
+        usciti.filter(c =>
+            isToday(
+                parseDateTime(c.uscita)
+            )
+        ).length;
+
+
+    setText(
+        "dashInSito",
+        mezzi.length
+    );
+
+
+    setText(
+        "dashParkOccupati",
+        occupati
+    );
+
+
+    setText(
+        "dashParkLiberi",
+        totalePark - occupati
+    );
+
+
+    setText(
+        "dashUsciti",
+        usciti.length
+    );
+
+
+    setText(
+        "dashOltre8",
+        oltre8
+    );
+
+
+    setText(
+        "dashOltre24",
+        oltre24
+    );
+
+
+    setText(
+        "dashIngressiOggi",
+        ingressiOggi
+    );
+
+
+    setText(
+        "dashUsciteOggi",
+        usciteOggi
+    );
+
+}
+
+
+
+/* =========================================================
+   ALERT DASHBOARD
+   ========================================================= */
+
+function aggiornaDashboardAlerts() {
+
+    const container =
+        document.getElementById(
+            "dashboardAlerts"
+        );
+
+
+    if (!container) return;
+
+
+    container.innerHTML = "";
+
+
+    const mezzi =
+        Object.entries(camionData)
+            .filter(([id, camion]) =>
+                camion && !camion.uscita
+            );
+
+
+    const alerts = [];
+
+
+    mezzi.forEach(([id, camion]) => {
+
+        const permanenza =
+            calcolaPermanenza(
+                camion.ingresso
+            );
+
+
+        if (permanenza.minuti >= 480) {
+
+            alerts.push({
+                id,
+                camion,
+                permanenza
+            });
+
+        }
+
+    });
+
+
+    alerts.sort(
+        (a,b) =>
+            b.permanenza.minuti -
+            a.permanenza.minuti
+    );
+
+
+    if (!alerts.length) {
+
+        container.innerHTML =
+            `<div class="emptyMessage">
+                Nessun mezzo da controllare.
+            </div>`;
+
+        return;
+
+    }
+
+
+    alerts.forEach(item => {
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "alertItem " +
+            (
+                item.permanenza.minuti >= 1440
+                    ? "over24"
+                    : "over8"
+            );
+
+
+        div.innerHTML = `
+
+            <div>
+
+                <div class="alertPlate">
+                    ${escapeHtml(
+                        item.camion.targa || ""
+                    )}
+                </div>
+
+                <div class="alertTime">
+
+                    Park:
+                    ${escapeHtml(
+                        item.camion.destinazione || ""
+                    )}
+
+                    ·
+
+                    ${escapeHtml(
+                        item.permanenza.testo
+                    )}
+
+                </div>
+
+            </div>
+
+            <strong>
+
+                ${
+                    item.permanenza.minuti >= 1440
+                        ? "OLTRE 24 ORE"
+                        : "OLTRE 8 ORE"
+                }
+
+            </strong>
+
+        `;
+
+
+        div.onclick = () =>
+            apriSchedaMezzo(item.id);
+
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+
+/* =========================================================
+   DASHBOARD PARK
+   ========================================================= */
+
+function aggiornaDashboardParkSummary() {
+
+    const container =
+        document.getElementById(
+            "dashboardParkSummary"
+        );
+
+
+    if (!container) return;
+
+
+    container.innerHTML = "";
+
+
+    parkGroups.forEach(group => {
+
+        const totale =
+            group.parcheggi.length;
+
+
+        let occupati = 0;
+
+
+        group.parcheggi.forEach(
+            location => {
+
+                if (
+                    trovaCamionPark(location)
+                ) {
+
+                    occupati++;
+
+                }
+
+            }
+        );
+
+
+        const liberi =
+            totale - occupati;
+
+
+        const percentuale =
+            totale
+                ? Math.round(
+                    occupati /
+                    totale *
+                    100
+                )
+                : 0;
+
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "parkSummaryCard";
+
+
+        card.innerHTML = `
+
+            <div class="parkSummaryName">
+                ${escapeHtml(group.nome)}
+            </div>
+
+            <div class="parkSummaryNumbers">
+
+                <span class="parkFreeNumber">
+                    ${liberi} liberi
+                </span>
+
+                <span class="parkOccupiedNumber">
+                    ${occupati} occupati
+                </span>
+
+            </div>
+
+            <div class="parkStatusBar">
+
+                <div
+                    class="parkStatusFill ${
+                        percentuale >= 100
+                            ? "full"
+                            : percentuale >= 80
+                                ? "medium"
+                                : ""
+                    }"
+                    style="width:${percentuale}%"
+                ></div>
+
+            </div>
+
+        `;
+
+
+        card.onclick = () => {
+
+            showPage("park");
+
+            setTimeout(() => {
+
+                const section =
+                    Array.from(
+                        document.querySelectorAll(
+                            ".parkSection"
+                        )
+                    ).find(section =>
+                        section.querySelector("h3")
+                            ?.textContent ===
+                        group.nome
+                    );
+
+
+                if (section) {
+
+                    section.scrollIntoView({
+                        behavior: "smooth"
+                    });
+
+                }
+
+            }, 50);
+
+        };
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+
+/* =========================================================
+   DASHBOARD TRUCK
+   ========================================================= */
+
+function aggiornaDashboardTruckList() {
+
+    const container =
+        document.getElementById(
+            "dashboardTruckList"
+        );
+
+
+    if (!container) return;
+
+
+    container.innerHTML = "";
+
+
+    const mezzi =
+        Object.entries(camionData)
+            .filter(([id, camion]) =>
+                camion && !camion.uscita
+            )
+            .sort((a,b) => {
+
+                const da =
+                    parseDateTime(
+                        a[1].ingresso
+                    )?.getTime() || 0;
+
+
+                const dbb =
+                    parseDateTime(
+                        b[1].ingresso
+                    )?.getTime() || 0;
+
+
+                return dbb - da;
+
+            })
+            .slice(0, 10);
+
+
+    if (!mezzi.length) {
+
+        container.innerHTML =
+            `<div class="emptyMessage">
+                Nessun mezzo presente.
+            </div>`;
+
+        return;
+
+    }
+
+
+    mezzi.forEach(([id, camion]) => {
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "dashboardTruck";
+
+
+        const permanenza =
+            calcolaPermanenza(
+                camion.ingresso
+            );
+
+
+        div.innerHTML = `
+
+            <div
+                class="clickablePlate"
+            >
+                ${escapeHtml(
+                    camion.targa || ""
+                )}
+            </div>
+
+            <div>
+                ${escapeHtml(
+                    camion.destinazione || ""
+                )}
+            </div>
+
+            <div>
+                ${escapeHtml(
+                    camion.vettore || ""
+                )}
+            </div>
+
+            <div class="${permanenza.classe}">
+                ${escapeHtml(
+                    permanenza.testo
+                )}
+            </div>
+
+        `;
+
+
+        div.onclick = () =>
+            apriSchedaMezzo(id);
+
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+
+/* =========================================================
+   MOVIMENTI
+   ========================================================= */
+
+function aggiornaMovimenti() {
+
+    const tbody =
+        document.getElementById(
+            "monitorMovimenti"
+        );
+
+
+    if (!tbody) return;
+
+
+    tbody.innerHTML = "";
+
+
+    const ricerca =
+        (
+            document.getElementById(
+                "ricercaMovimenti"
+            )?.value || ""
+        )
+        .trim()
+        .toUpperCase();
+
+
+    db.ref("movimenti")
+        .once("value")
+        .then(snapshot => {
+
+            const movimenti =
+                snapshot.val() || {};
+
+
+            Object.entries(movimenti)
+                .map(([id, movimento]) =>
+                    ({id, ...movimento})
+                )
+                .filter(movimento => {
+
+                    const testo = [
+
+                        movimento.targa,
+                        movimento.da,
+                        movimento.a,
+                        movimento.operatore
+
+                    ]
+                    .join(" ")
+                    .toUpperCase();
+
+
+                    return !ricerca ||
+                        testo.includes(ricerca);
+
+                })
+                .sort((a,b) => {
+
+                    const da =
+                        parseDateTime(
+                            a.dataOra
+                        )?.getTime() || 0;
+
+
+                    const dbb =
+                        parseDateTime(
+                            b.dataOra
+                        )?.getTime() || 0;
+
+
+                    return dbb - da;
+
+                })
+                .forEach(movimento => {
+
+                    const tr =
+                        document.createElement("tr");
+
+
+                    tr.innerHTML = `
+
+                        <td>
+                            ${escapeHtml(
+                                movimento.dataOra || ""
+                            )}
+                        </td>
+
+                        <td class="clickablePlate">
+                            ${escapeHtml(
+                                movimento.targa || ""
+                            )}
+                        </td>
+
+                        <td class="moveFrom">
+                            ${escapeHtml(
+                                movimento.da || "—"
+                            )}
+                        </td>
+
+                        <td class="moveTo">
+                            ${escapeHtml(
+                                movimento.a || ""
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                movimento.operatore || ""
+                            )}
+                        </td>
+
+                    `;
+
+
+                    tr.children[1].onclick = () => {
+
+                        const found =
+                            Object.entries(
+                                camionData
+                            ).find(
+                                ([id, camion]) =>
+                                    camion &&
+                                    camion.targa ===
+                                    movimento.targa
+                            );
+
+
+                        if (found) {
+
+                            apriSchedaMezzo(
+                                found[0]
+                            );
+
+                        }
+
+                    };
+
+
+                    tbody.appendChild(tr);
+
+                });
+
+        });
+
+}
+
+
+
+/* =========================================================
+   STATISTICHE
+   ========================================================= */
+
+function aggiornaStatistiche() {
+
+    const tutti =
+        Object.values(camionData)
+            .filter(Boolean);
+
+
+    const presenti =
+        tutti.filter(c => !c.uscita);
+
+
+    const usciti =
+        tutti.filter(c => c.uscita);
+
+
+    const ingressiOggi =
+        tutti.filter(c =>
+            isToday(
+                parseDateTime(c.ingresso)
+            )
+        ).length;
+
+
+    const usciteOggi =
+        usciti.filter(c =>
+            isToday(
+                parseDateTime(c.uscita)
+            )
+        ).length;
+
+
+    const permanenze =
+        presenti
+            .map(c =>
+                calcolaPermanenza(
+                    c.ingresso
+                ).minuti
+            )
+            .filter(v => Number.isFinite(v));
+
+
+    const oltre8 =
+        permanenze.filter(
+            v => v >= 480
+        ).length;
+
+
+    const oltre24 =
+        permanenze.filter(
+            v => v >= 1440
+        ).length;
+
+
+    const media =
+        permanenze.length
+            ? Math.round(
+                permanenze.reduce(
+                    (a,b) => a + b,
+                    0
+                ) /
+                permanenze.length
+            )
+            : 0;
+
+
+    const massima =
+        permanenze.length
+            ? Math.max(...permanenze)
+            : 0;
+
+
+    setText(
+        "statIngressi",
+        ingressiOggi
+    );
+
+
+    setText(
+        "statUscite",
+        usciteOggi
+    );
+
+
+    setText(
+        "statPresenti",
+        presenti.length
+    );
+
+
+    setText(
+        "statOltre8",
+        oltre8
+    );
+
+
+    setText(
+        "statOltre24",
+        oltre24
+    );
+
+
+    aggiornaStatisticheMovimenti();
+
+    setText(
+        "statMedia",
+        minutiInTesto(media)
+    );
+
+
+    setText(
+        "statMassima",
+        minutiInTesto(massima)
+    );
+
+
+    aggiornaStatistichePark();
+
+}
+
+
+
+/* =========================================================
+   STATISTICHE MOVIMENTI
+   ========================================================= */
+
+function aggiornaStatisticheMovimenti() {
+
+    const element =
+        document.getElementById(
+            "statSpostamenti"
+        );
+
+
+    if (!element) return;
+
+
+    db.ref("movimenti")
+        .once("value")
+        .then(snapshot => {
+
+            const movimenti =
+                Object.values(
+                    snapshot.val() || {}
+                );
+
+
+            const oggi =
+                movimenti.filter(m =>
+                    isToday(
+                        parseDateTime(
+                            m.dataOra
+                        )
+                    )
+                ).length;
+
+
+            element.textContent =
+                oggi;
+
+        });
+
+}
+
+
+
+/* =========================================================
+   STATISTICHE PARK
+   ========================================================= */
+
+function aggiornaStatistichePark() {
+
+    const container =
+        document.getElementById(
+            "statPark"
+        );
+
+
+    if (!container) return;
+
+
+    container.innerHTML = "";
+
+
+    parkGroups.forEach(group => {
+
+        const totale =
+            group.parcheggi.length;
+
+
+        let occupati = 0;
+
+
+        group.parcheggi.forEach(
+            location => {
+
+                if (
+                    trovaCamionPark(location)
+                ) {
+
+                    occupati++;
+
+                }
+
+            }
+        );
+
+
+        const percentuale =
+            totale
+                ? Math.round(
+                    occupati /
+                    totale *
+                    100
+                )
+                : 0;
+
+
+        const row =
+            document.createElement("div");
+
+
+        row.className =
+            "statParkRow";
+
+
+        row.innerHTML = `
+
+            <div class="statParkHeader">
+
+                <strong>
+                    ${escapeHtml(group.nome)}
+                </strong>
+
+                <span>
+                    ${occupati}/${totale}
+                    (${percentuale}%)
+                </span>
+
+            </div>
+
+            <div class="parkStatusBar">
+
+                <div
+                    class="parkStatusFill ${
+                        percentuale >= 100
+                            ? "full"
+                            : percentuale >= 80
+                                ? "medium"
+                                : ""
+                    }"
+                    style="width:${percentuale}%"
+                ></div>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(row);
+
+    });
+
+}
+
+
+
+/* =========================================================
+   UTILITÀ
+   ========================================================= */
+
+function setText(id, value) {
+
+    const el =
+        document.getElementById(id);
+
+
+    if (el) {
+
+        el.textContent =
+            value;
 
     }
 
 }
 
 
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
 
-function escapeHtml(value) {
+function isToday(date) {
 
-    if (
-        value === null ||
-        value === undefined
-    ) {
-        return "";
+    if (!date) return false;
+
+
+    const now =
+        new Date();
+
+
+    return (
+        date.getDate() === now.getDate() &&
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear()
+    );
+
+}
+
+
+
+function minutiInTesto(minuti) {
+
+    const giorni =
+        Math.floor(minuti / 1440);
+
+
+    const ore =
+        Math.floor(
+            (minuti % 1440) / 60
+        );
+
+
+    const min =
+        minuti % 60;
+
+
+    if (giorni > 0) {
+
+        return `${giorni}g ${ore}h ${String(min).padStart(2,"0")}m`;
+
     }
 
 
-    return String(value)
+    return `${ore}h ${String(min).padStart(2,"0")}m`;
+
+}
+
+
+
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -2491,526 +3984,44 @@ function escapeHtml(value) {
 }
 
 
-/* =========================================================
-   EXPORT IN EXCEL
-========================================================= */
-
-function exportInExcel() {
-
-    const dati = [];
-
-
-    for (const id in camionData) {
-
-        const camion = camionData[id];
-
-
-        if (
-            !camion ||
-            camion.uscita
-        ) {
-            continue;
-        }
-
-
-        dati.push({
-
-            PK:
-                camion.destinazione || "",
-
-            Attesa:
-                camion.attesa || "",
-
-            Tipo:
-                camion.tipo || "",
-
-            Targa:
-                camion.targa || "",
-
-            Vettore:
-                camion.vettore || "",
-
-            Quantita:
-                camion.quantita || "",
-
-            Linea:
-                camion.linea || "",
-
-            Ingresso:
-                camion.ingresso || "",
-
-            Permanenza:
-                calcolaPermanenza(
-                    camion.ingresso
-                ).testo
-
-        });
-
-    }
-
-
-    if (!dati.length) {
-
-        alert(
-            "Non ci sono dati da esportare."
-        );
-
-        return;
-
-    }
-
-
-    const worksheet =
-        XLSX.utils.json_to_sheet(
-            dati
-        );
-
-
-    const workbook =
-        XLSX.utils.book_new();
-
-
-    XLSX.utils.book_append_sheet(
-        workbook,
-        worksheet,
-        "In Sito"
-    );
-
-
-    XLSX.writeFile(
-        workbook,
-        "In_Sito.xlsx"
-    );
-
-}
-
 
 /* =========================================================
-   EXPORT OUT EXCEL
-========================================================= */
+   FIREBASE LISTENER
+   ========================================================= */
 
-function exportOutExcel() {
+db.ref("camion").on(
+    "value",
+    snapshot => {
 
-    const dati = [];
+        camionData =
+            snapshot.val() || {};
 
 
-    for (const id in camionData) {
+        aggiornaPark();
 
-        const camion = camionData[id];
+        aggiornaMonitor();
 
+        aggiornaDashboard();
 
-        if (
-            !camion ||
-            !camion.uscita
-        ) {
-            continue;
-        }
-
-
-        dati.push({
-
-            PK:
-                camion.destinazione || "",
-
-            Attesa:
-                camion.attesa || "",
-
-            Tipo:
-                camion.tipo || "",
-
-            Targa:
-                camion.targa || "",
-
-            Vettore:
-                camion.vettore || "",
-
-            Quantita:
-                camion.quantita || "",
-
-            Linea:
-                camion.linea || "",
-
-            Ingresso:
-                camion.ingresso || "",
-
-            Uscita:
-                camion.uscita || ""
-
-        });
-
-    }
-
-
-    if (!dati.length) {
-
-        alert(
-            "Non ci sono dati da esportare."
-        );
-
-        return;
-
-    }
-
-
-    const worksheet =
-        XLSX.utils.json_to_sheet(
-            dati
-        );
-
-
-    const workbook =
-        XLSX.utils.book_new();
-
-
-    XLSX.utils.book_append_sheet(
-        workbook,
-        worksheet,
-        "Usciti"
-    );
-
-
-    XLSX.writeFile(
-        workbook,
-        "Usciti.xlsx"
-    );
-
-}
-
-
-/* =========================================================
-   EVENTI
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        /* PARK */
-
-        creaPark();
-
-        popolaSelectDestinazioni();
-
-
-        /* PAGINA INIZIALE */
-
-        showPage(
-            "pageDashboard"
-        );
-
-
-        /* INBOUND */
-
-        const registraInboundBtn =
-            document.getElementById(
-                "registraInbound"
-            );
-
-
-        if (registraInboundBtn) {
-
-            registraInboundBtn.addEventListener(
-                "click",
-                registraInbound
-            );
-
-        }
-
-
-        /* OUTBOUND */
-
-        const registraOutboundBtn =
-            document.getElementById(
-                "registraOutbound"
-            );
-
-
-        if (registraOutboundBtn) {
-
-            registraOutboundBtn.addEventListener(
-                "click",
-                registraOutbound
-            );
-
-        }
-
-
-        /* TRATTORISTI */
-
-        const modificaDestBtn =
-            document.getElementById(
-                "btnModificaDest"
-            );
-
-
-        if (modificaDestBtn) {
-
-            modificaDestBtn.addEventListener(
-                "click",
-                modificaDestinazione
-            );
-
-        }
-
-
-        /* RICERCA OUTBOUND */
-
-        const ricercaOutbound =
-            document.getElementById(
-                "ricercaOutbound"
-            );
-
-
-        if (ricercaOutbound) {
-
-            ricercaOutbound.addEventListener(
-                "input",
-                cercaOutbound
-            );
-
-        }
-
-
-        /* RICERCA IN SITO */
-
-        const ricercaInSito =
-            document.getElementById(
-                "ricercaInSito"
-            );
-
-
-        if (ricercaInSito) {
-
-            ricercaInSito.addEventListener(
-                "input",
-                aggiornaMonitor
-            );
-
-        }
-
-
-        /* FILTRO ATTESA */
-
-        const filtroAttesa =
-            document.getElementById(
-                "filtroAttesa"
-            );
-
-
-        if (filtroAttesa) {
-
-            filtroAttesa.addEventListener(
-                "change",
-                aggiornaMonitor
-            );
-
-        }
-
-
-        /* RICERCA USCITI */
-
-        const ricercaUsciti =
-            document.getElementById(
-                "ricercaUsciti"
-            );
-
-
-        if (ricercaUsciti) {
-
-            ricercaUsciti.addEventListener(
-                "input",
-                aggiornaMonitor
-            );
-
-        }
-
-
-        /* CAMERA INBOUND */
-
-        const video =
-            document.getElementById(
-                "video"
-            );
-
-
-        if (video) {
-
-            startRearCamera(video);
-
-        }
-
-
-        const snap =
-            document.getElementById(
-                "snap"
-            );
-
-
-        if (snap) {
-
-            snap.addEventListener(
-                "click",
-                () => {
-
-                    scattaFoto(
-                        "video",
-                        "canvas"
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* CAMERA OUTBOUND */
-
-        const videoOut =
-            document.getElementById(
-                "videoOut"
-            );
-
-
-        if (videoOut) {
-
-            startRearCamera(videoOut);
-
-        }
-
-
-        const snapOut =
-            document.getElementById(
-                "snapOut"
-            );
-
-
-        if (snapOut) {
-
-            snapOut.addEventListener(
-                "click",
-                () => {
-
-                    scattaFoto(
-                        "videoOut",
-                        "canvasOut"
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* POPUP */
-
-        const popupClose =
-            document.getElementById(
-                "popupCloseButton"
-            );
-
-
-        if (popupClose) {
-
-            popupClose.addEventListener(
-                "click",
-                chiudiPopup
-            );
-
-        }
-
-
-        const popupCloseBottom =
-            document.getElementById(
-                "popupCloseButtonBottom"
-            );
-
-
-        if (popupCloseBottom) {
-
-            popupCloseBottom.addEventListener(
-                "click",
-                chiudiPopup
-            );
-
-        }
-
-
-        const popupMove =
-            document.getElementById(
-                "popupMoveButton"
-            );
-
-
-        if (popupMove) {
-
-            popupMove.addEventListener(
-                "click",
-                spostaDaPopup
-            );
-
-        }
-
-
-        const popupOverlay =
-            document.getElementById(
-                "parkPopupOverlay"
-            );
-
-
-        if (popupOverlay) {
-
-            popupOverlay.addEventListener(
-                "click",
-                event => {
-
-                    if (
-                        event.target ===
-                        popupOverlay
-                    ) {
-
-                        chiudiPopup();
-
-                    }
-
-                }
-            );
-
-        }
-
-
-        /* FIREBASE */
-
-        db.ref("camion")
-            .on(
-                "value",
-                snapshot => {
-
-                    camionData =
-                        snapshot.val() || {};
-
-
-                    aggiornaPark();
-
-                    aggiornaMonitor();
-
-                    aggiornaDashboard();
-
-                }
-            );
-
-
-        /* AGGIORNAMENTO PERIODICO */
-
-        setInterval(
-            () => {
-
-                aggiornaMonitor();
-
-                aggiornaDashboard();
-
-            },
-            30000
-        );
+        aggiornaStatistiche();
 
     }
 );
+
+
+
+/* =========================================================
+   AGGIORNAMENTO AUTOMATICO
+   ========================================================= */
+
+setInterval(() => {
+
+    aggiornaPark();
+
+    aggiornaMonitor();
+
+    aggiornaDashboard();
+
+    aggiornaStatistiche();
+
+}, 30000);
